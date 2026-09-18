@@ -1,4 +1,4 @@
-name: Deploy to Hostinger VPS
+name: Deploy Nexvarta
 
 on:
   push:
@@ -7,39 +7,27 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
-      - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.HOSTINGER_HOST }}
-          username: ${{ secrets.HOSTINGER_USERNAME }}
-          key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          port: ${{ secrets.HOSTINGER_PORT || 22 }}
-          script: |
-            set -e
+      - name: Deploy on VPS
+        run: |
+          set -e
+          echo "🚀 Navigating to project directory..."
+          cd /var/www/nexvarta
 
-            # Ensure NVM / Node / PM2 are in PATH
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            export PATH=$PATH:/usr/local/bin:$HOME/.npm-global/bin
+          echo "📥 Pulling latest changes from main branch..."
+          git fetch origin main
+          git reset --hard origin/main
 
-            echo "🚀 Navigating to project directory..."
-            cd /var/www/nexvarta
+          echo "📦 Installing dependencies..."
+          npm install --omit=dev
 
-            echo "📥 Pulling latest changes from main branch..."
-            git fetch origin main
-            git reset --hard origin/main
+          echo "🏗️ Building Next.js application..."
+          npm run build
 
-            echo "📦 Installing dependencies..."
-            npm install --omit=dev
+          echo "🔄 Reloading PM2 process..."
+          pm2 startOrReload ecosystem.config.cjs --update-env
+          pm2 save
 
-            echo "🏗️ Building Next.js application..."
-            npm run build
-
-            echo "🔄 Reloading PM2 process..."
-            pm2 startOrReload ecosystem.config.cjs --update-env
-            pm2 save
-
-            echo "✅ Deployment completed successfully!"
+          echo "✅ Deployment completed successfully!"
