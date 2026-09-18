@@ -36,7 +36,8 @@ import {
   Lock,
   User,
   LogOut,
-  EyeOff
+  EyeOff,
+  Play
 } from 'lucide-react';
 import { downloadEPaperPDF, openEPaperPrintWindow } from '../../lib/epaperDownloader';
 
@@ -210,6 +211,53 @@ export default function SubscriberDashboardPage() {
       setPasswordInput('');
       showToast('🚪 तुम्ही यशस्वीरीत्या लॉगआउट झाला आहात.');
     }
+  };
+
+  const handleDownloadVideo = async (vid) => {
+    if (!vid) return;
+    const title = vid.title || 'Nexvarta 4K Footage';
+    showToast(`📥 "${title}" चे वॉटरमार्क-फ्री 4K बंडल डाऊनलोड होत आहे...`);
+    
+    let targetUrl = vid.previewVideo || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+
+    // Google Drive direct download URL conversion
+    if (targetUrl.includes('drive.google.com')) {
+      const match = targetUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        targetUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`;
+      }
+    }
+
+    try {
+      if (targetUrl.startsWith('/') || targetUrl.includes('/uploads/')) {
+        const res = await fetch(targetUrl);
+        if (res.ok) {
+          const blob = await res.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `${(vid.slug || 'nexvarta_pro_footage').replace(/[^a-zA-Z0-9_-]/g, '_')}.mp4`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(blobUrl);
+          showToast('✅ 4K व्हिडिओ फाईल डाऊनलोड झाली!');
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Direct blob fetch failed, falling back to direct link:', e);
+    }
+
+    // Direct link fallback
+    const link = document.createElement('a');
+    link.href = targetUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.download = `${(vid.slug || 'nexvarta_pro_footage')}.mp4`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const showToast = (msg) => {
@@ -779,8 +827,8 @@ export default function SubscriberDashboardPage() {
                         position: 'absolute',
                         inset: 0,
                         margin: 'auto',
-                        width: 50,
-                        height: 50,
+                        width: 52,
+                        height: 52,
                         borderRadius: '50%',
                         background: 'rgba(234,88,12,0.95)',
                         color: '#fff',
@@ -789,10 +837,12 @@ export default function SubscriberDashboardPage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         cursor: 'pointer',
-                        boxShadow: '0 0 16px rgba(234,88,12,0.6)'
+                        boxShadow: '0 0 20px rgba(234,88,12,0.7)',
+                        transition: 'transform 0.15s ease'
                       }}
+                      title="व्हिडिओ प्रिव्ह्यू व स्क्रिप्ट पहा"
                     >
-                      <Eye size={22} fill="#fff" />
+                      <Play size={22} fill="#fff" style={{ marginLeft: 3 }} />
                     </button>
                   </div>
 
@@ -852,15 +902,7 @@ export default function SubscriberDashboardPage() {
                       </button>
 
                       <button
-                        onClick={() => {
-                          showToast(`📥 ${vid.title} चे वॉटरमार्क-फ्री 4K बंडल डाऊनलोड होत आहे...`);
-                          const link = document.createElement('a');
-                          link.href = vid.previewVideo || '#';
-                          link.download = `${vid.slug || 'nexvarta_pro_footage'}.mp4`;
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
+                        onClick={() => handleDownloadVideo(vid)}
                         style={{
                           background: '#ea580c',
                           color: '#fff',
@@ -1522,13 +1564,27 @@ export default function SubscriberDashboardPage() {
 
             {/* Video Player */}
             <div style={{ position: 'relative', background: '#000', borderRadius: 12, overflow: 'hidden', marginBottom: 18, maxHeight: selectedVideo.format === '9:16' ? 440 : 360, display: 'flex', justifyContent: 'center' }}>
-              <video 
-                controls 
-                autoPlay 
-                playsInline 
-                src={selectedVideo.previewVideo} 
-                style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-              />
+              {selectedVideo.previewVideo?.includes('drive.google.com') ? (
+                <iframe 
+                  src={selectedVideo.previewVideo} 
+                  style={{ width: '100%', height: selectedVideo.format === '9:16' ? 440 : 360, border: 'none', borderRadius: 12 }} 
+                  allow="autoplay"
+                />
+              ) : selectedVideo.previewVideo?.includes('youtube.com') || selectedVideo.previewVideo?.includes('youtu.be') ? (
+                <iframe 
+                  src={selectedVideo.previewVideo.replace('watch?v=', 'embed/')} 
+                  style={{ width: '100%', height: selectedVideo.format === '9:16' ? 440 : 360, border: 'none', borderRadius: 12 }} 
+                  allow="autoplay; encrypted-media"
+                />
+              ) : (
+                <video 
+                  controls 
+                  autoPlay 
+                  playsInline 
+                  src={selectedVideo.previewVideo || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"} 
+                  style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                />
+              )}
             </div>
 
             {/* Script Box */}
@@ -1582,15 +1638,7 @@ export default function SubscriberDashboardPage() {
 
             {/* Direct Download Button */}
             <button
-              onClick={() => {
-                showToast(`📥 ${selectedVideo.title} चे वॉटरमार्क-फ्री 4K बंडल डाऊनलोड होत आहे...`);
-                const link = document.createElement('a');
-                link.href = selectedVideo.previewVideo || '#';
-                link.download = `${selectedVideo.slug || 'nexvarta_pro_footage'}.mp4`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
+              onClick={() => handleDownloadVideo(selectedVideo)}
               style={{
                 width: '100%',
                 background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
