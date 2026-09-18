@@ -44,7 +44,11 @@ import {
   Play,
   Film,
   Globe,
-  HardDrive
+  HardDrive,
+  Lock,
+  User,
+  EyeOff,
+  LogOut
 } from 'lucide-react';
 import { applyWatermarkToImage } from '../../lib/watermarkUtil';
 
@@ -96,15 +100,75 @@ export default function AdminDashboardPage() {
   const [watermarkTag, setWatermarkTag] = useState('🔴 NEXVARTA EXCLUSIVE');
   const [isWatermarking, setIsWatermarking] = useState(false);
 
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
+  const [usernameInput, setUsernameInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   // Analytics Dashboard State
   const [analyticsData, setAnalyticsData] = useState(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [liveReadersCount, setLiveReadersCount] = useState(1482);
 
-  // Fetch CMS data on mount
+  // Fetch CMS data & Check Authentication on mount
   useEffect(() => {
+    try {
+      const storedAuth = localStorage.getItem('nexvarta_admin_auth');
+      if (storedAuth === 'true') {
+        setIsAuthenticated(true);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAuthChecking(false);
+    }
     fetchCmsData();
   }, []);
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    setLoginError('');
+
+    const u = usernameInput.trim();
+    const p = passwordInput.trim();
+
+    if (!u || !p) {
+      setLoginError('कृपया वापरकर्ता नाव (User ID) आणि पासवर्ड प्रविष्ट करा.');
+      return;
+    }
+
+    const validUsers = ['admin', 'nexvarta', 'avinashcommercial01@gmail.com'];
+    const validPasswords = ['Nexvarta@2026', 'admin123'];
+
+    if (validUsers.includes(u.toLowerCase()) && validPasswords.includes(p)) {
+      try {
+        localStorage.setItem('nexvarta_admin_auth', 'true');
+        localStorage.setItem('nexvarta_admin_user', u);
+      } catch (err) {}
+      setIsAuthenticated(true);
+      setLoginError('');
+      showToast('🎉 लॉगिन यशस्वी! ॲडमिन पॅनेलमध्ये आपले स्वागत आहे.');
+    } else {
+      setLoginError('❌ अवैध लॉगिन आयडी किंवा पासवर्ड! कृपया योग्य माहिती टाका.');
+    }
+  };
+
+  const handleLogout = () => {
+    if (confirm('तुम्हाला ॲडमिन पॅनेलमधून बाहेर पडायचे (Logout) आहे का?')) {
+      try {
+        localStorage.removeItem('nexvarta_admin_auth');
+        localStorage.removeItem('nexvarta_admin_user');
+      } catch (err) {}
+      setIsAuthenticated(false);
+      setUsernameInput('');
+      setPasswordInput('');
+      setLoginError('');
+      showToast('🚪 तुम्ही यशस्वीरीत्या लॉगआउट झाला आहात.');
+    }
+  };
 
   const fetchCmsData = async () => {
     try {
@@ -641,6 +705,212 @@ export default function AdminDashboardPage() {
     showToast('🗑️ व्हिडिओ पॅकेज डिलीट केले!');
   };
 
+  if (authChecking) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0b1120', color: '#fff' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: 16 }}>🔒</div>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>सुरक्षा तपासणी सुरू आहे...</h3>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, render secure Login Screen
+  if (!isAuthenticated) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        background: 'radial-gradient(ellipse at top, #1e293b, #0a0f1d)', 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        padding: '24px 16px',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '440px',
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '20px',
+          padding: '36px 32px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 56, 132, 0.2)',
+          color: '#ffffff'
+        }}>
+          {/* Logo & Header */}
+          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+            <div style={{
+              width: 64,
+              height: 64,
+              margin: '0 auto 16px',
+              background: 'linear-gradient(135deg, #003884 0%, #ea580c 100%)',
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 8px 20px rgba(234, 88, 12, 0.35)'
+            }}>
+              <Tv size={34} color="#ffffff" />
+            </div>
+            <div style={{ display: 'inline-block', background: 'rgba(234, 88, 12, 0.2)', color: '#fb923c', border: '1px solid rgba(234, 88, 12, 0.4)', fontSize: '0.75rem', fontWeight: 800, padding: '4px 12px', borderRadius: '99px', marginBottom: 10, letterSpacing: 0.5 }}>
+              🛡️ अधिकृत संपादकीय प्रवेश
+            </div>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 900, letterSpacing: '-0.02em', margin: '0 0 6px 0', color: '#ffffff' }}>
+              NEXVARTA CMS
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+              कंट्रोल पॅनेलमध्ये प्रवेश करण्यासाठी कृपया आपला लॉगिन आयडी व पासवर्ड प्रविष्ट करा.
+            </p>
+          </div>
+
+          {/* Error Message */}
+          {loginError && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.15)',
+              border: '1px solid rgba(239, 68, 68, 0.4)',
+              color: '#fca5a5',
+              padding: '12px 14px',
+              borderRadius: '10px',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              marginBottom: 20
+            }}>
+              <AlertCircle size={18} style={{ flexShrink: 0 }} />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {/* Username / ID */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                लॉगिन आयडी / वापरकर्ता नाव (User ID)
+              </label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <User size={18} style={{ position: 'absolute', left: 14, color: '#64748b' }} />
+                <input 
+                  type="text"
+                  placeholder="उदा. admin किंवा ईमेल"
+                  value={usernameInput}
+                  onChange={(e) => setUsernameInput(e.target.value)}
+                  autoFocus
+                  required
+                  style={{
+                    width: '100%',
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '10px',
+                    padding: '12px 14px 12px 42px',
+                    color: '#ffffff',
+                    fontSize: '0.925rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                सुरक्षित पासवर्ड (Password)
+              </label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <Lock size={18} style={{ position: 'absolute', left: 14, color: '#64748b' }} />
+                <input 
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="आपला पासवर्ड प्रविष्ट करा"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '10px',
+                    padding: '12px 42px 12px 42px',
+                    color: '#ffffff',
+                    fontSize: '0.925rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: 12,
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 4
+                  }}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Login Submit Button */}
+            <button
+              type="submit"
+              style={{
+                marginTop: 6,
+                background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '13px 20px',
+                fontSize: '0.95rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                boxShadow: '0 4px 15px rgba(234, 88, 12, 0.4)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Lock size={16} /> लॉगिन करा (Login to Admin)
+            </button>
+          </form>
+
+          {/* Return to Portal Link */}
+          <div style={{ marginTop: 24, textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 18 }}>
+            <Link 
+              href="/"
+              style={{ 
+                color: '#93c5fd', 
+                fontSize: '0.85rem', 
+                fontWeight: 600, 
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6
+              }}
+            >
+              ← मुख्य न्यूज पोर्टलवर परत जा
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading || !cmsData) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f172a', color: '#fff' }}>
@@ -685,9 +955,16 @@ export default function AdminDashboardPage() {
           <button 
             onClick={() => saveCmsData(cmsData)}
             disabled={isSaving}
-            style={{ background: '#ea580c', color: '#fff', fontSize: '0.85rem', fontWeight: 800, padding: '8px 20px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(234, 88, 12, 0.4)' }}
+            style={{ background: '#ea580c', color: '#fff', fontSize: '0.85rem', fontWeight: 800, padding: '8px 20px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(234, 88, 12, 0.4)' }}
           >
             <Save size={16} /> {isSaving ? 'सेव्ह होत आहे...' : 'सर्व बदल सेव्ह करा'}
+          </button>
+          <button 
+            onClick={handleLogout}
+            style={{ background: '#dc2626', color: '#fff', fontSize: '0.85rem', fontWeight: 700, padding: '8px 16px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(220,38,38,0.3)' }}
+            title="लॉगिन सेशन बंद करा"
+          >
+            <LogOut size={16} /> बाहेर पडा
           </button>
         </div>
       </header>
