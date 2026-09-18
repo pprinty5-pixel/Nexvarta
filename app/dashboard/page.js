@@ -32,11 +32,24 @@ import {
   Radio,
   Sliders,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  Lock,
+  User,
+  LogOut,
+  EyeOff
 } from 'lucide-react';
 import { downloadEPaperPDF, openEPaperPrintWindow } from '../../lib/epaperDownloader';
 
 export default function SubscriberDashboardPage() {
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
+  const [loginInput, setLoginInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [siteLogoUrl, setSiteLogoUrl] = useState('');
+
   // Active Navigation Tab
   const [activeTab, setActiveTab] = useState('videos'); // 'videos' | 'epaper' | 'license' | 'billing' | 'team' | 'support'
   const [formatFilter, setFormatFilter] = useState('all'); // 'all' | '9:16' | '16:9'
@@ -89,10 +102,14 @@ export default function SubscriberDashboardPage() {
     notes: ''
   });
 
-  // Load from localStorage if present
+  // Load subscriber session and CMS data
   useEffect(() => {
     try {
+      const auth = localStorage.getItem('nexvarta_subscriber_auth');
       const saved = localStorage.getItem('nexvarta_user_subscription');
+      if (auth === 'true' || saved) {
+        setIsAuthenticated(true);
+      }
       if (saved) {
         const parsed = JSON.parse(saved);
         setSubscriber(prev => ({
@@ -108,10 +125,14 @@ export default function SubscriberDashboardPage() {
           billingCycle: parsed.billingCycle || prev.billingCycle,
         }));
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAuthChecking(false);
+    }
 
-    // Load videos
-    async function loadCmsVideos() {
+    // Load videos & site config
+    async function loadCmsData() {
       try {
         setLoading(true);
         const res = await fetch('/api/admin/cms');
@@ -120,6 +141,9 @@ export default function SubscriberDashboardPage() {
           if (json.creatorVideos && json.creatorVideos.length > 0) {
             setVideos(json.creatorVideos);
           }
+          if (json.siteConfig?.logoUrl) {
+            setSiteLogoUrl(json.siteConfig.logoUrl);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -127,8 +151,66 @@ export default function SubscriberDashboardPage() {
         setLoading(false);
       }
     }
-    loadCmsVideos();
+    loadCmsData();
   }, []);
+
+  const handleSubscriberLogin = (e) => {
+    e?.preventDefault();
+    setLoginError('');
+
+    const inputVal = loginInput.trim();
+    const passVal = passwordInput.trim();
+
+    if (!inputVal) {
+      setLoginError('कृपया आपला नोंदणीकृत ईमेल, मोबाईल किंवा परवाना क्रमांक प्रविष्ट करा.');
+      return;
+    }
+
+    // Valid if matches subscriber email/phone/license or demo
+    const isDemo = inputVal.toLowerCase() === 'sachin.g@gmail.com' || 
+                   inputVal.toLowerCase() === 'admin' || 
+                   inputVal.includes('98765') || 
+                   inputVal.toUpperCase().startsWith('NV-LIC') ||
+                   inputVal.toLowerCase().includes('@');
+
+    const isValidPass = passVal === '1234' || passVal === 'Nexvarta@2026' || passVal === 'admin123' || passVal.length >= 4;
+
+    if (isDemo && isValidPass) {
+      try {
+        localStorage.setItem('nexvarta_subscriber_auth', 'true');
+        if (inputVal.includes('@')) {
+          setSubscriber(prev => ({ ...prev, email: inputVal }));
+        }
+      } catch (err) {}
+      setIsAuthenticated(true);
+      setLoginError('');
+      showToast('🎉 सबस्क्रायबर लॉगिन यशस्वी! मेंबर हबमध्ये आपले स्वागत आहे.');
+    } else {
+      setLoginError('❌ चुकीचा आयडी किंवा पासवर्ड! कृपया योग्य क्रेडेंशियल्स प्रविष्ट करा.');
+    }
+  };
+
+  const handleDemoLogin = () => {
+    try {
+      localStorage.setItem('nexvarta_subscriber_auth', 'true');
+    } catch (err) {}
+    setIsAuthenticated(true);
+    setLoginError('');
+    showToast('🎉 प्रो मेंबर लॉगिन यशस्वी!');
+  };
+
+  const handleSubscriberLogout = () => {
+    if (confirm('तुम्हाला मेंबर डॅशबोर्डमधून बाहेर पडायचे (Logout) आहे का?')) {
+      try {
+        localStorage.removeItem('nexvarta_subscriber_auth');
+        localStorage.removeItem('nexvarta_user_subscription');
+      } catch (err) {}
+      setIsAuthenticated(false);
+      setLoginInput('');
+      setPasswordInput('');
+      showToast('🚪 तुम्ही यशस्वीरीत्या लॉगआउट झाला आहात.');
+    }
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -147,6 +229,253 @@ export default function SubscriberDashboardPage() {
     return matchesFormat && matchesSearch;
   });
 
+  if (authChecking) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0f1d', color: '#fff' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: 16 }}>🔒</div>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>सबस्क्रायबर प्रमाणीकरण तपासत आहे...</h3>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, render Subscriber Login Screen
+  if (!isAuthenticated) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        background: 'radial-gradient(ellipse at top, #1e1b4b, #0a0f1d)', 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        padding: '24px 16px',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '460px',
+          background: 'rgba(255, 255, 255, 0.04)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '20px',
+          padding: '36px 32px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(234, 88, 12, 0.15)',
+          color: '#ffffff'
+        }}>
+          {/* Logo & Header */}
+          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+            {siteLogoUrl ? (
+              <img 
+                src={siteLogoUrl} 
+                alt="Logo" 
+                style={{ height: 48, maxWidth: 200, objectFit: 'contain', margin: '0 auto 16px', display: 'block' }} 
+              />
+            ) : (
+              <div style={{
+                width: 64,
+                height: 64,
+                margin: '0 auto 16px',
+                background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                borderRadius: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 8px 20px rgba(234, 88, 12, 0.35)'
+              }}>
+                <span style={{ fontSize: '2rem', fontWeight: 900, color: '#fff' }}>N</span>
+              </div>
+            )}
+            <div style={{ display: 'inline-block', background: 'rgba(234, 88, 12, 0.2)', color: '#fb923c', border: '1px solid rgba(234, 88, 12, 0.4)', fontSize: '0.75rem', fontWeight: 800, padding: '4px 12px', borderRadius: '99px', marginBottom: 10, letterSpacing: 0.5 }}>
+              💎 अधिकृत मेंबर व सबस्क्रायबर हब
+            </div>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '-0.02em', margin: '0 0 6px 0', color: '#ffffff' }}>
+              NEXVARTA MEMBER LOGIN
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+              4K व्हिडिओ फुटेज, ई-पेपर डाऊनलोड्स आणि व्यावसायिक परवाना वापरण्यासाठी कृपया लॉगिन करा.
+            </p>
+          </div>
+
+          {/* Error Message */}
+          {loginError && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.15)',
+              border: '1px solid rgba(239, 68, 68, 0.4)',
+              color: '#fca5a5',
+              padding: '12px 14px',
+              borderRadius: '10px',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              marginBottom: 20
+            }}>
+              <AlertCircle size={18} style={{ flexShrink: 0 }} />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={handleSubscriberLogin} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {/* Email / Phone / License */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                नोंदणीकृत ईमेल, मोबाईल किंवा परवाना क्रमांक
+              </label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <User size={18} style={{ position: 'absolute', left: 14, color: '#64748b' }} />
+                <input 
+                  type="text"
+                  placeholder="उदा. sachin.g@gmail.com किंवा 98765..."
+                  value={loginInput}
+                  onChange={(e) => setLoginInput(e.target.value)}
+                  autoFocus
+                  required
+                  style={{
+                    width: '100%',
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '10px',
+                    padding: '12px 14px 12px 42px',
+                    color: '#ffffff',
+                    fontSize: '0.925rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                पासवर्ड (किंवा OTP '1234')
+              </label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <Lock size={18} style={{ position: 'absolute', left: 14, color: '#64748b' }} />
+                <input 
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="आपला पासवर्ड किंवा 1234 टाका"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '10px',
+                    padding: '12px 42px 12px 42px',
+                    color: '#ffffff',
+                    fontSize: '0.925rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: 12,
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 4
+                  }}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Login Submit Button */}
+            <button
+              type="submit"
+              style={{
+                marginTop: 6,
+                background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '13px 20px',
+                fontSize: '0.95rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                boxShadow: '0 4px 15px rgba(234, 88, 12, 0.4)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Lock size={16} /> मेंबर लॉगिन करा (Login to Hub)
+            </button>
+
+            {/* Quick 1-Click Demo Login */}
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                color: '#93c5fd',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '10px',
+                padding: '10px 16px',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6
+              }}
+            >
+              ⚡ 1-क्लिक प्रो डेमो सबस्क्रायबर लॉगिन
+            </button>
+          </form>
+
+          {/* Links */}
+          <div style={{ marginTop: 24, textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 18, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <Link 
+              href="/subscribe"
+              style={{ 
+                color: '#f59e0b', 
+                fontSize: '0.85rem', 
+                fontWeight: 700, 
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6
+              }}
+            >
+              💎 नवीन सबस्क्रिप्शन हवे आहे? प्लॅन्स पहा →
+            </Link>
+            <Link 
+              href="/"
+              style={{ 
+                color: '#94a3b8', 
+                fontSize: '0.825rem', 
+                textDecoration: 'none'
+              }}
+            >
+              ← मुख्य वृत्तपोर्टलवर परत जा
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#0a0f1d', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       
@@ -159,9 +488,17 @@ export default function SubscriberDashboardPage() {
           {/* Logo & Status Badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 900, fontSize: '1.2rem', boxShadow: '0 4px 14px rgba(234,88,12,0.4)' }}>
-                N
-              </div>
+              {siteLogoUrl ? (
+                <img 
+                  src={siteLogoUrl} 
+                  alt="Logo" 
+                  style={{ height: 38, maxWidth: 140, objectFit: 'contain' }}
+                />
+              ) : (
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 900, fontSize: '1.2rem', boxShadow: '0 4px 14px rgba(234,88,12,0.4)' }}>
+                  N
+                </div>
+              )}
               <div>
                 <div style={{ fontSize: '1.25rem', fontWeight: 900, letterSpacing: 1.5, color: '#ffffff', lineHeight: 1.1 }}>
                   NEXVARTA <span style={{ color: '#ea580c', fontSize: '0.85rem', fontWeight: 800, background: 'rgba(234,88,12,0.15)', padding: '2px 8px', borderRadius: 4, border: '1px solid rgba(234,88,12,0.3)' }}>MEMBER HUB</span>
@@ -204,6 +541,14 @@ export default function SubscriberDashboardPage() {
             >
               🌐 मुख्य वृत्तपोर्टल
             </Link>
+
+            <button 
+              onClick={handleSubscriberLogout}
+              style={{ background: '#dc2626', color: '#fff', fontSize: '0.8rem', fontWeight: 700, padding: '7px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(220,38,38,0.3)' }}
+              title="लॉगआउट करा"
+            >
+              <LogOut size={14} /> बाहेर पडा
+            </button>
           </div>
 
         </div>
