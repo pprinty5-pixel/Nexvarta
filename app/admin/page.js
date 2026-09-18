@@ -108,6 +108,10 @@ export default function AdminDashboardPage() {
   const [loginError, setLoginError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  // Logo Upload State
+  const [isLogoUploading, setIsLogoUploading] = useState(false);
+  const [logoPreviewBg, setLogoPreviewBg] = useState('light'); // 'light' | 'dark'
+
   // Analytics Dashboard State
   const [analyticsData, setAnalyticsData] = useState(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
@@ -208,6 +212,58 @@ export default function AdminDashboardPage() {
       showToast('⚠️ सर्व्हर एरर.');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // ----------------------------------------------------
+  // LOGO UPLOAD & BRANDING ACTIONS
+  // ----------------------------------------------------
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('⚠️ लोगो इमेज फाईलची साईझ 5MB पेक्षा लहान असावी.');
+      return;
+    }
+
+    try {
+      setIsLogoUploading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.url) {
+        const updated = { ...cmsData };
+        if (!updated.siteConfig) updated.siteConfig = {};
+        updated.siteConfig.logoUrl = data.url;
+        setCmsData(updated);
+        saveCmsData(updated);
+        showToast('✅ लोगो यशस्वीरीत्या अपलोड आणि सेव्ह झाला!');
+      } else {
+        showToast('⚠️ लोगो अपलोड करताना त्रुटी: ' + (data.error || 'अयशस्वी'));
+      }
+    } catch (err) {
+      showToast('⚠️ नेटवर्क एरर आला.');
+    } finally {
+      setIsLogoUploading(false);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    if (confirm('वेबसाइटचा लोगो काढून टाकायचा आहे का?')) {
+      const updated = { ...cmsData };
+      if (updated.siteConfig) {
+        updated.siteConfig.logoUrl = '';
+      }
+      setCmsData(updated);
+      saveCmsData(updated);
+      showToast('🗑️ लोगो काढून टाकला!');
     }
   };
 
@@ -936,11 +992,19 @@ export default function AdminDashboardPage() {
       {/* Top Admin Navbar */}
       <header style={{ background: '#003884', color: '#fff', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 36, height: 36, background: '#ea580c', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Tv size={20} />
-          </div>
+          {cmsData?.siteConfig?.logoUrl ? (
+            <img 
+              src={cmsData.siteConfig.logoUrl} 
+              alt="Logo" 
+              style={{ height: 36, maxWidth: 130, objectFit: 'contain', background: 'rgba(255,255,255,0.1)', padding: 4, borderRadius: 6 }} 
+            />
+          ) : (
+            <div style={{ width: 36, height: 36, background: '#ea580c', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Tv size={20} />
+            </div>
+          )}
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.1 }}>NEXVARTA CMS</h1>
+            <h1 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.1 }}>{cmsData?.siteConfig?.name || 'NEXVARTA CMS'}</h1>
             <span style={{ fontSize: '0.725rem', color: '#93c5fd', fontWeight: 600 }}>फुल ॲडमिन कंट्रोल पॅनल</span>
           </div>
         </div>
@@ -1771,6 +1835,187 @@ export default function AdminDashboardPage() {
             <div>
               <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>साइट सेटिंग्स, स्टॅट्स व संपर्क</h2>
               <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: 24 }}>About मजकूर, स्टॅट्स आकडे, पिंपरी मुख्यालय पत्ता, फोन व ईमेल बदला.</p>
+
+              {/* Site Logo & Header Branding Card */}
+              <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <ImageIcon size={22} color="#ea580c" /> वेबसाइट लोगो (Site Logo & Branding)
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '4px 0 0 0' }}>
+                      मुख्य हेडर, फुटर आणि ॲडमिन पॅनेलवर दिसणारा अधिकृत लोगो बदला किंवा नवीन अपलोड करा.
+                    </p>
+                  </div>
+                  {cmsData.siteConfig?.logoUrl && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveLogo}
+                      style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', padding: '6px 14px', borderRadius: 8, fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                    >
+                      <Trash2 size={14} /> लोगो काढा (Remove Logo)
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 24, alignItems: 'start' }}>
+                  {/* Left: Upload & URL Options */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {/* Option 1: File Upload */}
+                    <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', borderRadius: 12, padding: '20px 18px', textAlign: 'center' }}>
+                      <input 
+                        type="file" 
+                        id="logoFileInput" 
+                        accept="image/png,image/jpeg,image/webp,image/svg+xml" 
+                        style={{ display: 'none' }}
+                        onChange={handleLogoUpload}
+                        disabled={isLogoUploading}
+                      />
+                      <label 
+                        htmlFor="logoFileInput" 
+                        style={{ 
+                          cursor: isLogoUploading ? 'not-allowed' : 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          background: '#003884',
+                          color: '#fff',
+                          padding: '10px 20px',
+                          borderRadius: 8,
+                          fontWeight: 800,
+                          fontSize: '0.9rem',
+                          boxShadow: '0 2px 8px rgba(0,56,132,0.25)'
+                        }}
+                      >
+                        <UploadCloud size={18} /> {isLogoUploading ? 'अपलोड होत आहे...' : '📁 संगणकावरून नवीन लोगो अपलोड करा'}
+                      </label>
+                      <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '10px 0 0 0' }}>
+                        सपोर्टेड फॉरमॅट: PNG, SVG, WEBP, JPG (कमाल 5MB)<br/>
+                        <strong>टिप:</strong> पारदर्शक (Transparent Background) असलेला लोगो सर्वोत्तम दिसतो.
+                      </p>
+                    </div>
+
+                    {/* Option 2: Image URL input */}
+                    <div>
+                      <label style={{ fontSize: '0.825rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                        किंवा थेट लोगो इमेज लिंक (Direct Image URL) प्रविष्ट करा:
+                      </label>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <input 
+                          type="text" 
+                          placeholder="उदा. https://nvnews.in/logo.png किंवा /uploads/logos/..."
+                          value={cmsData.siteConfig?.logoUrl || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            updated.siteConfig.logoUrl = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          style={{ flex: 1, padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, fontSize: '0.875rem' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Display option: Logo only vs Logo + Name */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f1f5f9', padding: '10px 14px', borderRadius: 8 }}>
+                      <input 
+                        type="checkbox"
+                        id="logoOnlyCheckbox"
+                        checked={Boolean(cmsData.siteConfig?.logoOnly)}
+                        onChange={(e) => {
+                          const updated = { ...cmsData };
+                          if (!updated.siteConfig) updated.siteConfig = {};
+                          updated.siteConfig.logoOnly = e.target.checked;
+                          setCmsData(updated);
+                        }}
+                        style={{ width: 16, height: 16, cursor: 'pointer' }}
+                      />
+                      <label htmlFor="logoOnlyCheckbox" style={{ fontSize: '0.825rem', fontWeight: 700, color: '#334155', cursor: 'pointer' }}>
+                        फक्त लोगो दाखवा (ब्रँड नाव व टॅगलाईन लपवा)
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Right: Live Logo Preview Box */}
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: 18 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#475569' }}>लाइव्ह लोगो प्रिव्ह्यू (Live Preview)</span>
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        <button
+                          type="button"
+                          onClick={() => setLogoPreviewBg('light')}
+                          style={{
+                            padding: '4px 8px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            borderRadius: 6,
+                            border: '1px solid #cbd5e1',
+                            background: logoPreviewBg === 'light' ? '#003884' : '#fff',
+                            color: logoPreviewBg === 'light' ? '#fff' : '#64748b',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          ☀️ पांढरा
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setLogoPreviewBg('dark')}
+                          style={{
+                            padding: '4px 8px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            borderRadius: 6,
+                            border: '1px solid #cbd5e1',
+                            background: logoPreviewBg === 'dark' ? '#003884' : '#fff',
+                            color: logoPreviewBg === 'dark' ? '#fff' : '#64748b',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🌙 निळा
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      height: 120,
+                      borderRadius: 10,
+                      border: '1px solid #cbd5e1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: 16,
+                      background: logoPreviewBg === 'light' ? '#ffffff' : '#002255',
+                      backgroundImage: logoPreviewBg === 'light' 
+                        ? 'radial-gradient(#e2e8f0 1px, transparent 1px)' 
+                        : 'radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)',
+                      backgroundSize: '12px 12px',
+                      transition: 'background 0.2s ease'
+                    }}>
+                      {cmsData.siteConfig?.logoUrl ? (
+                        <img 
+                          src={cmsData.siteConfig.logoUrl} 
+                          alt="Site Logo Preview" 
+                          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div style={{ textAlign: 'center', color: logoPreviewBg === 'light' ? '#94a3b8' : '#93c5fd' }}>
+                          <Tv size={36} style={{ margin: '0 auto 6px', display: 'block' }} />
+                          <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>सध्या डिफॉल्ट टीव्ही आयकॉन वापरात आहे</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {cmsData.siteConfig?.logoUrl && (
+                      <div style={{ marginTop: 10, fontSize: '0.75rem', color: '#16a34a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <CheckCircle2 size={14} /> लोगो सक्रिय आहे: {cmsData.siteConfig.logoUrl}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                 {/* About & Brand Info */}
