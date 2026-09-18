@@ -1,0 +1,726 @@
+{
+  "siteConfig": {
+    "name": "NEXVARTA",
+    "tagline": "The Next Voice of News",
+    "description": "Delivering credible, fast, and hyperlocal journalism from Pune to the world.",
+    "url": "https://nexvarta.com",
+    "about": {
+      "title": "About Nexvarta",
+      "tagline": "The Next Voice of News",
+      "content": "Nexvarta is a next-generation digital news platform delivering real-time, credible, and hyperlocal journalism from Pune to the world. Powered by modern technology and on-ground verified reporting, we connect citizens to timely news across politics, civic issues, tech, business, and culture."
+    },
+    "contact": {
+      "address": "Nexvarta Media Pvt. Ltd., Pimpri, Maharashtra, India - 411018",
+      "emails": [
+        {
+          "label": "Editorial",
+          "email": "news@nexvarta.com"
+        },
+        {
+          "label": "Support",
+          "email": "support@nexvarta.com"
+        },
+        {
+          "label": "Advertising",
+          "email": "advertise@nexvarta.com"
+        }
+      ],
+      "phones": [
+        {
+          "label": "Newsroom",
+          "number": "+91 20 6789 0000"
+        },
+        {
+          "label": "WhatsApp Tips",
+          "number": "+91 98765 43210"
+        },
+        {
+          "label": "Toll Free",
+          "number": "1800 123 4567"
+        }
+      ]
+    },
+    "stats": [
+      {
+        "value": "5M+",
+        "label": "Monthly Readers"
+      },
+      {
+        "value": "24x7",
+        "label": "Live Coverage"
+      },
+      {
+        "value": "500+",
+        "label": "Daily News Reports"
+      },
+      {
+        "value": "100%",
+        "label": "Verified Sources"
+      }
+    ],
+    "footer": {
+      "copyright": "© 2026 Nexvarta Media Pvt. Ltd. All rights reserved. | Headquarters: Pimpri, Maharashtra"
+    }
+  },
+  "breakingTickers": [
+    "पुणे मेट्रो: हिंजवडी-शिवाजीनगर मेट्रो ३ चे लोकार्पण, प्रवासाचा वेळ ९० मिनिटांवरून अवघ्या १८ मिनिटांवर!",
+    "महाराष्ट्र नवीन औद्योगिक धोरण २०२६: एमएसएमई उद्योगांना ५ लाखांपर्यंत बिनव्याजी कर्ज, १० लाख नव्या नोकऱ्यांचे उद्दिष्ट.",
+    "आयपीएल २०२७ मेगा लिलाव: ऋषभ पंतने मोडला सर्वकालीन विक्रम; ३२ कोटी रुपयांना मुंबई इंडियन्सकडे!",
+    "टाटा मोटर्सचा मोठा चमत्कार: पुण्यात विकसित केली १० मिनिटांत चार्ज होणारी १००० किमी रेंज सॉलिड-स्टेट बॅटरी."
+  ],
+  "nexvartaShorts": [
+    {
+      "id": "short-1",
+      "tag": "AI",
+      "bg": "#8b5cf6",
+      "title": "AI predicts monsoon with 95% accuracy",
+      "category": "Tech"
+    },
+    {
+      "id": "short-2",
+      "tag": "EV",
+      "bg": "#ef4444",
+      "title": "EV sales cross 2M mark in 2026",
+      "category": "Automotive"
+    },
+    {
+      "id": "short-3",
+      "tag": "CRICKET",
+      "bg": "#f59e0b",
+      "title": "India beats Australia in ODI series",
+      "category": "Sports"
+    },
+    {
+      "id": "short-4",
+      "tag": "HEALTH",
+      "bg": "#0d9488",
+      "title": "New dengue vaccine approved",
+      "category": "Healthcare"
+    },
+    {
+      "id": "short-5",
+      "tag": "STARTUP",
+      "bg": "#ec4899",
+      "title": "Pune startup raises $50M Series B",
+      "category": "Business"
+    },
+    {
+      "id": "short-6",
+      "tag": "SPACE",
+      "bg": "#3b82f6",
+      "title": "Private firms to launch satellites",
+      "category": "Science"
+    }
+  ],
+  "liveTv": {
+    "title": "NEXVARTA NEWS 24x7 HD",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    "status": "LIVE",
+    "viewers": "१४,२५०+ लाइव्ह"
+  },
+  "subscriptionPlan": {
+    "name": "Nexvarta All-Access Creator Pass",
+    "badge": "सर्व-समावेशक पास (All-in-One)",
+    "description": "यूट्यूबर्स, इन्स्टाग्राम न्यूज पेजेस आणि डिजिटल मीडिया चॅनेल्ससाठी एकच संपूर्ण सोल्यूशन.",
+    "pricing": {
+      "monthly": {
+        "price": 799,
+        "display": "₹799",
+        "billing": "/ महिना",
+        "savings": null
+      },
+      "yearly": {
+        "price": 6999,
+        "display": "₹6,999",
+        "billing": "/ वर्ष",
+        "savings": "२ महिने मोफत (Save 27%)"
+      }
+    },
+    "features": [
+      "दोन्ही फॉरमॅट्स: 9:16 व्हर्टिकल रील्स आणि 16:9 Full HD/4K व्हिडिओ",
+      "१००% वॉटरमार्क फ्री (No Watermark) हाय-स्पीड डाऊनलोड",
+      "रेडीमेड न्यूज स्क्रिप्ट (मराठी आणि इंग्रजी दोन्हीमध्ये)",
+      "क्लीन ऑडिओ बाईट्स आणि रेकॉर्डेड व्हॉइसओव्हर (MP3)",
+      "रेडी पोस्ट थंबनेल आणि सोशल मीडिया ग्राफिक्स",
+      "१००% कमर्शियल रॉयल्टी-फ्री लायसन्स (यूट्यूब मॉनिटायझेशन सुरक्षित)",
+      "दररोज ताजी ऑन-ग्राउंड आणि ब्रेकिंग न्यूज अपडेट्स"
+    ]
+  },
+  "newsSections": [
+    {
+      "id": "maharashtra",
+      "name": "Maharashtra News",
+      "slug": "maharashtra",
+      "color": "#ea580c",
+      "banners": [
+        {
+          "id": "b-m1",
+          "title": "INDUSTRIAL POLICY",
+          "color": "#10b981"
+        },
+        {
+          "id": "b-m2",
+          "title": "FARM LOAN WAIVER",
+          "color": "#f59e0b"
+        },
+        {
+          "id": "b-m3",
+          "title": "EXPRESSWAY 120KMPH",
+          "color": "#6366f1"
+        },
+        {
+          "id": "b-m4",
+          "title": "NASHIK GRAPES",
+          "color": "#7c3aed"
+        },
+        {
+          "id": "b-m5",
+          "title": "KONKAN CRUISE",
+          "color": "#06b6d4"
+        }
+      ],
+      "articles": [
+        {
+          "id": "maha-1",
+          "badge": "ECONOMY",
+          "badgeColor": "#10b981",
+          "title": "Maharashtra New Industrial Policy 2026 announced, MSME loans up to 5 lakh...",
+          "summary": "Government targets 10 lakh new jobs with focus on green manufacturing. Single-window clearance and land allocation incentives expanded across Tier-2 cities.",
+          "fullContent": "The state cabinet unveiled the comprehensive Maharashtra New Industrial Policy 2026, offering collateral-free low-interest capital loans up to ₹5 lakh for new micro-enterprises and women-led rural industries. The policy introduces single-day industrial approvals through the Maitri 2.0 digital portal.",
+          "date": "Sep 13, 2026",
+          "author": "Rajesh Gaikwad",
+          "readTime": "4 min read",
+          "views": 34723,
+          "shares": 1562,
+          "downloads": 416,
+          "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "maha-2",
+          "badge": "AGRICULTURE",
+          "badgeColor": "#f59e0b",
+          "title": "Farm loan waiver phase 2 begins, 12 lakh farmers to benefit from Oct 1",
+          "summary": "Rs 10,000 crore allocation announced for drought-affected districts. Online portal launched for direct benefit transfer into farmer accounts without paperwork.",
+          "fullContent": "Addressing a press conference at Mantralaya, the Agriculture Minister announced the rollout of Phase 2 of the agrarian debt relief framework. Over 12 lakh eligible agricultural landholders across Marathwada, Vidarbha, and North Maharashtra will receive direct settlement credits into verified bank accounts.",
+          "date": "Sep 13, 2026",
+          "author": "Vilas Jadhav",
+          "readTime": "3 min read",
+          "views": 44447,
+          "shares": 2000,
+          "downloads": 533,
+          "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "maha-3",
+          "badge": "INFRASTRUCTURE",
+          "badgeColor": "#6366f1",
+          "title": "Mumbai-Pune Expressway speed limit raised to 120 kmph, new rules effective...",
+          "summary": "Lane discipline and automated challans for violations implemented. Advanced highway monitoring system with 180 camera points deployed across the ghat section.",
+          "fullContent": "The Maharashtra State Road Development Corporation (MSRDC) has officially revised the maximum permissible speed on straight stretches of the Yashwantrao Chavan Mumbai-Pune Expressway to 120 kmph for light motor vehicles.",
+          "date": "Sep 13, 2026",
+          "author": "Sanjay Pawar",
+          "readTime": "3 min read",
+          "views": 19790,
+          "shares": 890,
+          "downloads": 237,
+          "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "maha-4",
+          "badge": "EXPORT",
+          "badgeColor": "#7c3aed",
+          "title": "Nashik grape exports surge 40%, European demand boosts farmer income",
+          "summary": "Record 2.5 lakh tonne shipment to UK and Netherlands this season. Cold chain infrastructure upgrades help Nashik farmers fetch record prices per container.",
+          "fullContent": "Nashik's grape growers celebrate an unprecedented export cycle with overseas dispatches surging by 40% over the previous fiscal year. Improved cold-chain logistics hubs and APEDA residue monitoring labs in Dindori and Niphad have enabled direct refrigerated ocean container shipments.",
+          "date": "Sep 13, 2026",
+          "author": "Mahesh Bhamare",
+          "readTime": "3 min read",
+          "views": 17737,
+          "shares": 798,
+          "downloads": 212,
+          "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&q=80",
+          "status": "review"
+        },
+        {
+          "id": "maha-5",
+          "badge": "TOURISM",
+          "badgeColor": "#06b6d4",
+          "title": "Konkan tourism boom: New cruise service Mumbai-Goa launches",
+          "summary": "Luxury overnight cruise offers coastal stops at Alibaug and Ratnagiri. Service expected to attract 5 lakh tourists along Maharashtra's pristine coastline.",
+          "fullContent": "Coastal tourism received a massive stimulus today with the maiden voyage of the Konkan Voyager coastal passenger liner. Departing from Mumbai International Cruise Terminal, the ship navigates scenic Konkan waters with scheduled stopovers.",
+          "date": "Sep 13, 2026",
+          "author": "Pooja Sawant",
+          "readTime": "3 min read",
+          "views": 39085,
+          "shares": 1758,
+          "downloads": 469,
+          "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1000&q=80",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "id": "pune",
+      "name": "Pune News",
+      "slug": "pune",
+      "color": "#2563eb",
+      "banners": [
+        {
+          "id": "b-p1",
+          "title": "PUNE METRO",
+          "color": "#1d4ed8"
+        },
+        {
+          "id": "b-p2",
+          "title": "IT PARK JOBS",
+          "color": "#f97316"
+        },
+        {
+          "id": "b-p3",
+          "title": "GANESHOTSAV",
+          "color": "#db2777"
+        },
+        {
+          "id": "b-p4",
+          "title": "SPPU AI DEGREE",
+          "color": "#7c3aed"
+        },
+        {
+          "id": "b-p5",
+          "title": "HADAPSAR HOSPITAL",
+          "color": "#0d9488"
+        }
+      ],
+      "articles": [
+        {
+          "id": "pune-1",
+          "badge": "TRANSPORT",
+          "badgeColor": "#f97316",
+          "title": "Pune Metro: Hinjewadi-Shivajinagar line inaugurated, cuts travel to 15 mins",
+          "summary": "New IT corridor connectivity reduces commute time drastically. Daily ridership expected to cross 2 lakh with integrated multi-modal transit at key junction stations.",
+          "fullContent": "The eagerly awaited Hinjewadi to Shivajinagar elevated Metro Line 3 commenced official commercial operations today. Spanning 23 kilometers with 23 state-of-the-art stations, the new <span style=\"color: #7c3aed\">rapid transit system bypa</span>sses chronic traffic chokepoints along Baner, Wakad, and Pashan. Commuters reported completing the journey in under 18 minutes compared to the typical 90-minute road commute during peak hours.",
+          "date": "Sep 13, 2026",
+          "author": "Prashant Patil",
+          "readTime": "3 min read",
+          "views": 35678,
+          "shares": 1605,
+          "downloads": 428,
+          "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1000&q=80",
+          "status": "scheduled"
+        },
+        {
+          "id": "pune-2",
+          "badge": "EMPLOYMENT",
+          "badgeColor": "#2563eb",
+          "title": "IT Park to create 5000 jobs in Hinjewadi Phase-3, major hiring drive",
+          "summary": "Leading tech firms announce campus recruitment. Phase-3 expansion includes AI labs and fintech zones targeting skilled engineers and fresh graduates across Maharashtra.",
+          "fullContent": "The Maharashtra Industrial Development Corporation (MIDC) and Hinjewadi Industries Association announced the completion of Phase-3 IT infrastructure development. Four premier tech multinational corporations and six burgeoning AI unicorns are launching dedicated engineering centers, generating an estimated 5,000 direct technical positions.",
+          "date": "Sep 13, 2026",
+          "author": "Snehal Joshi",
+          "readTime": "4 min read",
+          "views": 52754,
+          "shares": 2373,
+          "downloads": 633,
+          "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "pune-3",
+          "badge": "CULTURE",
+          "badgeColor": "#ec4899",
+          "title": "Ganeshotsav 2026: Pune gears up with 2000+ mandals, AI security deployed",
+          "summary": "City implements smart surveillance and crowd management for biggest festival. Drone monitoring and automated heat-mapping activated across Laxmi Road and historic core.",
+          "fullContent": "With Ganeshotsav 2026 commencing this week, Pune City Police and the Municipal Corporation have rolled out the country's most advanced smart-crowd management grid. Over 1,200 high-definition AI-enabled cameras have been positioned at key junction points, tracking real-time pedestrian density.",
+          "date": "Sep 13, 2026",
+          "author": "Omkar Deshmukh",
+          "readTime": "3 min read",
+          "views": 48810,
+          "shares": 2196,
+          "downloads": 585,
+          "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "pune-4",
+          "badge": "EDUCATION",
+          "badgeColor": "#7c3aed",
+          "title": "Savitribai Phule Pune University launches AI & Data Science degree",
+          "summary": "New 4-year program partners with tech giants for industry curriculum. Focus on generative AI, MLOps and real-world industrial research projects.",
+          "fullContent": "Savitribai Phule Pune University (SPPU) announced its cutting-edge B.Tech and M.Tech curriculum in Applied Artificial Intelligence and High-Performance Data Science. Designed in consultation with Pune's tech corridor leaders, the degree incorporates 12 months of mandatory industry residency.",
+          "date": "Sep 13, 2026",
+          "author": "Kavita Kulkarni",
+          "readTime": "3 min read",
+          "views": 55053,
+          "shares": 2477,
+          "downloads": 660,
+          "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "pune-5",
+          "badge": "HEALTHCARE",
+          "badgeColor": "#0d9488",
+          "title": "New 500-bed super-specialty hospital opens in Hadapsar",
+          "summary": "State-of-the-art facility offers robotic surgery and cancer care. Hospital equipped with AI diagnostics and dedicated emergency cardiac trauma unit.",
+          "fullContent": "Pune's eastern growth corridor received a major medical boost with the inauguration of a 500-bed multi-specialty healthcare complex in Hadapsar. Featuring next-generation robotic surgery suites, linear accelerator cancer radiotherapy, and a dedicated 50-bed pediatric ICU.",
+          "date": "Sep 13, 2026",
+          "author": "Dr. Aniket Shinde",
+          "readTime": "2 min read",
+          "views": 51471,
+          "shares": 2316,
+          "downloads": 617,
+          "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&q=80",
+          "status": "scheduled",
+          "scheduledAt": "2026-09-18T07:30"
+        }
+      ]
+    },
+    {
+      "id": "india",
+      "name": "India News",
+      "slug": "india",
+      "color": "#1d4ed8",
+      "banners": [
+        {
+          "id": "b-i1",
+          "title": "DIGITAL INDIA 10Y",
+          "color": "#1d4ed8"
+        },
+        {
+          "id": "b-i2",
+          "title": "CHANDRAYAAN-4",
+          "color": "#ef4444"
+        },
+        {
+          "id": "b-i3",
+          "title": "NEP 2026",
+          "color": "#10b981"
+        }
+      ],
+      "articles": [
+        {
+          "id": "india-1",
+          "badge": "GOVERNANCE",
+          "badgeColor": "#1d4ed8",
+          "title": "Digital India completes 10 years: Rural digital connectivity reaches 98%",
+          "summary": "Over 600,000 villages connected via optical fiber network. UPI and DigiLocker usage sees 300% growth across tier-3 towns and rural panchayats.",
+          "fullContent": "Celebrating a decade of Digital India, national telecom authorities confirmed high-speed optical fiber connectivity has been operationalized across 98% of gram panchayats.",
+          "date": "Sep 13, 2026",
+          "author": "Rohan Verma",
+          "readTime": "4 min read",
+          "views": 43984,
+          "shares": 1979,
+          "downloads": 527,
+          "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "india-2",
+          "badge": "SPACE TECH",
+          "badgeColor": "#ef4444",
+          "title": "ISRO reveals Chandrayaan-4 sample return mission flight plan",
+          "summary": "Lunar sample return scheduled with dual-launch docking architecture and indigenous rover targeting the Moon's South Pole.",
+          "fullContent": "ISRO released the official mission architecture for Chandrayaan-4, representing India's boldest deep-space endeavor to date. The mission involves two LVM3 rocket launches.",
+          "date": "Sep 13, 2026",
+          "author": "Devendra Rao",
+          "readTime": "4 min read",
+          "views": 17835,
+          "shares": 802,
+          "downloads": 214,
+          "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "india-3",
+          "badge": "EDUCATION",
+          "badgeColor": "#10b981",
+          "title": "NEP 2026: 10,000 schools modernized with AI labs and robotics curriculum",
+          "summary": "National Education Policy rollout enters phase 3 with experiential coding, regional language instruction, and smart classrooms across all states.",
+          "fullContent": "The Ministry of Education reported universal adoption of the new 5+3+3+4 schooling model across 28 states. Over 10,000 government model schools have received computational robotics kits.",
+          "date": "Sep 13, 2026",
+          "author": "Meera Nair",
+          "readTime": "3 min read",
+          "views": 27611,
+          "shares": 1242,
+          "downloads": 331,
+          "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1000&q=80",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "name": "Tech News",
+      "slug": "tech",
+      "color": "#10b981",
+      "banners": [
+        {
+          "id": "b-t1",
+          "title": "EV BATTERY",
+          "color": "#10b981"
+        },
+        {
+          "id": "b-t2",
+          "title": "UPI GLOBAL",
+          "color": "#f59e0b"
+        }
+      ],
+      "articles": [
+        {
+          "id": "tech-1",
+          "badge": "AUTOMOTIVE",
+          "badgeColor": "#10b981",
+          "title": "Tata unveils 1000km range EV battery with 10-minute charging tech",
+          "summary": "Solid-state battery developed in Pune R&D center enters production. New tech reduces costs by 40% and delivers ultra-fast thermal stability.",
+          "fullContent": "In a landmark automotive breakthrough, engineers at Tata's Pune advanced technology facility demonstrated an operational solid-state silicon-anode battery pack.",
+          "date": "Sep 13, 2026",
+          "author": "Aditya Roy",
+          "readTime": "3 min read",
+          "views": 52608,
+          "shares": 2367,
+          "downloads": 631,
+          "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "tech-2",
+          "badge": "FINTECH",
+          "badgeColor": "#f59e0b",
+          "title": "UPI expands to 15 countries: Japan, South Korea latest to adopt",
+          "summary": "NPCI signs MoU for cross-border payments with zero transaction fees. Indian tourists can now pay seamlessly using standard QR codes across Tokyo and Seoul.",
+          "fullContent": "NPCI International Payments Ltd (NIPL) solidified historic payment integration pacts with major banking consortiums in Tokyo and Seoul.",
+          "date": "Sep 13, 2026",
+          "author": "Tanvi Saxena",
+          "readTime": "3 min read",
+          "views": 38575,
+          "shares": 1735,
+          "downloads": 462,
+          "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1000&q=80",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "id": "sports",
+      "name": "Sports News",
+      "slug": "sports",
+      "color": "#dc2626",
+      "banners": [
+        {
+          "id": "b-s1",
+          "title": "ASIAN GAMES",
+          "color": "#2563eb"
+        },
+        {
+          "id": "b-s2",
+          "title": "IPL AUCTION",
+          "color": "#f97316"
+        },
+        {
+          "id": "b-s3",
+          "title": "BADMINTON GOLD",
+          "color": "#10b981"
+        },
+        {
+          "id": "b-s4",
+          "title": "FOOTBALL ISL",
+          "color": "#7c3aed"
+        },
+        {
+          "id": "b-s5",
+          "title": "HOCKEY PRO LEAGUE",
+          "color": "#ef4444"
+        }
+      ],
+      "articles": [
+        {
+          "id": "sports-1",
+          "badge": "MULTI-SPORT",
+          "badgeColor": "#2563eb",
+          "title": "India tops Asian Games 2026 medal tally with 112 medals in Aichi",
+          "summary": "Athletics and shooting teams deliver record 38 gold medals for India. Young athletes under 21 contribute 60% of podium finishes.",
+          "fullContent": "The Indian contingent scripted history at the 20th Asian Games in Aichi-Nagoya, finishing in top positions with an unprecedented haul of 112 total medals, including 38 Gold, 42 Silver, and 32 Bronze.",
+          "date": "Sep 13, 2026",
+          "author": "Sunil Gavaskar Jr.",
+          "readTime": "4 min read",
+          "views": 51462,
+          "shares": 2315,
+          "downloads": 617,
+          "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "sports-2",
+          "badge": "CRICKET",
+          "badgeColor": "#f97316",
+          "title": "IPL 2027 mega auction: Rishabh Pant breaks record at Rs 32 crore",
+          "summary": "Mumbai Indians sign India captain in historic bid at Dubai venue. Total spending crosses Rs 1200 crore as two new franchises enter bidding war.",
+          "fullContent": "The IPL 2027 Player Mega Auction in Dubai saw all previous bidding benchmarks obliterated as dynamic wicketkeeper-batter Rishabh Pant was picked up for a record-shattering ₹32 crore.",
+          "date": "Sep 13, 2026",
+          "author": "Ketan Trivedi",
+          "readTime": "3 min read",
+          "views": 46444,
+          "shares": 2089,
+          "downloads": 557,
+          "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "sports-3",
+          "badge": "BADMINTON",
+          "badgeColor": "#10b981",
+          "title": "PV Sindhu wins World Championship Gold after dominant final",
+          "summary": "Indian shuttler defeats world no.1 in straight sets to claim third title. Victory marks successful comeback after 18-month tactical training in Hyderabad.",
+          "fullContent": "Double Olympic medalist PV Sindhu produced a masterclass performance to triumph in the BWF World Championship final in Copenhagen. Defeating her opponent 21-14, 21-16 with precision smashes.",
+          "date": "Sep 13, 2026",
+          "author": "Aparna Popat",
+          "readTime": "3 min read",
+          "views": 50549,
+          "shares": 2274,
+          "downloads": 606,
+          "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "sports-4",
+          "badge": "FOOTBALL",
+          "badgeColor": "#7c3aed",
+          "title": "ISL season kickoff: Mumbai City FC vs Bengaluru FC tonight",
+          "summary": "League introduces VAR and AI-powered analytics for 2026-27 season. Record 14 teams participate with 3 new promoted clubs from I-League.",
+          "fullContent": "The Indian Super League 2026-27 campaign officially kicks off with high-voltage clash at the Mumbai Football Arena between Mumbai City FC and Bengaluru FC.",
+          "date": "Sep 13, 2026",
+          "author": "Carlton Chapman",
+          "readTime": "3 min read",
+          "views": 16555,
+          "shares": 744,
+          "downloads": 198,
+          "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&q=80",
+          "status": "published"
+        },
+        {
+          "id": "sports-5",
+          "badge": "HOCKEY",
+          "badgeColor": "#ef4444",
+          "title": "Indian hockey teams qualify for Pro League finals 2026",
+          "summary": "Both men's and women's squads reach final four after strong European tour. India to host knockout stage in Bhubaneswar next month.",
+          "fullContent": "In a stellar display of modern fast-paced turf hockey, both the Indian Men's and Women's national squads locked in their spots for the FIH Pro League Grand Finals.",
+          "date": "Sep 13, 2026",
+          "author": "Dilip Tirkey",
+          "readTime": "3 min read",
+          "views": 29508,
+          "shares": 1327,
+          "downloads": 354,
+          "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1000&q=80",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "creatorVideos": [
+    {
+      "id": "vid-01",
+      "title": "Pune Metro Line 3 Inauguration Special Video Package",
+      "format": "9:16",
+      "formatLabel": "9:16 Vertical Reel / Shorts",
+      "category": "Pune News",
+      "duration": "0:58 min",
+      "resolution": "1080x1920 Full HD",
+      "fps": "60 FPS",
+      "date": "Sep 13, 2026",
+      "thumbnail": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80",
+      "previewVideo": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "scriptMarathi": "पुणेकरांसाठी आजचा दिवस ऐतिहासिक! हिंजवडी ते शिवाजीनगर मेट्रो लाईन ३ चे आज लोकार्पण झाले. तब्बल २३ किमीचा हा मार्ग अवघ्या १५ ते १८ मिनिटांत पार होणार आहे...",
+      "scriptEnglish": "A historic day for Punekars! Metro Line 3 connecting Hinjewadi to Shivajinagar officially commenced operations today. Reduces commute to under 18 minutes...",
+      "fileSize": "84.5 MB",
+      "downloadsCount": 312
+    },
+    {
+      "id": "vid-02",
+      "title": "Maharashtra Industrial Policy 2026: ₹5 Lakh MSME Loans & Subsidies",
+      "format": "16:9",
+      "formatLabel": "16:9 Landscape Broadcast Pack",
+      "category": "Maharashtra",
+      "duration": "2:45 min",
+      "resolution": "3840x2160 4K UHD",
+      "fps": "60 FPS",
+      "date": "Sep 13, 2026",
+      "thumbnail": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+      "previewVideo": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "scriptMarathi": "महाराष्ट्र शासनाने जाहीर केले नवीन औद्योगिक धोरण २०२६! तरुणांना आणि महिला उद्योजकांना ५ लाख रुपयांपर्यंत विनातारण कर्ज, वीज बिलात ४०% सवलत...",
+      "scriptEnglish": "Maharashtra Government announces New Industrial Policy 2026 with collateral-free MSME loans up to ₹5 Lakh...",
+      "fileSize": "245.8 MB",
+      "downloadsCount": 189
+    },
+    {
+      "id": "vid-03",
+      "title": "Ganeshotsav 2026 AI Security & Crowd Management Drone Footage",
+      "format": "9:16",
+      "formatLabel": "9:16 Vertical Reel / Shorts",
+      "category": "Culture",
+      "duration": "0:45 min",
+      "resolution": "1080x1920 Full HD",
+      "fps": "60 FPS",
+      "date": "Sep 13, 2026",
+      "thumbnail": "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=800&q=80",
+      "previewVideo": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "scriptMarathi": "पुण्यातील जगप्रसिद्ध गणेशोत्सवासाठी यंदा प्रथमच एआय (AI) ड्रोन आणि स्मार्ट सर्व्हेलन्स तैनात! २,००० हून अधिक मंडळांमध्ये गर्दीचे रिअल-टाइम मॅपिंग...",
+      "scriptEnglish": "Pune's historic Ganeshotsav 2026 equipped with AI drone surveillance and smart heat-mapping across 2,000+ mandals...",
+      "fileSize": "68.2 MB",
+      "downloadsCount": 420
+    },
+    {
+      "id": "vid-04",
+      "title": "Tata Solid-State 1000km Battery: Live Pune R&D Demonstration",
+      "format": "16:9",
+      "formatLabel": "16:9 Landscape Broadcast Pack",
+      "category": "Tech News",
+      "duration": "3:10 min",
+      "resolution": "1920x1080 Full HD",
+      "fps": "60 FPS",
+      "date": "Sep 13, 2026",
+      "thumbnail": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80",
+      "previewVideo": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+      "scriptMarathi": "इलेक्ट्रिक वाहनांच्या जगात भारताची मोठी झेप! टाटा मोटर्सच्या पुणे रिसर्च सेंटरने शोधली १००० किमी धावणारी सॉलिड-स्टेट बॅटरी...",
+      "scriptEnglish": "India's massive leap in electric mobility! Tata Motors unveils a breakthrough 1,000 km solid-state silicon-anode battery...",
+      "fileSize": "192.4 MB",
+      "downloadsCount": 275
+    },
+    {
+      "id": "vid-05",
+      "title": "IPL Mega Auction: Rishabh Pant Record ₹32 Crore Historic Bidding War",
+      "format": "9:16",
+      "formatLabel": "9:16 Vertical Reel / Shorts",
+      "category": "Sports News",
+      "duration": "0:52 min",
+      "resolution": "1080x1920 Full HD",
+      "fps": "60 FPS",
+      "date": "Sep 13, 2026",
+      "thumbnail": "https://images.unsplash.com/photo-1531415074868-036b1c57e329?w=800&q=80",
+      "previewVideo": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "scriptMarathi": "आयपीएलच्या इतिहासातील सर्वात मोठी बोली! ऋषभ पंत तब्बल ३२ कोटी रुपयांना मुंबई इंडियन्सच्या ताफ्यात...",
+      "scriptEnglish": "The biggest bid in cricket auction history! Rishabh Pant shatters all benchmarks with a historic ₹32 crore deal...",
+      "fileSize": "73.1 MB",
+      "downloadsCount": 560
+    },
+    {
+      "id": "vid-06",
+      "title": "Nashik Grape Export Surge 40%: Cold-Chain Tech & Farmer Success Stories",
+      "format": "16:9",
+      "formatLabel": "16:9 Landscape Broadcast Pack",
+      "category": "Maharashtra",
+      "duration": "2:15 min",
+      "resolution": "1920x1080 Full HD",
+      "fps": "60 FPS",
+      "date": "Sep 13, 2026",
+      "thumbnail": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=800&q=80",
+      "previewVideo": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+      "scriptMarathi": "नाशिकच्या द्राक्षांनी केली युरोपवर मात! ४०% निर्यातीसह शेतकऱ्यांच्या उत्पन्नात विक्रमी वाढ...",
+      "scriptEnglish": "Nashik's grapes conquer European markets with an unprecedented 40% export surge...",
+      "fileSize": "185.0 MB",
+      "downloadsCount": 145
+    }
+  ]
+}
