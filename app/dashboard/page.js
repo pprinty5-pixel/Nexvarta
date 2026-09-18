@@ -218,7 +218,7 @@ export default function SubscriberDashboardPage() {
     const title = vid.title || 'Nexvarta 4K Footage';
     showToast(`📥 "${title}" चे वॉटरमार्क-फ्री 4K बंडल डाऊनलोड होत आहे...`);
     
-    let targetUrl = vid.previewVideo || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+    let targetUrl = vid.previewVideo || '/videos/pune-metro-footage.mp4';
 
     // Google Drive direct download URL conversion
     if (targetUrl.includes('drive.google.com')) {
@@ -1581,7 +1581,7 @@ export default function SubscriberDashboardPage() {
                   controls 
                   autoPlay 
                   playsInline 
-                  src={selectedVideo.previewVideo || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"} 
+                  src={selectedVideo.previewVideo || "/videos/pune-metro-footage.mp4"} 
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                 />
               )}

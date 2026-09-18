@@ -55,7 +55,7 @@ export default function HomePage() {
   const [currentPlan, setCurrentPlan] = useState(subscriptionPlan);
   const [currentLiveTv, setCurrentLiveTv] = useState({
     title: "NEXVARTA NEWS 24x7 HD",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    videoUrl: "/videos/pune-metro-footage.mp4",
     viewers: "१४,२५०+ लाइव्ह"
   });
 
@@ -99,7 +99,7 @@ export default function HomePage() {
     category: 'Pune News',
     format: '9:16',
     thumbnail: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    videoUrl: '/videos/pune-metro-footage.mp4',
     scriptMr: '',
     scriptEn: '',
   });
@@ -222,7 +222,7 @@ ${video.previewVideo}
       date: 'Just Now',
       tags: [adminForm.category, 'Breaking'],
       thumbnail: adminForm.thumbnail || 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80',
-      previewVideo: adminForm.videoUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      previewVideo: adminForm.videoUrl || '/videos/pune-metro-footage.mp4',
       scriptMarathi: adminForm.scriptMr,
       scriptEnglish: adminForm.scriptEn,
       audioByteUrl: 'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg',
@@ -1239,7 +1239,7 @@ ${video.previewVideo}
             </div>
             <div style={{ position: 'relative', aspectRatio: '16/9', background: '#000', borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
               <video autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
-                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4" />
+                <source src="/videos/pune-metro-footage.mp4" type="video/mp4" />
               </video>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b', fontSize: '0.85rem' }}>

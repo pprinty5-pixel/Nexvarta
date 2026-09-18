@@ -1624,7 +1624,7 @@ export default function AdminDashboardPage() {
                     date: 'Just Now',
                     fileSize: '85.0 MB',
                     thumbnail: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80',
-                    previewVideo: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                    previewVideo: '/videos/pune-metro-footage.mp4',
                     scriptMarathi: '',
                     scriptEnglish: '',
                   })}
