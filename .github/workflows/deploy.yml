@@ -36,4 +36,56 @@ jobs:
           pm2 startOrReload ecosystem.config.cjs --update-env
           pm2 save
 
-          echo "✅ Deployment completed successfully!"
+          echo "🔍 Checking local port 3000..."
+          curl -I http://127.0.0.1:3000 || true
+
+          echo "🌐 Configuring OpenLiteSpeed proxy to Next.js..."
+          # Add external processor to server config if not present
+          if [ -f /usr/local/lsws/conf/httpd_config.conf ]; then
+            if ! grep -q "extprocessor nextjs_proxy" /usr/local/lsws/conf/httpd_config.conf; then
+              cat << 'EOF' >> /usr/local/lsws/conf/httpd_config.conf
+
+extprocessor nextjs_proxy {
+  type                    proxy
+  address                 127.0.0.1:3000
+  maxConns                100
+  pcKeepAliveTimeout      60
+  initTimeout             60
+  retryTimeout            0
+  respBuffer              0
+}
+EOF
+            fi
+          fi
+
+          # Configure vhost for nvnews.in with proxy context
+          if [ -d /usr/local/lsws/conf/vhosts/nvnews.in ]; then
+            cat << 'EOF' > /usr/local/lsws/conf/vhosts/nvnews.in/vhconf.conf
+docRoot                   /home/nvnews.in/public_html
+vhDomain                  nvnews.in
+vhAliases                 www.nvnews.in
+adminEmails               admin@nvnews.in
+enableGzip                1
+enableBr                  1
+
+context / {
+  type                    proxy
+  handler                 nextjs_proxy
+  addDefaultCharset       off
+}
+
+rewrite  {
+  enable                  1
+  autoLoadHtaccess        1
+}
+EOF
+          fi
+
+          # Remove conflicting placeholder files
+          rm -f /home/nvnews.in/public_html/index.html
+          rm -f /home/nvnews.in/public_html/.htaccess
+
+          # Restart OpenLiteSpeed web server
+          /usr/local/lsws/bin/lswsctrl restart || systemctl restart lsws
+
+          echo "✅ Deployment and Proxy configured successfully!"
