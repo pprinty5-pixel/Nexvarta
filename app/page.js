@@ -28,6 +28,7 @@ import {
   Printer
 } from 'lucide-react';
 import { openEPaperPrintWindow, downloadEPaperPDF } from '../lib/epaperDownloader';
+import { translations } from '../lib/i18n';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('all');
@@ -39,7 +40,9 @@ export default function HomePage() {
     billing: 'monthly',
   });
 
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('mr');
+  const t = translations[language] || translations.mr;
+
 
   // Dynamic State powered by CMS
   const [currentSiteConfig, setCurrentSiteConfig] = useState(siteConfig);
@@ -119,7 +122,22 @@ export default function HomePage() {
         }
       } catch (e) {}
     }
+
+    try {
+      const savedLang = localStorage.getItem('nexvarta_lang');
+      if (savedLang && (savedLang === 'mr' || savedLang === 'en' || savedLang === 'hi')) {
+        setLanguage(savedLang);
+      }
+    } catch (e) {}
   }, []);
+
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+    try {
+      localStorage.setItem('nexvarta_lang', lang);
+    } catch (e) {}
+    showToast(lang === 'mr' ? 'भाषा: मराठी निवडली' : lang === 'hi' ? 'भाषा: हिंदी चुनी गई' : 'Language: English selected');
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -269,11 +287,11 @@ ${video.previewVideo}
       <div className="super-top-bar">
         <div className="container super-top-inner">
           <div className="super-top-left">
-            <span>{language === 'mr' ? '१३ सप्टेंबर, २०२६' : 'September 13, 2026'}</span>
+            <span>{t.dateDisplay}</span>
             <span className="super-top-divider">|</span>
-            <span>Pune: 28°C</span>
+            <span>{t.puneWeather}</span>
             <span className="super-top-divider">|</span>
-            <span>Mumbai: 30°C</span>
+            <span>{t.mumbaiWeather}</span>
           </div>
           <div className="super-top-right">
             <button 
@@ -281,28 +299,31 @@ ${video.previewVideo}
               style={{ background: 'rgba(255,255,255,0.15)', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}
               onClick={() => setIsEPaperModalOpen(true)}
             >
-              📰 E-Paper
-            </button>
-            <span className="super-top-divider">|</span>
-            <button 
-              className={`super-top-link ${language === 'hi' ? 'active-lang' : ''}`}
-              onClick={() => { setLanguage('hi'); showToast('भाषा: हिंदी निवडली'); }}
-            >
-              हिंदी
+              {t.ePaper}
             </button>
             <span className="super-top-divider">|</span>
             <button 
               className={`super-top-link ${language === 'mr' ? 'active-lang' : ''}`}
-              onClick={() => { setLanguage('mr'); showToast('भाषा: मराठी निवडली'); }}
+              style={language === 'mr' ? { fontWeight: 800, background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 4 } : {}}
+              onClick={() => changeLanguage('mr')}
             >
               मराठी
             </button>
             <span className="super-top-divider">|</span>
             <button 
               className={`super-top-link ${language === 'en' ? 'active-lang' : ''}`}
-              onClick={() => { setLanguage('en'); showToast('Language: English selected'); }}
+              style={language === 'en' ? { fontWeight: 800, background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 4 } : {}}
+              onClick={() => changeLanguage('en')}
             >
               English
+            </button>
+            <span className="super-top-divider">|</span>
+            <button 
+              className={`super-top-link ${language === 'hi' ? 'active-lang' : ''}`}
+              style={language === 'hi' ? { fontWeight: 800, background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 4 } : {}}
+              onClick={() => changeLanguage('hi')}
+            >
+              हिंदी
             </button>
           </div>
         </div>
@@ -327,71 +348,71 @@ ${video.previewVideo}
               className={`nav-link ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              {language === 'mr' ? 'मुख्य पान' : 'Home'}
+              {t.home}
             </button>
             <button 
               className={`nav-link ${activeTab === 'pune' ? 'active' : ''}`}
               onClick={() => setActiveTab('pune')}
             >
-              {language === 'mr' ? 'पुणे' : 'Pune'}
+              {t.pune}
             </button>
             <button 
               className={`nav-link ${activeTab === 'maharashtra' ? 'active' : ''}`}
               onClick={() => setActiveTab('maharashtra')}
             >
-              {language === 'mr' ? 'महाराष्ट्र' : 'Maharashtra'}
+              {t.maharashtra}
             </button>
             <button 
               className={`nav-link ${activeTab === 'india' ? 'active' : ''}`}
               onClick={() => setActiveTab('india')}
             >
-              {language === 'mr' ? 'देश' : 'India'}
+              {t.india}
             </button>
             <button 
               className={`nav-link ${activeTab === 'tech' ? 'active' : ''}`}
               onClick={() => setActiveTab('tech')}
             >
-              {language === 'mr' ? 'टेक' : 'Tech'}
+              {t.tech}
             </button>
             <button 
               className={`nav-link ${activeTab === 'startup' ? 'active' : ''}`}
               onClick={() => setActiveTab('tech')}
             >
-              {language === 'mr' ? 'स्टार्टअप' : 'Startup'}
+              {t.startup}
             </button>
             <button 
               className={`nav-link ${activeTab === 'politics' ? 'active' : ''}`}
               onClick={() => setActiveTab('maharashtra')}
             >
-              {language === 'mr' ? 'राजकारण' : 'Politics'}
+              {t.politics}
             </button>
             <button 
               className={`nav-link ${activeTab === 'sports' ? 'active' : ''}`}
               onClick={() => setActiveTab('sports')}
             >
-              {language === 'mr' ? 'क्रीडा' : 'Sports'}
+              {t.sports}
             </button>
             <a 
               href="#creatorHub" 
               className="nav-link"
             >
-              {language === 'mr' ? 'व्हिडिओ' : 'Video'}
+              {t.video}
             </a>
           </nav>
 
           {/* Actions */}
           <div className="header-actions">
             <button className="live-tv-btn" onClick={() => setIsLiveTvModalOpen(true)}>
-              <span className="live-dot"></span> Live TV
+              <span className="live-dot"></span> {t.liveTv}
             </button>
             <Link href="/dashboard" className="creator-pass-btn" style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '7px 12px', fontSize: '0.8rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 5 }}>
-              👤 माझा डॅशबोर्ड
+              {t.dashboard}
             </Link>
             <Link href="/subscribe" className="creator-pass-btn" style={{ background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', color: '#fff', border: 'none', padding: '7px 14px', fontSize: '0.8rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 5 }}>
-              💎 सबस्क्रिप्शन घ्या
+              {t.subscribe}
             </Link>
             <Link href="/admin" className="creator-pass-btn" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)', padding: '7px 14px', fontSize: '0.8rem' }}>
-              ⚙️ ॲडमिन
+              {t.admin}
             </Link>
           </div>
         </div>
@@ -401,7 +422,7 @@ ${video.previewVideo}
       <div className="breaking-ticker">
         <div className="container ticker-inner">
           <span className="ticker-badge">
-            <span className="ticker-pulse"></span> {language === 'mr' ? 'ब्रेकिंग' : 'BREAKING'}
+            <span className="ticker-pulse"></span> {t.breakingBadge}
           </span>
           <div className="ticker-marquee-wrapper">
             <div className="ticker-marquee-track">
@@ -440,28 +461,28 @@ ${video.previewVideo}
           {/* Left Column: Big Featured Hero Card (Dynamic from CMS) */}
           <Link href={`/news/${heroArticle.id}`} className="hero-featured-card">
             <div className="hero-trending-badge">
-              TRENDING
+              {t.trending}
             </div>
             <div className="hero-featured-center">
               <div className="hero-center-circle">
                 <span className="hero-center-circle-text">
-                  {heroArticle.badge || 'NEXVARTA SPOTLIGHT'}
+                  {heroArticle.badge || 'नेक्सवार्ता विशेष'}
                 </span>
               </div>
             </div>
             <div className="hero-featured-overlay">
               <h2 className="hero-featured-title">
-                {heroArticle.title}
+                {language === 'en' && heroArticle.titleEn ? heroArticle.titleEn : heroArticle.title}
               </h2>
               <p className="hero-featured-desc">
                 {heroArticle.summary}
               </p>
               <div className="hero-featured-meta">
-                <span>{heroArticle.author || 'News Desk'}</span>
+                <span>{heroArticle.author || 'वृत्त कक्ष'}</span>
                 <span>•</span>
-                <span>{heroArticle.date || 'Sep 13, 2026'}</span>
+                <span>{heroArticle.date || t.dateDisplay}</span>
                 <span>•</span>
-                <span>👁️ {heroArticle.views || '48k'} readers</span>
+                <span>👁️ {heroArticle.views || '४८ हजार'} {t.views}</span>
               </div>
             </div>
           </Link>
@@ -470,7 +491,7 @@ ${video.previewVideo}
           <div className="top-stories-column">
             <div className="top-stories-header">
               <span className="top-stories-bar"></span>
-              <span>{language === 'mr' ? 'टॉप स्टोरीज (Top Stories)' : 'Top Stories'}</span>
+              <span>{t.topStories}</span>
             </div>
 
             <div className="top-stories-stack">
@@ -486,10 +507,10 @@ ${video.previewVideo}
                   </div>
                   <div className="top-story-body">
                     <div className="top-story-category" style={{ color: story.badgeColor || '#ea580c' }}>
-                      {story.sectionName?.replace(' News', '') || 'NEWS'}
+                      {story.sectionName || 'बातम्या'}
                     </div>
                     <h3 className="top-story-headline">
-                      {story.title}
+                      {language === 'en' && story.titleEn ? story.titleEn : story.title}
                     </h3>
                     <div className="top-story-date">
                       {story.date}
@@ -506,7 +527,7 @@ ${video.previewVideo}
       <section className="shorts-section">
         <div className="container">
           <div className="section-title-wrap">
-            <h2 className="section-title">Nexvarta Shorts</h2>
+            <h2 className="section-title">{language === 'en' ? 'Nexvarta Shorts' : 'नेक्सवार्ता शॉर्ट्स'}</h2>
             <div className="section-divider"></div>
           </div>
           <div className="shorts-grid">
@@ -514,13 +535,13 @@ ${video.previewVideo}
               <div 
                 key={short.id} 
                 className="short-card"
-                onClick={() => showToast(`⚡ ${short.tag}: ${short.title}`)}
+                onClick={() => showToast(`⚡ ${short.tag}: ${language === 'en' && short.titleEn ? short.titleEn : short.title}`)}
               >
                 <div className="short-banner" style={{ backgroundColor: short.bg }}>
                   {short.tag}
                 </div>
                 <div className="short-body">
-                  {short.title}
+                  {language === 'en' && short.titleEn ? short.titleEn : short.title}
                 </div>
               </div>
             ))}
@@ -533,7 +554,9 @@ ${video.previewVideo}
         <section key={section.id} className="news-category-section" id={section.slug}>
           <div className="container">
             <div className="section-title-wrap">
-              <h2 className="section-title">{section.name}</h2>
+              <h2 className="section-title">
+                {language === 'en' && section.nameEn ? section.nameEn : language === 'hi' && section.nameHi ? section.nameHi : section.name}
+              </h2>
               <div className="section-divider"></div>
             </div>
 
@@ -561,7 +584,7 @@ ${video.previewVideo}
                       {article.watermark && (
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(3px)', color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '3px 8px', letterSpacing: 0.5, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 4 }}>
                           <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444' }}></span>
-                          Nexvarta Exclusive
+                          नेक्सवार्ता विशेष
                         </div>
                       )}
                     </Link>
@@ -571,7 +594,7 @@ ${video.previewVideo}
                   </span>
                   <Link href={`/news/${article.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <h3 className="news-headline" style={{ cursor: 'pointer' }}>
-                      {article.title}
+                      {language === 'en' && article.titleEn ? article.titleEn : article.title}
                     </h3>
                   </Link>
                   <p className="news-summary">
@@ -590,7 +613,7 @@ ${video.previewVideo}
                       href={`/news/${article.id}`}
                       className="news-read-more"
                     >
-                      Read More <span>→</span>
+                      {t.readFull} <span>→</span>
                     </Link>
                   </div>
                 </article>
