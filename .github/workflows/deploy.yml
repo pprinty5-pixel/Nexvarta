@@ -13,6 +13,12 @@ jobs:
       - name: Deploy on VPS
         run: |
           set -e
+
+          # Ensure Node, NPM, and PM2 are in PATH
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          export PATH=$PATH:/usr/local/bin:$HOME/.nvm/versions/node/v20.20.2/bin
+
           echo "🚀 Navigating to project directory..."
           cd /var/www/nexvarta
 
