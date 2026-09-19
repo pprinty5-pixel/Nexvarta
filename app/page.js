@@ -340,6 +340,7 @@ ${video.previewVideo}
                 src={currentSiteConfig.logoUrl} 
                 alt={currentSiteConfig.name || "NEXVARTA"} 
                 style={{ height: 42, maxWidth: 180, objectFit: 'contain' }}
+                onError={(e) => { e.target.style.display = 'none'; }}
               />
             ) : (
               <div className="brand-logo-icon">

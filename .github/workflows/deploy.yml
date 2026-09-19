@@ -23,8 +23,12 @@ jobs:
           cd /var/www/nexvarta
 
           echo "📥 Pulling latest changes from main branch..."
+          # Backup live CMS store before git reset so admin edits are preserved
+          [ -f data/cmsStore.json ] && cp data/cmsStore.json /tmp/cmsStore_runtime.json || true
           git fetch origin main
           git reset --hard origin/main
+          # Restore live CMS store if it existed
+          [ -f /tmp/cmsStore_runtime.json ] && cp /tmp/cmsStore_runtime.json data/cmsStore.json || true
 
           echo "📦 Installing dependencies..."
           npm install --omit=dev
