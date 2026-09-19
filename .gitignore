@@ -27,8 +27,9 @@ yarn-error.log*
 .env
 !.env.example
 
-# vercel
-.vercel
+# data backups
+/data/backups/
+/data/cmsStore_latest.json
 
 # typescript
 *.tsbuildinfo
