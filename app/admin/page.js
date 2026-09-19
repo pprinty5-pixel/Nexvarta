@@ -1509,7 +1509,251 @@ export default function AdminDashboardPage() {
 
               {/* Breaking Tickers Editor */}
               <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, marginBottom: 28 }}>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 14 }}>🔴 ब्रेकिंग न्यूज टिकर (Live Headings)</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 8, color: '#0f172a' }}>
+                      🔴 ब्रेकिंग न्यूज टिकर (Live Headings & Speed Control)
+                    </h3>
+                    <p style={{ color: '#64748b', fontSize: '0.85rem', margin: '4px 0 0 0' }}>
+                      होमपेजवरील फिरणाऱ्या ब्रेकिंग न्यूज बातम्या आणि त्यांचा फिरण्याचा वेग (Scroll Speed) नियंत्रित करा.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => saveCmsData(cmsData)}
+                    disabled={isSaving}
+                    style={{
+                      background: '#ea580c',
+                      color: '#fff',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      padding: '8px 16px',
+                      borderRadius: 8,
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      boxShadow: '0 2px 6px rgba(234,88,12,0.3)'
+                    }}
+                  >
+                    <Save size={15} /> {isSaving ? 'सेव्ह होत आहे...' : 'बदल सेव्ह करा'}
+                  </button>
+                </div>
+
+                {/* ⚡ Ticker Speed Management Panel */}
+                <div style={{
+                  background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: 12,
+                  padding: 20,
+                  marginBottom: 24
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 8, background: '#ea580c', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(234,88,12,0.3)' }}>
+                        <Zap size={20} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '0.98rem', color: '#0f172a' }}>
+                          टिकर फिरण्याचा वेग (Scroll Speed Control)
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
+                          कमी सेकंद = जलद गती | जास्त सेकंद = हळूवार व वाचनीय गती
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Speed category status badge */}
+                    <div style={{
+                      padding: '6px 14px',
+                      borderRadius: 99,
+                      fontWeight: 800,
+                      fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      background: (cmsData.tickerSpeed || 28) <= 18 
+                        ? '#fef2f2' 
+                        : (cmsData.tickerSpeed || 28) <= 25 
+                        ? '#eff6ff' 
+                        : (cmsData.tickerSpeed || 28) <= 35 
+                        ? '#f0fdf4' 
+                        : '#faf5ff',
+                      color: (cmsData.tickerSpeed || 28) <= 18 
+                        ? '#dc2626' 
+                        : (cmsData.tickerSpeed || 28) <= 25 
+                        ? '#2563eb' 
+                        : (cmsData.tickerSpeed || 28) <= 35 
+                        ? '#16a34a' 
+                        : '#9333ea',
+                      border: `1px solid ${(cmsData.tickerSpeed || 28) <= 18 ? '#fecaca' : (cmsData.tickerSpeed || 28) <= 25 ? '#bfdbfe' : (cmsData.tickerSpeed || 28) <= 35 ? '#bbf7d0' : '#e9d5ff'}`
+                    }}>
+                      <Clock size={14} />
+                      <span>
+                        {(cmsData.tickerSpeed || 28) <= 18 
+                          ? `⚡ खूप जलद (${cmsData.tickerSpeed || 28}s)` 
+                          : (cmsData.tickerSpeed || 28) <= 25 
+                          ? `🚀 वेगवान (${cmsData.tickerSpeed || 28}s)` 
+                          : (cmsData.tickerSpeed || 28) <= 35 
+                          ? `⚖️ संतुलित / मध्यम (${cmsData.tickerSpeed || 28}s)` 
+                          : `📖 हळूवार / वाचनीय (${cmsData.tickerSpeed || 28}s)`}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Preset Speed Buttons */}
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+                    {[
+                      { label: '⚡ जलद (15s)', val: 15 },
+                      { label: '🚀 वेगवान (22s)', val: 22 },
+                      { label: '⚖️ मध्यम / डीफॉल्ट (28s)', val: 28 },
+                      { label: '📖 हळूवार / वाचनीय (38s)', val: 38 },
+                      { label: '🐢 अतिशय हळू (50s)', val: 50 }
+                    ].map(preset => {
+                      const isSelected = (cmsData.tickerSpeed || 28) === preset.val;
+                      return (
+                        <button
+                          key={preset.val}
+                          type="button"
+                          onClick={() => {
+                            const updated = { ...cmsData, tickerSpeed: preset.val };
+                            setCmsData(updated);
+                          }}
+                          style={{
+                            padding: '6px 14px',
+                            borderRadius: 8,
+                            fontSize: '0.82rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                            border: isSelected ? '2px solid #ea580c' : '1px solid #cbd5e1',
+                            background: isSelected ? '#ea580c' : '#ffffff',
+                            color: isSelected ? '#ffffff' : '#334155',
+                            boxShadow: isSelected ? '0 2px 6px rgba(234,88,12,0.3)' : 'none'
+                          }}
+                        >
+                          {preset.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Range Slider & Manual Stepper */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, background: '#ffffff', padding: '12px 16px', borderRadius: 8, border: '1px solid #e2e8f0', marginBottom: 14 }}>
+                    <Sliders size={18} style={{ color: '#64748b' }} />
+                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#dc2626', minWidth: 65 }}>१०s (जलद)</span>
+                    <input 
+                      type="range"
+                      min="10"
+                      max="60"
+                      step="1"
+                      value={cmsData.tickerSpeed || 28}
+                      onChange={(e) => {
+                        const updated = { ...cmsData, tickerSpeed: parseInt(e.target.value, 10) };
+                        setCmsData(updated);
+                      }}
+                      style={{ flex: 1, accentColor: '#ea580c', cursor: 'pointer', height: 6 }}
+                    />
+                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', minWidth: 65, textAlign: 'right' }}>६०s (हळू)</span>
+                    
+                    {/* Stepper buttons */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 8, borderLeft: '1px solid #e2e8f0', paddingLeft: 12 }}>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const current = cmsData.tickerSpeed || 28;
+                          if (current > 10) {
+                            setCmsData({ ...cmsData, tickerSpeed: current - 2 });
+                          }
+                        }}
+                        title="२ सेकंद वेग वाढवा"
+                        style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, cursor: 'pointer' }}
+                      >
+                        -
+                      </button>
+                      <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a', minWidth: 42, textAlign: 'center' }}>
+                        {cmsData.tickerSpeed || 28}s
+                      </span>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const current = cmsData.tickerSpeed || 28;
+                          if (current < 60) {
+                            setCmsData({ ...cmsData, tickerSpeed: current + 2 });
+                          }
+                        }}
+                        title="२ सेकंद वेग कमी करा (हळू)"
+                        style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, cursor: 'pointer' }}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Live Simulation Preview in Admin */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Eye size={14} style={{ color: '#ea580c' }} /> थेट प्रिव्ह्यू (Live Simulation - {cmsData.tickerSpeed || 28} सेकंद):
+                      </span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                        होमपेजवर या वेगाने बातमी पट्टी फिरेल
+                      </span>
+                    </div>
+
+                    <div style={{
+                      background: '#0f172a',
+                      borderRadius: 8,
+                      padding: '8px 12px',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      border: '1px solid #1e293b'
+                    }}>
+                      <div style={{
+                        background: '#dc2626',
+                        color: '#ffffff',
+                        fontSize: '0.72rem',
+                        fontWeight: 900,
+                        padding: '3px 8px',
+                        borderRadius: 4,
+                        whiteSpace: 'nowrap',
+                        letterSpacing: 0.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4
+                      }}>
+                        <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#fff' }}></span>
+                        LIVE
+                      </div>
+
+                      <div style={{ flex: 1, overflow: 'hidden', position: 'relative', whiteSpace: 'nowrap' }}>
+                        <div 
+                          key={cmsData.tickerSpeed || 28}
+                          style={{
+                            display: 'inline-flex',
+                            whiteSpace: 'nowrap',
+                            animation: `tickerScroll ${cmsData.tickerSpeed || 28}s linear infinite`
+                          }}
+                        >
+                          {(cmsData.breakingTickers || []).concat(cmsData.breakingTickers || []).map((t, idx) => (
+                            <span key={idx} style={{ color: '#f8fafc', fontSize: '0.84rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', marginRight: 24 }}>
+                              <span>{t}</span>
+                              <span style={{ color: '#ea580c', marginLeft: 16 }}>•</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Breaking News Headings List */}
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>
+                  📝 ब्रेकिंग न्यूज मथळे (Live Headings List)
+                </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
                   {cmsData.breakingTickers.map((ticker, idx) => (
                     <div key={idx} style={{ display: 'flex', gap: 10 }}>

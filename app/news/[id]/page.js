@@ -32,6 +32,7 @@ export default function DedicatedArticlePage() {
     "पुणे मेट्रो: हिंजवडी-शिवाजीनगर मेट्रो ३ चे लोकार्पण, प्रवासाचा वेळ ९० मिनिटांवरून अवघ्या १८ मिनिटांवर!",
     "महाराष्ट्र नवीन औद्योगिक धोरण २०२६: एमएसएमई उद्योगांना ५ लाखांपर्यंत बिनव्याजी कर्ज, १० लाख नव्या नोकऱ्यांचे उद्दिष्ट."
   ]);
+  const [tickerSpeed, setTickerSpeed] = useState(28);
   const [currentShorts, setCurrentShorts] = useState(nexvartaShorts);
   const [toastMessage, setToastMessage] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -45,6 +46,7 @@ export default function DedicatedArticlePage() {
           if (data.siteConfig) setCurrentSiteConfig(data.siteConfig);
           if (data.newsSections) setCurrentSections(data.newsSections);
           if (data.breakingTickers) setCurrentTickers(data.breakingTickers);
+          if (data.tickerSpeed) setTickerSpeed(Number(data.tickerSpeed));
           if (data.nexvartaShorts) setCurrentShorts(data.nexvartaShorts);
         }
       })
@@ -146,7 +148,7 @@ export default function DedicatedArticlePage() {
             <span className="ticker-pulse"></span> BREAKING
           </span>
           <div className="ticker-marquee-wrapper">
-            <div className="ticker-marquee-track">
+            <div className="ticker-marquee-track" style={{ animationDuration: `${tickerSpeed || 28}s` }}>
               {currentTickers.map((t, i) => (
                 <span key={`nt1-${i}`} className="ticker-item">
                   <span>{t}</span>
@@ -195,6 +197,9 @@ export default function DedicatedArticlePage() {
 
           {/* Actions */}
           <div className="header-actions">
+            <Link href="/" className="live-tv-btn" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
+              <span className="live-dot"></span> Live TV
+            </Link>
             <Link href="/admin" className="creator-pass-btn desktop-only" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)' }}>
               ⚙️ ॲडमिन
             </Link>

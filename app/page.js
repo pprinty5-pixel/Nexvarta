@@ -50,6 +50,7 @@ export default function HomePage() {
     "पुणे मेट्रो: हिंजवडी-शिवाजीनगर मेट्रो ३ चे लोकार्पण, प्रवासाचा वेळ ९० मिनिटांवरून अवघ्या १८ मिनिटांवर!",
     "महाराष्ट्र नवीन औद्योगिक धोरण २०२६: एमएसएमई उद्योगांना ५ लाखांपर्यंत बिनव्याजी कर्ज, १० लाख नव्या नोकऱ्यांचे उद्दिष्ट."
   ]);
+  const [tickerSpeed, setTickerSpeed] = useState(28);
   const [currentShorts, setCurrentShorts] = useState(nexvartaShorts);
   const [currentSections, setCurrentSections] = useState(newsSections);
   const [currentPlan, setCurrentPlan] = useState(subscriptionPlan);
@@ -70,6 +71,7 @@ export default function HomePage() {
         if (data) {
           if (data.siteConfig) setCurrentSiteConfig(data.siteConfig);
           if (data.breakingTickers) setCurrentTickers(data.breakingTickers);
+          if (data.tickerSpeed) setTickerSpeed(Number(data.tickerSpeed));
           if (data.nexvartaShorts) setCurrentShorts(data.nexvartaShorts);
           if (data.newsSections) setCurrentSections(data.newsSections);
           if (data.subscriptionPlan) setCurrentPlan(data.subscriptionPlan);
@@ -435,7 +437,7 @@ ${video.previewVideo}
             <span className="ticker-pulse"></span> {t.breakingBadge}
           </span>
           <div className="ticker-marquee-wrapper">
-            <div className="ticker-marquee-track">
+            <div className="ticker-marquee-track" style={{ animationDuration: `${tickerSpeed || 28}s` }}>
               {/* Continuous loop 1 */}
               {(currentTickers.length > 0 ? currentTickers : [
                 "ISRO approves Chandrayaan-4 mission, aims to send humans to Moon by 2027",
