@@ -54,13 +54,15 @@ export async function generateMetadata({ params }) {
   const description = article.summary || (article.fullContent ? article.fullContent.replace(/<[^>]*>?/gm, '').slice(0, 160) : '') || currentConfig?.tagline || 'नेक्सवार्ता - बातमीचा नवा आणि विश्वासार्ह आवाज';
 
   // Resolve absolute image URL for WhatsApp / Facebook
-  let ogImageUrl = `https://nvnews.in/api/og/article?id=${encodeURIComponent(id)}`;
+  let ogImageUrl = 'https://nvnews.in/uploads/logos/nexvarta_official_logo.png';
 
-  if (article.image && !article.image.startsWith('data:')) {
+  if (article.image) {
     if (article.image.startsWith('http://') || article.image.startsWith('https://')) {
       ogImageUrl = article.image;
-    } else {
-      ogImageUrl = `https://nvnews.in${article.image.startsWith('/') ? '' : '/'}${article.image}`;
+    } else if (article.image.startsWith('/')) {
+      ogImageUrl = `https://nvnews.in${article.image}`;
+    } else if (article.image.startsWith('data:image/')) {
+      ogImageUrl = `https://nvnews.in/api/og/article?id=${encodeURIComponent(id)}`;
     }
   }
 
