@@ -418,15 +418,6 @@ ${video.previewVideo}
             <button className="live-tv-btn" onClick={() => setIsLiveTvModalOpen(true)}>
               <span className="live-dot"></span> {t.liveTv}
             </button>
-            <Link href="/dashboard" className="creator-pass-btn desktop-only" style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '7px 12px', fontSize: '0.8rem', fontWeight: 800, alignItems: 'center', gap: 5 }}>
-              {t.dashboard}
-            </Link>
-            <Link href="/subscribe" className="creator-pass-btn desktop-only" style={{ background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', color: '#fff', border: 'none', padding: '7px 14px', fontSize: '0.8rem', fontWeight: 800, alignItems: 'center', gap: 5 }}>
-              {t.subscribe}
-            </Link>
-            <Link href="/admin" className="creator-pass-btn desktop-only" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)', padding: '7px 14px', fontSize: '0.8rem' }}>
-              {t.admin}
-            </Link>
           </div>
         </div>
       </header>
@@ -948,8 +939,11 @@ ${video.previewVideo}
             </div>
           </div>
 
-          <div className="footer-bottom">
-            © 2026 Nexvarta Media Pvt. Ltd. All rights reserved. | Headquarters: Pimpri, Maharashtra
+          <div className="footer-bottom" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+            <span>© 2026 Nexvarta Media Pvt. Ltd. All rights reserved. | Headquarters: Pimpri, Maharashtra</span>
+            <Link href="/admin" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.2s' }}>
+              🔒 संपादकीय प्रवेश (Staff Login)
+            </Link>
           </div>
         </div>
       </footer>

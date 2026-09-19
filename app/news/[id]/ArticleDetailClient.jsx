@@ -206,9 +206,6 @@ export default function ArticleDetailClient({
             <Link href="/" className="live-tv-btn" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
               <span className="live-dot"></span> Live TV
             </Link>
-            <Link href="/admin" className="creator-pass-btn desktop-only" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)' }}>
-              ⚙️ ॲडमिन
-            </Link>
           </div>
         </div>
       </header>
