@@ -32,6 +32,35 @@ function getArticleById(id) {
   return null;
 }
 
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const storePath = path.join(process.cwd(), 'data', 'cmsStore.json');
+  const ids = [];
+  try {
+    if (fs.existsSync(storePath)) {
+      const cms = JSON.parse(fs.readFileSync(storePath, 'utf8'));
+      if (cms.newsSections) {
+        for (const section of cms.newsSections) {
+          for (const art of section.articles || []) {
+            ids.push({ id: art.id });
+          }
+        }
+      }
+    }
+  } catch (e) {}
+
+  for (const section of newsSections) {
+    for (const art of section.articles || []) {
+      if (!ids.some(item => item.id === art.id)) {
+        ids.push({ id: art.id });
+      }
+    }
+  }
+
+  return ids;
+}
+
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const id = resolvedParams?.id;
