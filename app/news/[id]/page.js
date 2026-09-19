@@ -203,9 +203,9 @@ export default function DedicatedArticlePage() {
       </header>
 
       {/* Breadcrumb & Navigation Bar */}
-      <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '14px 0' }}>
+      <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '12px 0' }} className="article-breadcrumb-bar">
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: '#64748b' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: '#64748b', flexWrap: 'wrap' }}>
             <Link href="/" style={{ color: '#003884', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
               <ArrowLeft size={14} /> मुख्य पान (Home)
             </Link>
@@ -218,19 +218,19 @@ export default function DedicatedArticlePage() {
                 <ChevronRight size={14} color="#94a3b8" />
               </>
             )}
-            <span style={{ color: '#0f172a', fontWeight: 600, maxWidth: 320, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span className="article-breadcrumb-title" style={{ color: '#0f172a', fontWeight: 600, maxWidth: 320, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {foundArticle ? foundArticle.title : 'बातमी'}
             </span>
           </div>
 
-          <Link href="/" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#003884', display: 'flex', alignItems: 'center', gap: 6, background: '#eff6ff', padding: '6px 14px', borderRadius: 6 }}>
+          <Link href="/" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#003884', display: 'flex', alignItems: 'center', gap: 6, background: '#eff6ff', padding: '6px 14px', borderRadius: 6, whiteSpace: 'nowrap' }}>
             ← सर्व बातम्या पहा
           </Link>
         </div>
       </div>
 
       {/* Article Content or Not Found */}
-      <main className="container" style={{ padding: '36px 20px 60px' }}>
+      <main className="container article-main-container">
         {!foundArticle ? (
           <div style={{ background: '#fff', borderRadius: 16, padding: '60px 30px', textAlign: 'center', border: '1px solid #e2e8f0', maxWidth: 640, margin: '40px auto' }}>
             <div style={{ fontSize: '3rem', marginBottom: 16 }}>📰</div>
@@ -245,9 +245,9 @@ export default function DedicatedArticlePage() {
             </Link>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 340px', gap: 40, alignItems: 'start' }}>
+          <div className="article-layout-grid">
             {/* Left Column: Full News Article */}
-            <article style={{ background: '#ffffff', borderRadius: 16, border: '1px solid #e2e8f0', padding: '36px 40px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+            <article className="article-main-card">
               {/* Category Badge & Section Header */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                 <span 
@@ -275,14 +275,7 @@ export default function DedicatedArticlePage() {
               </div>
 
               {/* Main Headline (H1) */}
-              <h1 style={{ 
-                fontFamily: 'var(--font-heading)', 
-                fontSize: '2.3rem', 
-                fontWeight: 900, 
-                color: '#0f172a', 
-                lineHeight: 1.3, 
-                marginBottom: 20 
-              }}>
+              <h1 className="article-headline">
                 {foundArticle.title}
               </h1>
 
@@ -464,7 +457,7 @@ export default function DedicatedArticlePage() {
             </article>
 
             {/* Right Column: Sidebar */}
-            <aside style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+            <aside className="article-sidebar">
               {/* More from this category */}
               {relatedArticles.length > 0 && (
                 <div style={{ background: '#ffffff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
