@@ -111,6 +111,7 @@ export default function AdminDashboardPage() {
   // Logo Upload State
   const [isLogoUploading, setIsLogoUploading] = useState(false);
   const [logoPreviewBg, setLogoPreviewBg] = useState('light'); // 'light' | 'dark'
+  const [logoLoadError, setLogoLoadError] = useState(false);
 
   // Analytics Dashboard State
   const [analyticsData, setAnalyticsData] = useState(null);
@@ -244,12 +245,42 @@ export default function AdminDashboardPage() {
         updated.siteConfig.logoUrl = data.url;
         setCmsData(updated);
         saveCmsData(updated);
+        setLogoLoadError(false);
         showToast('✅ लोगो यशस्वीरीत्या अपलोड आणि सेव्ह झाला!');
       } else {
         showToast('⚠️ लोगो अपलोड करताना त्रुटी: ' + (data.error || 'अयशस्वी'));
       }
     } catch (err) {
       showToast('⚠️ नेटवर्क एरर आला.');
+    } finally {
+      setIsLogoUploading(false);
+    }
+  };
+
+  const handleAutoFixLogo = async () => {
+    if (!cmsData?.siteConfig?.logoUrl) return;
+    try {
+      setIsLogoUploading(true);
+      showToast('⏳ लोगो वेब-सुसंगत (sRGB) फॉरमॅटमध्ये रूपांतरित करत आहे...');
+      const res = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'fix-existing', url: cmsData.siteConfig.logoUrl }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        const updated = { ...cmsData };
+        if (!updated.siteConfig) updated.siteConfig = {};
+        updated.siteConfig.logoUrl = data.url;
+        setCmsData(updated);
+        saveCmsData(updated);
+        setLogoLoadError(false);
+        showToast('✅ लोगो यशस्वीरीत्या sRGB मध्ये रूपांतरित आणि सेव्ह झाला!');
+      } else {
+        showToast('⚠️ त्रुटी: ' + (data.error || 'रूपांतरित करता आले नाही.'));
+      }
+    } catch (err) {
+      showToast('⚠️ नेटवर्क त्रुटी आली.');
     } finally {
       setIsLogoUploading(false);
     }
@@ -263,6 +294,7 @@ export default function AdminDashboardPage() {
       }
       setCmsData(updated);
       saveCmsData(updated);
+      setLogoLoadError(false);
       showToast('🗑️ लोगो काढून टाकला!');
     }
   };
@@ -997,6 +1029,7 @@ export default function AdminDashboardPage() {
               src={cmsData.siteConfig.logoUrl} 
               alt="Logo" 
               style={{ height: 34, maxWidth: 120, objectFit: 'contain', background: 'rgba(255,255,255,0.1)', padding: 4, borderRadius: 6 }} 
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           ) : (
             <div style={{ width: 34, height: 34, background: '#ea580c', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -2112,6 +2145,7 @@ export default function AdminDashboardPage() {
                         id="logoFileInput" 
                         accept="image/png,image/jpeg,image/webp,image/svg+xml" 
                         style={{ display: 'none' }}
+                        onClick={(e) => { e.target.value = null; }}
                         onChange={handleLogoUpload}
                         disabled={isLogoUploading}
                       />
@@ -2236,14 +2270,44 @@ export default function AdminDashboardPage() {
                       transition: 'background 0.2s ease'
                     }}>
                       {cmsData.siteConfig?.logoUrl ? (
-                        <img 
-                          src={cmsData.siteConfig.logoUrl} 
-                          alt="Site Logo Preview" 
-                          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
+                        logoLoadError ? (
+                          <div style={{ textAlign: 'center', padding: '10px 14px' }}>
+                            <div style={{ color: '#dc2626', fontWeight: 700, fontSize: '0.82rem', marginBottom: 6 }}>
+                              ⚠️ लोगो इमेज ब्राउझरमध्ये लोड झाली नाही (CMYK किंवा अनसपोर्टेड फॉरमॅट असू शकतो).
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleAutoFixLogo}
+                              disabled={isLogoUploading}
+                              style={{
+                                background: '#ea580c',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: 6,
+                                padding: '6px 14px',
+                                fontSize: '0.78rem',
+                                fontWeight: 800,
+                                cursor: 'pointer',
+                                boxShadow: '0 2px 6px rgba(234,88,12,0.3)'
+                              }}
+                            >
+                              {isLogoUploading ? 'रूपांतरित होत आहे...' : '🔄 लोगो स्वयंचलित sRGB मध्ये रूपांतरित करा'}
+                            </button>
+                          </div>
+                        ) : (
+                          <img 
+                            key={cmsData.siteConfig.logoUrl}
+                            src={cmsData.siteConfig.logoUrl} 
+                            alt="Site Logo Preview" 
+                            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                            onError={() => {
+                              setLogoLoadError(true);
+                            }}
+                            onLoad={() => {
+                              setLogoLoadError(false);
+                            }}
+                          />
+                        )
                       ) : (
                         <div style={{ textAlign: 'center', color: logoPreviewBg === 'light' ? '#94a3b8' : '#93c5fd' }}>
                           <Tv size={36} style={{ margin: '0 auto 6px', display: 'block' }} />

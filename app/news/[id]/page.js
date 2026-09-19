@@ -170,13 +170,23 @@ export default function DedicatedArticlePage() {
       <header className="site-header">
         <div className="container header-inner">
           <Link href="/" className="brand-group">
-            <div className="brand-logo-icon">
-              <Tv size={26} />
-            </div>
-            <div className="brand-texts">
-              <span className="brand-name">{currentSiteConfig.name}</span>
-              <span className="brand-tagline">{currentSiteConfig.tagline}</span>
-            </div>
+            {currentSiteConfig?.logoUrl ? (
+              <img 
+                src={currentSiteConfig.logoUrl} 
+                alt={currentSiteConfig.name || "NEXVARTA"} 
+                style={{ height: 42, maxWidth: 180, objectFit: 'contain' }}
+              />
+            ) : (
+              <div className="brand-logo-icon">
+                <Tv size={26} />
+              </div>
+            )}
+            {!currentSiteConfig?.logoOnly && (
+              <div className="brand-texts">
+                <span className="brand-name">{currentSiteConfig.name}</span>
+                <span className="brand-tagline">{currentSiteConfig.tagline}</span>
+              </div>
+            )}
           </Link>
 
           {/* Navigation Categories */}
