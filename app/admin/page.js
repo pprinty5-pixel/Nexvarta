@@ -990,26 +990,26 @@ export default function AdminDashboardPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9', display: 'flex', flexDirection: 'column' }}>
       {/* Top Admin Navbar */}
-      <header style={{ background: '#003884', color: '#fff', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+      <header className="admin-header" style={{ background: '#003884', color: '#fff', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', position: 'sticky', top: 0, zIndex: 100, flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {cmsData?.siteConfig?.logoUrl ? (
             <img 
               src={cmsData.siteConfig.logoUrl} 
               alt="Logo" 
-              style={{ height: 36, maxWidth: 130, objectFit: 'contain', background: 'rgba(255,255,255,0.1)', padding: 4, borderRadius: 6 }} 
+              style={{ height: 34, maxWidth: 120, objectFit: 'contain', background: 'rgba(255,255,255,0.1)', padding: 4, borderRadius: 6 }} 
             />
           ) : (
-            <div style={{ width: 36, height: 36, background: '#ea580c', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Tv size={20} />
+            <div style={{ width: 34, height: 34, background: '#ea580c', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Tv size={18} />
             </div>
           )}
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.1 }}>{cmsData?.siteConfig?.name || 'NEXVARTA CMS'}</h1>
-            <span style={{ fontSize: '0.725rem', color: '#93c5fd', fontWeight: 600 }}>फुल ॲडमिन कंट्रोल पॅनल</span>
+            <h1 style={{ fontSize: '1.15rem', fontWeight: 900, lineHeight: 1.1 }}>{cmsData?.siteConfig?.name || 'NEXVARTA CMS'}</h1>
+            <span style={{ fontSize: '0.7rem', color: '#93c5fd', fontWeight: 600 }}>फुल ॲडमिन कंट्रोल पॅनल</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="admin-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <Link href="/subscribe" target="_blank" style={{ background: '#ea580c', color: '#fff', fontSize: '0.85rem', fontWeight: 800, padding: '8px 16px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', boxShadow: '0 2px 8px rgba(234,88,12,0.3)' }}>
             <Sparkles size={15} /> 💎 सबस्क्रिप्शन विक्री पॅनेल
           </Link>
@@ -1034,9 +1034,9 @@ export default function AdminDashboardPage() {
       </header>
 
       {/* Main Admin Content */}
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div className="admin-main-wrapper" style={{ display: 'flex', flex: 1 }}>
         {/* Sidebar */}
-        <aside style={{ width: 280, background: '#ffffff', borderRight: '1px solid #e2e8f0', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <aside className="admin-sidebar" style={{ width: 280, background: '#ffffff', borderRight: '1px solid #e2e8f0', padding: '20px 14px', display: 'flex', flexDirection: 'column', gap: 6 }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 10, paddingLeft: 12 }}>
             व्यवस्थापन विभाग
           </div>

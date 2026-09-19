@@ -1467,7 +1467,7 @@ ${video.previewVideo}
                       दररोज २ लाख आयटी कर्मचाऱ्यांना वाहतूक कोंडीतून मुक्ती; २३ किमी मार्ग व २३ अत्याधुनिक स्थानके सुरू
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
+                    <div className="epaper-grid-2" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
                       <div style={{ position: 'relative', background: '#0f172a', borderRadius: 6, overflow: 'hidden' }}>
                         <img 
                           src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80" 
@@ -1487,7 +1487,7 @@ ${video.previewVideo}
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, borderBottom: '2px solid #000', paddingBottom: 20, marginBottom: 18, fontFamily: 'sans-serif' }}>
+                  <div className="epaper-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, borderBottom: '2px solid #000', paddingBottom: 20, marginBottom: 18, fontFamily: 'sans-serif' }}>
                     <div style={{ borderRight: '1px solid #e2e8f0', paddingRight: 16 }}>
                       <span style={{ background: '#1d4ed8', color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '2px 6px', borderRadius: 2 }}>इस्रो अंतराळ मोहीम</span>
                       <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', margin: '8px 0 6px', lineHeight: 1.3 }}>
@@ -1535,7 +1535,7 @@ ${video.previewVideo}
                       पश्चिम व पूर्व पुण्याचे अंतर ४० मिनिटांवर येणार; अवजड वाहने थेट शहराबाहेरून वळवणार
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
+                    <div className="epaper-grid-2" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
                       <div style={{ position: 'relative', background: '#0f172a', borderRadius: 6, overflow: 'hidden' }}>
                         <img 
                           src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800&q=80" 
@@ -1555,7 +1555,7 @@ ${video.previewVideo}
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, borderBottom: '2px solid #000', paddingBottom: 20, marginBottom: 18, fontFamily: 'sans-serif' }}>
+                  <div className="epaper-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, borderBottom: '2px solid #000', paddingBottom: 20, marginBottom: 18, fontFamily: 'sans-serif' }}>
                     <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: 16, borderRadius: 6 }}>
                       <h4 style={{ color: '#003884', marginBottom: 8, fontSize: '1.1rem', fontWeight: 800 }}>💼 हिंजवडी फेज-३: ५००० नव्या आयटी नोकऱ्या</h4>
                       <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.6 }}>
@@ -1587,7 +1587,7 @@ ${video.previewVideo}
                       पीक कर्ज व आपत्ती अनुदान थेट बँक खात्यात वर्ग होणार • १ ऑक्टोबरपासून वितरण सुरू
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
+                    <div className="epaper-grid-2" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
                       <div style={{ position: 'relative', background: '#0f172a', borderRadius: 6, overflow: 'hidden' }}>
                         <img 
                           src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?w=800&q=80" 
@@ -1630,7 +1630,7 @@ ${video.previewVideo}
                       आयपीएल इतिहासातील सर्वकालीन विक्रम मोडीत • १५ देशांतील खेळाडूंवर कोट्यवधींचा वर्षाव
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
+                    <div className="epaper-grid-2" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
                       <div style={{ position: 'relative', background: '#0f172a', borderRadius: 6, overflow: 'hidden' }}>
                         <img 
                           src="https://images.unsplash.com/photo-1531415074868-036b1c57e329?w=800&q=80" 
@@ -1650,7 +1650,7 @@ ${video.previewVideo}
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, borderBottom: '2px solid #000', paddingBottom: 20, marginBottom: 18, fontFamily: 'sans-serif' }}>
+                  <div className="epaper-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, borderBottom: '2px solid #000', paddingBottom: 20, marginBottom: 18, fontFamily: 'sans-serif' }}>
                     <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: 16, borderRadius: 6 }}>
                       <h4 style={{ color: '#003884', marginBottom: 8, fontSize: '1.1rem', fontWeight: 800 }}>📝 नेक्सवार्ता अग्रलेख: महाराष्ट्राची मेट्रो क्रांती</h4>
                       <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.6 }}>

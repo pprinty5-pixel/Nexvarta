@@ -185,7 +185,7 @@ export default function SubscribePage() {
           TOP NAVBAR
           ========================================================================= */}
       <header style={{ background: '#0f172a', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+        <div className="subscribe-header-inner" style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -203,7 +203,7 @@ export default function SubscribePage() {
             </Link>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div className="subscribe-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             {activeSubscription ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', padding: '6px 14px', borderRadius: 8, fontSize: '0.82rem', color: '#34d399', fontWeight: 800 }}>
                 <CheckCircle2 size={16} />
@@ -242,7 +242,7 @@ export default function SubscribePage() {
             <Sparkles size={16} /> १००% विश्वासार्ह • १०,०००+ वाचक व डिजिटल क्रिएटर्सचा विश्वास
           </div>
 
-          <h1 style={{ fontSize: '2.6rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.25, margin: '0 0 16px 0', letterSpacing: -0.5 }}>
+          <h1 className="subscribe-hero-title" style={{ fontSize: '2.6rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.25, margin: '0 0 16px 0', letterSpacing: -0.5 }}>
             दर्जेदार पत्रकारिता, डिजिटल ई-पेपर आणि <br />
             <span style={{ background: 'linear-gradient(135deg, #fb923c 0%, #ea580c 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               कमर्शियल 4K व्हिडिओ फुटेजसाठी
@@ -336,8 +336,8 @@ export default function SubscribePage() {
       {/* =========================================================================
           PRICING CARDS (3 TIERS)
           ========================================================================= */}
-      <section style={{ maxWidth: 1040, margin: '0 auto', padding: '20px 24px 60px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 28, alignItems: 'stretch' }}>
+      <section style={{ maxWidth: 1040, margin: '0 auto', padding: '20px 20px 60px' }}>
+        <div className="pricing-cards-grid">
           
           {plans.map((plan) => {
             const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
@@ -613,7 +613,7 @@ export default function SubscribePage() {
                 </div>
 
                 {/* Customer Details */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
+                <div className="checkout-fields-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
                   <div>
                     <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 3 }}>पूर्ण नाव *</label>
                     <input 
