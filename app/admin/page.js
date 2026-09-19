@@ -471,6 +471,30 @@ export default function AdminDashboardPage() {
         position: watermarkPosition,
         locationText: 'PUNE • MAHARASHTRA'
       });
+
+      // Upload to server so it has a permanent real URL for WhatsApp, Facebook and social media thumbnails
+      try {
+        const fetchRes = await fetch(watermarkedDataUrl);
+        const blob = await fetchRes.blob();
+        const uploadForm = new FormData();
+        uploadForm.append('file', blob, `article_img_${Date.now()}.png`);
+        const uploadRes = await fetch('/api/admin/upload-image', {
+          method: 'POST',
+          body: uploadForm
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadRes.ok && uploadData.url) {
+          setEditingArticle(prev => ({
+            ...prev,
+            image: uploadData.url
+          }));
+          showToast('✅ फोटोवर वॉटरमार्क जोडून फोटो यशस्वीरीत्या सेव्ह झाला!');
+          return;
+        }
+      } catch (uploadErr) {
+        console.warn('Fallback to data URL:', uploadErr);
+      }
+
       if (editingArticle) {
         setEditingArticle({
           ...editingArticle,

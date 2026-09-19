@@ -13,14 +13,14 @@ export const metadata = {
   authors: [{ name: 'Nexvarta Media Pvt. Ltd.' }],
   creator: 'Nexvarta Media Pvt. Ltd.',
   publisher: 'Nexvarta Media Pvt. Ltd.',
-  metadataBase: new URL('https://nexvarta.com'),
+  metadataBase: new URL('https://nvnews.in'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'NEXVARTA - The Next Voice of News',
     description: 'Hyperlocal journalism and B2B ready-to-use news video footage, scripts & audio for YouTubers and media agencies.',
-    url: 'https://nexvarta.com',
+    url: 'https://nvnews.in',
     siteName: 'NEXVARTA',
     images: [
       {
