@@ -31,8 +31,12 @@ function getArticleById(id) {
 }
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+  const url = new URL(request.url);
+  let id = url.searchParams.get('id') || request.headers.get('x-article-id');
+  if (!id) {
+    const m = url.pathname.match(/\/news\/([^/?#]+)/);
+    if (m) id = decodeURIComponent(m[1]);
+  }
   const result = getArticleById(id);
 
   const siteName = result?.siteConfig?.name || 'नेक्सवार्ता';

@@ -29,7 +29,13 @@ export function middleware(request) {
       const url = request.nextUrl.clone();
       url.pathname = '/api/og-preview';
       url.searchParams.set('id', articleId);
-      return NextResponse.rewrite(url);
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set('x-article-id', articleId);
+      return NextResponse.rewrite(url, {
+        request: {
+          headers: requestHeaders,
+        },
+      });
     }
   }
 
