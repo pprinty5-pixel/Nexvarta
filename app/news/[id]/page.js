@@ -195,7 +195,7 @@ export default function DedicatedArticlePage() {
 
           {/* Actions */}
           <div className="header-actions">
-            <Link href="/admin" className="creator-pass-btn" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <Link href="/admin" className="creator-pass-btn desktop-only" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)' }}>
               ⚙️ ॲडमिन
             </Link>
           </div>

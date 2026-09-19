@@ -415,13 +415,13 @@ ${video.previewVideo}
             <button className="live-tv-btn" onClick={() => setIsLiveTvModalOpen(true)}>
               <span className="live-dot"></span> {t.liveTv}
             </button>
-            <Link href="/dashboard" className="creator-pass-btn" style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '7px 12px', fontSize: '0.8rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 5 }}>
+            <Link href="/dashboard" className="creator-pass-btn desktop-only" style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '7px 12px', fontSize: '0.8rem', fontWeight: 800, alignItems: 'center', gap: 5 }}>
               {t.dashboard}
             </Link>
-            <Link href="/subscribe" className="creator-pass-btn" style={{ background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', color: '#fff', border: 'none', padding: '7px 14px', fontSize: '0.8rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 5 }}>
+            <Link href="/subscribe" className="creator-pass-btn desktop-only" style={{ background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', color: '#fff', border: 'none', padding: '7px 14px', fontSize: '0.8rem', fontWeight: 800, alignItems: 'center', gap: 5 }}>
               {t.subscribe}
             </Link>
-            <Link href="/admin" className="creator-pass-btn" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)', padding: '7px 14px', fontSize: '0.8rem' }}>
+            <Link href="/admin" className="creator-pass-btn desktop-only" style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.2)', padding: '7px 14px', fontSize: '0.8rem' }}>
               {t.admin}
             </Link>
           </div>
@@ -917,11 +917,12 @@ ${video.previewVideo}
             </div>
 
             <div className="footer-col">
-              <h4>Company</h4>
+              <h4>Company & Access</h4>
               <ul>
                 <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Careers</a></li>
+                <li><Link href="/subscribe">{t.subscribe || 'सबस्क्रिप्शन'}</Link></li>
+                <li><Link href="/dashboard">{t.dashboard || 'माझा डॅशबोर्ड'}</Link></li>
+                <li><Link href="/admin">{t.admin || 'ॲडमिन'}</Link></li>
                 <li><a href="mailto:advertise@nexvarta.com">Advertise</a></li>
                 <li><a href="#">Privacy Policy</a></li>
               </ul>

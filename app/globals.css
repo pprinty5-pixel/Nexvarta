@@ -593,6 +593,11 @@ button {
   transform: translateY(-1px);
 }
 
+/* Responsive visibility utilities */
+.desktop-only {
+  display: inline-flex;
+}
+
 /* Nexvarta Shorts Bar */
 .shorts-section {
   padding: 24px 0 16px;
@@ -1393,45 +1398,101 @@ button {
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 14px;
+    padding: 0 12px;
+  }
+
+  /* Desktop elements hidden on mobile */
+  .desktop-only,
+  .header-mobile-hide {
+    display: none !important;
+  }
+
+  /* Super Top Bar - sleek single-line fit on mobile */
+  .super-top-bar {
+    padding: 3px 0;
+    font-size: 0.72rem;
+  }
+
+  .super-top-inner {
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .super-top-left {
+    gap: 6px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .super-top-left span:nth-child(n+3) {
+    display: none; /* Show primary city weather only on narrow mobile screens */
+  }
+
+  .super-top-right {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .super-top-link {
+    font-size: 0.72rem;
+    padding: 2px 4px;
   }
 
   /* Header adjustments */
   .site-header {
-    padding: 4px 0;
+    padding: 6px 0 8px;
   }
 
   .header-inner {
+    display: flex;
     flex-wrap: wrap;
-    padding: 8px 0;
-    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    gap: 8px;
   }
 
   .brand-group {
-    gap: 10px;
+    gap: 8px;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
   }
 
   .brand-logo-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    flex-shrink: 0;
   }
 
   .brand-name {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    white-space: nowrap;
   }
 
   .brand-tagline {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
+    white-space: nowrap;
+    color: #64748b;
   }
 
   .header-actions {
-    gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
   }
 
   .live-tv-btn {
     padding: 6px 12px;
-    font-size: 0.775rem;
+    font-size: 0.76rem;
+    white-space: nowrap;
+    border-radius: var(--radius-full);
   }
 
   .creator-pass-btn {
@@ -1443,19 +1504,30 @@ button {
   .nav-categories {
     order: 3;
     width: 100%;
-    padding-top: 8px;
-    border-top: 1px solid var(--color-border-light);
-    gap: 16px;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    padding: 8px 0 4px;
+    border-top: 1px solid var(--color-border-light);
+    margin-top: 2px;
+  }
+
+  .nav-categories::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-link {
-    font-size: 0.875rem;
-    padding: 6px 4px;
+    font-size: 0.85rem;
+    padding: 4px 2px;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
   }
 
   .nav-link.active::after {
-    bottom: -9px;
+    bottom: -5px;
   }
 
   /* Breaking Ticker */

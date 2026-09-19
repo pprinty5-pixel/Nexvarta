@@ -1,5 +1,11 @@
 import './globals.css';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata = {
   title: 'NEXVARTA | The Next Voice of News | Pune & Maharashtra Live News & Creator Video Hub',
   description: 'Delivering credible, fast, and hyperlocal journalism from Pune to the world. Features 24x7 Live News, Pune Metro, Maharashtra Policy, and B2B Creator Video Syndication with readymade 9:16 Reels and 16:9 4K packages.',
