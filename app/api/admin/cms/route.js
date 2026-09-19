@@ -7,22 +7,32 @@ const storePath = path.join(process.cwd(), 'data', 'cmsStore.json');
 export async function GET(request) {
   try {
     const url = new URL(request.url);
-    if (url.searchParams.get('inspect') === 'tmp') {
-      let files = [];
-      const contents = {};
+    if (url.searchParams.get('inspect') === 'uploads') {
+      const getFiles = (dir) => {
+        let results = [];
+        try {
+          const list = fs.readdirSync(dir);
+          list.forEach(file => {
+            const fullPath = path.join(dir, file);
+            const stat = fs.statSync(fullPath);
+            if (stat && stat.isDirectory()) {
+              results = results.concat(getFiles(fullPath));
+            } else {
+              results.push({ path: fullPath, size: stat.size, mtime: stat.mtime });
+            }
+          });
+        } catch (e) {}
+        return results;
+      };
+      const uploads = getFiles(path.join(process.cwd(), 'public', 'uploads'));
+      let pm2Logs = [];
       try {
-        files = fs.readdirSync('/tmp').filter(f => f.includes('cmsStore') || f.includes('nexvarta') || f.includes('json'));
-        for (const f of files) {
-          try {
-            contents[f] = JSON.parse(fs.readFileSync(path.join('/tmp', f), 'utf8'));
-          } catch(e) {
-            contents[f] = e.message;
-          }
+        const pm2Dir = path.join(process.env.HOME || '/root', '.pm2', 'logs');
+        if (fs.existsSync(pm2Dir)) {
+          pm2Logs = fs.readdirSync(pm2Dir);
         }
-      } catch (e) {
-        // pass
-      }
-      return NextResponse.json({ tmpFiles: files, contents });
+      } catch (e) {}
+      return NextResponse.json({ uploads, pm2Logs });
     }
 
     if (!fs.existsSync(storePath)) {
