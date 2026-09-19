@@ -1137,7 +1137,7 @@ export default function AdminDashboardPage() {
         </aside>
 
         {/* Workspace Body */}
-        <main style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
+        <main className="admin-workspace" style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
           {/* =========================================================================
               TAB 1: ARTICLES & NEWS MANAGER
               ========================================================================= */}
@@ -2573,7 +2573,7 @@ export default function AdminDashboardPage() {
           ========================================================================= */}
       {editingArticle && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-          <div style={{ background: '#fff', borderRadius: 18, maxWidth: 840, width: '100%', maxHeight: '92vh', overflowY: 'auto', padding: 30, position: 'relative', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
+          <div className="admin-modal-card" style={{ background: '#fff', borderRadius: 18, maxWidth: 840, width: '100%', maxHeight: '92vh', overflowY: 'auto', padding: 30, position: 'relative', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
             
             {/* Modal Header with AI Launcher */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, borderBottom: '2px solid #f1f5f9', paddingBottom: 14, flexWrap: 'wrap', gap: 10 }}>
@@ -3101,7 +3101,7 @@ export default function AdminDashboardPage() {
           ========================================================================= */}
       {editingVideo && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-          <div style={{ background: '#fff', borderRadius: 16, maxWidth: 940, width: '100%', maxHeight: '92vh', overflowY: 'auto', padding: '28px 32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.35)' }}>
+          <div className="admin-modal-card" style={{ background: '#fff', borderRadius: 16, maxWidth: 940, width: '100%', maxHeight: '92vh', overflowY: 'auto', padding: '28px 32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.35)' }}>
             
             {/* Modal Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #e2e8f0', paddingBottom: 16, marginBottom: 20 }}>

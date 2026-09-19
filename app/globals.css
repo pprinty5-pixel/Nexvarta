@@ -2010,6 +2010,29 @@ button {
 }
 
 @media (max-width: 900px) {
+  .admin-header {
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+
+  .admin-header h1 {
+    font-size: 1.05rem !important;
+  }
+
+  .admin-header-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .admin-header-actions a,
+  .admin-header-actions button {
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
   .admin-main-wrapper {
     flex-direction: column !important;
   }
@@ -2024,6 +2047,7 @@ button {
     white-space: nowrap !important;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    gap: 8px !important;
   }
 
   .admin-sidebar::-webkit-scrollbar {
@@ -2040,6 +2064,37 @@ button {
 
   .admin-sidebar div[style*="marginTop: 'auto'"] {
     display: none !important;
+  }
+
+  .admin-workspace {
+    padding: 16px 12px 60px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Universal grid collapse for admin forms and widgets */
+  .admin-workspace div[style*="grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Admin Modals */
+  .admin-modal-card,
+  div[style*="position: 'fixed'"][style*="zIndex: 1000"] > div,
+  div[style*="position: fixed"][style*="z-index: 1000"] > div {
+    padding: 18px 14px !important;
+    border-radius: 14px !important;
+    width: 95% !important;
+    max-width: 95vw !important;
+    max-height: 94vh !important;
+  }
+
+  /* Grid rows inside admin modals */
+  .admin-modal-card div[style*="grid"],
+  div[style*="position: 'fixed'"][style*="zIndex: 1000"] div[style*="grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 }
 
