@@ -59,6 +59,7 @@ export default function HomePage() {
     videoUrl: "/videos/pune-metro-footage.mp4",
     viewers: "१४,२५०+ लाइव्ह"
   });
+  const [currentTrendingArticleId, setCurrentTrendingArticleId] = useState('india-2');
 
   const [creatorVideos, setCreatorVideos] = useState(initialCreatorVideos);
   const [toastMessage, setToastMessage] = useState(null);
@@ -77,6 +78,7 @@ export default function HomePage() {
           if (data.subscriptionPlan) setCurrentPlan(data.subscriptionPlan);
           if (data.creatorVideos) setCreatorVideos(data.creatorVideos);
           if (data.liveTv) setCurrentLiveTv(data.liveTv);
+          if (data.trendingArticleId) setCurrentTrendingArticleId(data.trendingArticleId);
         }
       })
       .catch(err => console.log('Using local fallback for fast SSR'));
@@ -269,8 +271,12 @@ ${video.previewVideo}
       }))
   );
 
-  // Hero article (e.g. Chandrayaan or highest impact article from CMS)
-  const heroArticle = allActiveArticles.find(a => a.id === 'india-2') || allActiveArticles[0] || {
+  // Hero article (Selected by Admin as Trending from CMS, or fallback)
+  const heroArticle = 
+    allActiveArticles.find(a => a.id === currentTrendingArticleId) ||
+    allActiveArticles.find(a => a.isTrending) ||
+    allActiveArticles.find(a => a.id === 'india-2') || 
+    allActiveArticles[0] || {
     id: 'india-2',
     title: 'ISRO approves Chandrayaan-4 mission, aims to send humans to Moon by 2027',
     summary: 'Union Cabinet greenlights ₹2,104 Cr lunar sample-return mission with next-gen LVM3 rocket and robotic lander.',

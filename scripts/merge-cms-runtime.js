@@ -40,9 +40,12 @@ try {
     };
   }
 
-  // 2. Preserve tickerSpeed
+  // 2. Preserve tickerSpeed & trendingArticleId
   if (runtimeData.tickerSpeed) {
     merged.tickerSpeed = runtimeData.tickerSpeed;
+  }
+  if (runtimeData.trendingArticleId) {
+    merged.trendingArticleId = runtimeData.trendingArticleId;
   }
 
   // 3. Preserve breakingTickers if runtime has custom tickers

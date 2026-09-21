@@ -566,7 +566,10 @@ export default function AdminDashboardPage() {
         downloads: typeof editingArticle.downloads === 'number' ? editingArticle.downloads : (editingArticle.downloads || 115),
         image: editingArticle.image || '',
         reelScript: editingArticle.reelScript || '',
+        isTrending: Boolean(editingArticle.isTrending),
       };
+
+      let savedArticleId = editingArticle.id;
 
       if (editingArticle.id && editingArticle.isNew !== true) {
         // Edit existing article - handle possible section change
@@ -590,14 +593,20 @@ export default function AdminDashboardPage() {
         showToast('✅ बातमी अपडेट झाली!');
       } else {
         // Add new
+        savedArticleId = `art-${Date.now()}`;
         const newArt = {
           ...artToSave,
-          id: `art-${Date.now()}`,
+          id: savedArticleId,
           date: editingArticle.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         };
         delete newArt.isNew;
         updated.newsSections[secIndex].articles.unshift(newArt);
         showToast('✨ नवीन बातमी यशस्वीरीत्या जोडली!');
+      }
+
+      // If marked as trending, set as active trendingArticleId
+      if (editingArticle.isTrending) {
+        updated.trendingArticleId = savedArticleId;
       }
 
       setCmsData(updated);
@@ -606,12 +615,23 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleSetTrendingArticle = (articleId) => {
+    const updated = { ...cmsData, trendingArticleId: articleId };
+    setCmsData(updated);
+    saveCmsData(updated);
+    showToast('🔥 मुख्य ट्रेंडिंग बातमी (Featured Trending Story) सेट झाली!');
+  };
+
   const handleDeleteArticle = (sectionId, articleId) => {
     if (!confirm('ही बातमी खरंच डिलीट करायची आहे का?')) return;
     const updated = { ...cmsData };
     const secIndex = updated.newsSections.findIndex(s => s.id === sectionId);
     if (secIndex !== -1) {
       updated.newsSections[secIndex].articles = updated.newsSections[secIndex].articles.filter(a => a.id !== articleId);
+      if (updated.trendingArticleId === articleId) {
+        const remainingArts = updated.newsSections.flatMap(s => s.articles || []);
+        updated.trendingArticleId = remainingArts[0]?.id || null;
+      }
       setCmsData(updated);
       saveCmsData(updated);
       showToast('🗑️ बातमी डिलीट केली!');
@@ -1257,6 +1277,52 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
+              {/* Featured Trending Article Selector Banner */}
+              {(() => {
+                const allArts = (cmsData.newsSections || []).flatMap(s => s.articles || []);
+                const currentTrendingArt = allArts.find(a => a.id === cmsData.trendingArticleId) || allArts[0];
+                return (
+                  <div style={{ background: 'linear-gradient(135deg, #fff7ed, #ffedd5)', border: '2px solid #fdba74', borderRadius: 14, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', boxShadow: '0 2px 8px rgba(234, 88, 12, 0.08)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 10, background: '#ea580c', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', flexShrink: 0, boxShadow: '0 4px 10px rgba(234, 88, 12, 0.3)' }}>
+                        🔥
+                      </div>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#c2410c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            सध्याची मुख्य ट्रेंडिंग बातमी (Current Featured Trending Story)
+                          </span>
+                          <span style={{ fontSize: '0.7rem', background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 99, fontWeight: 800 }}>
+                            होमपेज स्पॉटलाइट
+                          </span>
+                        </div>
+                        <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#7c2d12', marginTop: 4, marginBottom: 2 }}>
+                          {currentTrendingArt ? currentTrendingArt.title : 'कोणतीही बातमी निवडलेली नाही'}
+                        </h4>
+                        <span style={{ fontSize: '0.75rem', color: '#9a3412' }}>
+                          {currentTrendingArt ? `ID: ${currentTrendingArt.id} • ${currentTrendingArt.date || ''} • 👁️ ${currentTrendingArt.views || 0} व्ह्यूज` : ''}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#9a3412' }}>बदला:</span>
+                      <select
+                        value={cmsData.trendingArticleId || currentTrendingArt?.id || ''}
+                        onChange={(e) => handleSetTrendingArticle(e.target.value)}
+                        style={{ padding: '9px 14px', borderRadius: 8, border: '1.5px solid #ea580c', background: '#fff', fontWeight: 700, fontSize: '0.85rem', color: '#0f172a', maxWidth: 360, cursor: 'pointer' }}
+                      >
+                        {allArts.map(art => (
+                          <option key={art.id} value={art.id}>
+                            {art.title.length > 55 ? art.title.slice(0, 55) + '...' : art.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Editorial Workflow Status Filter Bar */}
               <div style={{ display: 'flex', gap: 10, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', background: '#fff', padding: '12px 18px', borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                 <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#475569', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -1444,6 +1510,12 @@ export default function AdminDashboardPage() {
                               {article.badge}
                             </span>
 
+                            {(cmsData.trendingArticleId === article.id || article.isTrending) && (
+                              <span style={{ fontSize: '0.7rem', fontWeight: 900, color: '#fff', background: '#ea580c', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center', gap: 4, boxShadow: '0 2px 5px rgba(234, 88, 12, 0.3)' }}>
+                                🔥 मुख्य ट्रेंडिंग बातमी
+                              </span>
+                            )}
+
                             {/* Status Badge */}
                             {article.status === 'scheduled' ? (
                               <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#1e40af', background: '#dbeafe', border: '1px solid #bfdbfe', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
@@ -1494,6 +1566,29 @@ export default function AdminDashboardPage() {
 
                         {/* Right: Quick Status Changer & Actions */}
                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', alignSelf: 'center' }}>
+                          {/* 1-Click Trending Selector Button */}
+                          <button
+                            onClick={() => handleSetTrendingArticle(article.id)}
+                            style={{
+                              background: (cmsData.trendingArticleId === article.id || article.isTrending) ? '#ea580c' : '#fff',
+                              color: (cmsData.trendingArticleId === article.id || article.isTrending) ? '#fff' : '#ea580c',
+                              border: '1.5px solid #ea580c',
+                              padding: '8px 12px',
+                              borderRadius: 6,
+                              fontSize: '0.75rem',
+                              fontWeight: 800,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 6,
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease',
+                              boxShadow: (cmsData.trendingArticleId === article.id || article.isTrending) ? '0 2px 6px rgba(234, 88, 12, 0.3)' : 'none'
+                            }}
+                            title="ही बातमी होमपेजवर मुख्य TRENDING स्पॉटलाइट बातमी म्हणून सेट करा"
+                          >
+                            {(cmsData.trendingArticleId === article.id || article.isTrending) ? '⭐ ट्रेंडिंग सेट आहे' : '🔥 ट्रेंडिंग बनवा'}
+                          </button>
+
                           <select
                             value={article.status || 'published'}
                             onChange={(e) => handleQuickStatusChange(section.id, article.id, e.target.value)}
@@ -3037,6 +3132,26 @@ export default function AdminDashboardPage() {
                     placeholder="उदा. पुणे मेट्रो: हिंजवडी-शिवाजीनगर मार्ग सुरू, प्रवाशांचा ९० मिनिटांचा वेळ वाचणार"
                     style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4, fontWeight: 700, fontSize: '0.95rem' }}
                   />
+                </div>
+
+                {/* 3b. Trending Feature Toggle */}
+                <div style={{ gridColumn: 'span 2', background: '#fff7ed', border: '1.5px solid #fdba74', borderRadius: 10, padding: '12px 16px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(editingArticle.isTrending || cmsData?.trendingArticleId === editingArticle.id)}
+                      onChange={(e) => setEditingArticle({ ...editingArticle, isTrending: e.target.checked })}
+                      style={{ width: 18, height: 18, accentColor: '#ea580c', cursor: 'pointer' }}
+                    />
+                    <div>
+                      <span style={{ fontSize: '0.875rem', fontWeight: 800, color: '#c2410c', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        🔥 मुख्य 'TRENDING' बातमी म्हणून होमपेजवर दाखवा (Set as Featured Trending News)
+                      </span>
+                      <span style={{ fontSize: '0.75rem', color: '#9a3412', display: 'block', marginTop: 2 }}>
+                        सक्रिय केल्यास ही बातमी होमपेजवर सर्वात मोठ्या Hero Spotlight कार्डमध्ये "TRENDING" बॅजसह दिसेल.
+                      </span>
+                    </div>
+                  </label>
                 </div>
 
                 {/* Badge & Color */}

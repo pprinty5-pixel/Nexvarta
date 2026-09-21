@@ -40,6 +40,7 @@ export default function ArticleDetailClient({
   ]);
   const [tickerSpeed, setTickerSpeed] = useState(initialCmsData?.tickerSpeed || 28);
   const [currentShorts, setCurrentShorts] = useState(initialCmsData?.nexvartaShorts || nexvartaShorts);
+  const [currentTrendingArticleId, setCurrentTrendingArticleId] = useState(initialCmsData?.trendingArticleId || null);
   const [toastMessage, setToastMessage] = useState(null);
   const [copied, setCopied] = useState(false);
 
@@ -54,6 +55,7 @@ export default function ArticleDetailClient({
           if (data.breakingTickers) setCurrentTickers(data.breakingTickers);
           if (data.tickerSpeed) setTickerSpeed(Number(data.tickerSpeed));
           if (data.nexvartaShorts) setCurrentShorts(data.nexvartaShorts);
+          if (data.trendingArticleId) setCurrentTrendingArticleId(data.trendingArticleId);
         }
       })
       .catch(err => console.log('Using local fallback for fast SSR'));
@@ -107,10 +109,17 @@ export default function ArticleDetailClient({
     ? foundSection.articles.filter(a => a.id !== foundArticle?.id).slice(0, 3)
     : [];
 
-  // Trending articles across sections
+  // Trending articles across sections - prioritize admin-selected trending article
   const trendingArticles = currentSections
-    .flatMap(s => s.articles.map(a => ({ ...a, sectionName: s.name, sectionSlug: s.slug })))
+    .flatMap(s => (s.articles || []).map(a => ({ ...a, sectionName: s.name, sectionSlug: s.slug })))
     .filter(a => a.id !== foundArticle?.id)
+    .sort((a, b) => {
+      const aTrending = a.id === currentTrendingArticleId || a.isTrending;
+      const bTrending = b.id === currentTrendingArticleId || b.isTrending;
+      if (aTrending && !bTrending) return -1;
+      if (!aTrending && bTrending) return 1;
+      return 0;
+    })
     .slice(0, 5);
 
   return (
