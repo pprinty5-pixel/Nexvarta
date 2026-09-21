@@ -110,6 +110,7 @@ export default function AdminDashboardPage() {
 
   // Logo Upload State
   const [isLogoUploading, setIsLogoUploading] = useState(false);
+  const [isInlineImgUploading, setIsInlineImgUploading] = useState(false);
   const [logoPreviewBg, setLogoPreviewBg] = useState('light'); // 'light' | 'dark'
   const [logoLoadError, setLogoLoadError] = useState(false);
 
@@ -388,6 +389,75 @@ export default function AdminDashboardPage() {
       const newCursorEnd = newCursorStart + selectedText.length;
       textarea.setSelectionRange(newCursorStart, newCursorEnd);
     }, 30);
+  };
+
+  const handleInlineImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setIsInlineImgUploading(true);
+      showToast('⏳ फोटो अपलोड होत आहे...');
+      const res = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        const caption = prompt('फोटोसाठी कॅप्शन / टीप लिहा (पर्यायी):', '') || '';
+        const markdownImg = `\n\n![${caption.trim()}](${data.url})\n\n`;
+
+        const textarea = document.getElementById('fullStoryTextarea');
+        if (textarea) {
+          const start = textarea.selectionStart;
+          const currentVal = editingArticle.fullContent || '';
+          const newText = currentVal.substring(0, start) + markdownImg + currentVal.substring(start);
+          setEditingArticle({ ...editingArticle, fullContent: newText });
+          setTimeout(() => {
+            textarea.focus();
+            const nextPos = start + markdownImg.length;
+            textarea.setSelectionRange(nextPos, nextPos);
+          }, 40);
+        } else {
+          setEditingArticle({ ...editingArticle, fullContent: (editingArticle.fullContent || '') + markdownImg });
+        }
+        showToast('✅ फोटो बातमीमध्ये जोडला!');
+      } else {
+        showToast('⚠️ फोटो अपलोड त्रुटी: ' + (data.error || 'अयशस्वी'));
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('⚠️ फोटो अपलोड करताना एरर आला.');
+    } finally {
+      setIsInlineImgUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleInsertImageUrl = () => {
+    const url = prompt('फोटोची URL / लिंक टाका (उदा. https://... किंवा /uploads/...):', '');
+    if (!url || !url.trim()) return;
+    const caption = prompt('फोटोसाठी कॅप्शन / टीप लिहा (पर्यायी):', '') || '';
+    const markdownImg = `\n\n![${caption.trim()}](${url.trim()})\n\n`;
+
+    const textarea = document.getElementById('fullStoryTextarea');
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const currentVal = editingArticle.fullContent || '';
+      const newText = currentVal.substring(0, start) + markdownImg + currentVal.substring(start);
+      setEditingArticle({ ...editingArticle, fullContent: newText });
+      setTimeout(() => {
+        textarea.focus();
+        const nextPos = start + markdownImg.length;
+        textarea.setSelectionRange(nextPos, nextPos);
+      }, 40);
+    } else {
+      setEditingArticle({ ...editingArticle, fullContent: (editingArticle.fullContent || '') + markdownImg });
+    }
+    showToast('✅ फोटो बातमीमध्ये जोडला!');
   };
 
   // ----------------------------------------------------
@@ -3411,6 +3481,75 @@ export default function AdminDashboardPage() {
                           style={{ height: 30, padding: '0 8px', fontSize: '0.75rem', fontWeight: 700, background: '#fff', border: '1px solid #cbd5e1', borderRadius: 5, cursor: 'pointer' }}
                         >
                           ❝ कोट
+                        </button>
+
+                        <div style={{ width: 1, height: 20, background: '#cbd5e1', margin: '0 4px' }}></div>
+
+                        {/* Inline Image Upload & Link */}
+                        <input
+                          type="file"
+                          id="inlineStoryImageInput"
+                          accept="image/*"
+                          onChange={handleInlineImageUpload}
+                          style={{ display: 'none' }}
+                        />
+                        <button
+                          type="button"
+                          disabled={isInlineImgUploading}
+                          onClick={() => document.getElementById('inlineStoryImageInput')?.click()}
+                          title="मजकुरात फोटो अपलोड करून जोडा (Upload Photo)"
+                          style={{
+                            height: 30,
+                            padding: '0 10px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: isInlineImgUploading ? '#e2e8f0' : '#eff6ff',
+                            color: '#1d4ed8',
+                            border: '1px solid #bfdbfe',
+                            borderRadius: 5,
+                            cursor: isInlineImgUploading ? 'not-allowed' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
+                        >
+                          📷 {isInlineImgUploading ? 'अपलोड होत आहे...' : 'फोटो जोडा'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleInsertImageUrl}
+                          title="फोटोची लिंक (URL) जोडा"
+                          style={{
+                            height: 30,
+                            padding: '0 8px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: '#fff',
+                            color: '#334155',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: 5,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🔗 फोटो लिंक
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertStoryFormat('\n\n---\n\n', '', '')}
+                          title="रेष (Divider)"
+                          style={{
+                            height: 30,
+                            padding: '0 8px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: '#fff',
+                            color: '#334155',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: 5,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          ➖ रेष
                         </button>
                       </div>
 
