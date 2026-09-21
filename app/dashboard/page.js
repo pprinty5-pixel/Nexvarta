@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { translations, getLiveDateDisplay } from '../lib/i18n';
+import { translations, getLiveDateDisplay } from '../../lib/i18n';
 import { 
   Check, 
   ShieldCheck, 
