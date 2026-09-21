@@ -2598,48 +2598,190 @@ export default function AdminDashboardPage() {
 
                 {/* Contact Us Settings */}
                 <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, gridColumn: 'span 2' }}>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: 14 }}>संपर्क माहिती (Contact Us)</h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
+                        📍 संपर्क माहिती व हेल्पलाईन (Contact Us Settings)
+                      </h3>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: '#64748b' }}>
+                        होमपेजवरील 'Contact Us' विभागात दिसणारे सर्व ३ ईमेल आणि ३ फोन नंबर येथून थेट एडिट करा.
+                      </p>
+                    </div>
+                  </div>
                   
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>मुख्यालय पत्ता (Headquarters Address)</label>
+                  {/* Headquarters Address */}
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      🏢 मुख्य कार्यालय पत्ता (Headquarters Address)
+                    </label>
                     <input 
                       type="text" 
-                      value={cmsData.siteConfig.contact.address} 
+                      value={cmsData.siteConfig?.contact?.address || ''} 
                       onChange={(e) => {
                         const updated = { ...cmsData };
+                        if (!updated.siteConfig) updated.siteConfig = {};
+                        if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
                         updated.siteConfig.contact.address = e.target.value;
                         setCmsData(updated);
                       }}
-                      style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
+                      placeholder="उदा. Nexvarta News network, new delhi"
+                      style={{ width: '100%', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4, fontSize: '0.9rem' }}
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                    <div>
-                      <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>ईमेल (Newsroom Email)</label>
-                      <input 
-                        type="email" 
-                        value={cmsData.siteConfig.contact.emails[0]?.email || ''} 
-                        onChange={(e) => {
-                          const updated = { ...cmsData };
-                          updated.siteConfig.contact.emails[0].email = e.target.value;
-                          setCmsData(updated);
-                        }}
-                        style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
-                      />
+                  {/* 3 Email Addresses */}
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      ✉️ अधिकृत ईमेल पत्ते (Email Us - ३ ईमेल):
                     </div>
-                    <div>
-                      <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>फोन नंबर (Newsroom Call)</label>
-                      <input 
-                        type="text" 
-                        value={cmsData.siteConfig.contact.phones[0]?.number || ''} 
-                        onChange={(e) => {
-                          const updated = { ...cmsData };
-                          updated.siteConfig.contact.phones[0].number = e.target.value;
-                          setCmsData(updated);
-                        }}
-                        style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
-                      />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
+                      {/* Email 1: Newsroom */}
+                      <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                          १. वृत्त कक्ष ईमेल (Newsroom / Editorial)
+                        </label>
+                        <input 
+                          type="email" 
+                          value={cmsData.siteConfig?.contact?.emails?.[0]?.email || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
+                            if (!Array.isArray(updated.siteConfig.contact.emails)) updated.siteConfig.contact.emails = [];
+                            if (!updated.siteConfig.contact.emails[0]) updated.siteConfig.contact.emails[0] = { label: 'Editorial', email: '' };
+                            updated.siteConfig.contact.emails[0].email = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          placeholder="news@nexvarta.in"
+                          style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                        />
+                      </div>
+
+                      {/* Email 2: Support */}
+                      <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                          २. मदत कक्ष ईमेल (Support)
+                        </label>
+                        <input 
+                          type="email" 
+                          value={cmsData.siteConfig?.contact?.emails?.[1]?.email || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
+                            if (!Array.isArray(updated.siteConfig.contact.emails)) updated.siteConfig.contact.emails = [];
+                            while (updated.siteConfig.contact.emails.length < 2) {
+                              updated.siteConfig.contact.emails.push({ label: 'Support', email: '' });
+                            }
+                            updated.siteConfig.contact.emails[1].email = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          placeholder="support@nexvarta.com"
+                          style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                        />
+                      </div>
+
+                      {/* Email 3: Advertising */}
+                      <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                          ३. जाहिरात कक्ष ईमेल (Advertising)
+                        </label>
+                        <input 
+                          type="email" 
+                          value={cmsData.siteConfig?.contact?.emails?.[2]?.email || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
+                            if (!Array.isArray(updated.siteConfig.contact.emails)) updated.siteConfig.contact.emails = [];
+                            while (updated.siteConfig.contact.emails.length < 3) {
+                              updated.siteConfig.contact.emails.push({ label: 'Advertising', email: '' });
+                            }
+                            updated.siteConfig.contact.emails[2].email = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          placeholder="advertise@nexvarta.com"
+                          style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3 Phone Numbers */}
+                  <div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      📞 फोन व संपर्क क्रमांक (Call Us - ३ क्रमांक):
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
+                      {/* Phone 1: Newsroom */}
+                      <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                          १. वृत्त कक्ष थेट फोन (Newsroom Call)
+                        </label>
+                        <input 
+                          type="text" 
+                          value={cmsData.siteConfig?.contact?.phones?.[0]?.number || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
+                            if (!Array.isArray(updated.siteConfig.contact.phones)) updated.siteConfig.contact.phones = [];
+                            if (!updated.siteConfig.contact.phones[0]) updated.siteConfig.contact.phones[0] = { label: 'Newsroom', number: '' };
+                            updated.siteConfig.contact.phones[0].number = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          placeholder="+91 9226393520"
+                          style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                        />
+                      </div>
+
+                      {/* Phone 2: WhatsApp Tips */}
+                      <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                          २. व्हॉट्सॲप बातम्या (WhatsApp Tips)
+                        </label>
+                        <input 
+                          type="text" 
+                          value={cmsData.siteConfig?.contact?.phones?.[1]?.number || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
+                            if (!Array.isArray(updated.siteConfig.contact.phones)) updated.siteConfig.contact.phones = [];
+                            while (updated.siteConfig.contact.phones.length < 2) {
+                              updated.siteConfig.contact.phones.push({ label: 'WhatsApp Tips', number: '' });
+                            }
+                            updated.siteConfig.contact.phones[1].number = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          placeholder="+91 98765 43210"
+                          style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                        />
+                      </div>
+
+                      {/* Phone 3: Toll Free */}
+                      <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 4 }}>
+                          ३. टोल फ्री नंबर (Toll Free Helpline)
+                        </label>
+                        <input 
+                          type="text" 
+                          value={cmsData.siteConfig?.contact?.phones?.[2]?.number || ''} 
+                          onChange={(e) => {
+                            const updated = { ...cmsData };
+                            if (!updated.siteConfig) updated.siteConfig = {};
+                            if (!updated.siteConfig.contact) updated.siteConfig.contact = {};
+                            if (!Array.isArray(updated.siteConfig.contact.phones)) updated.siteConfig.contact.phones = [];
+                            while (updated.siteConfig.contact.phones.length < 3) {
+                              updated.siteConfig.contact.phones.push({ label: 'Toll Free', number: '' });
+                            }
+                            updated.siteConfig.contact.phones[2].number = e.target.value;
+                            setCmsData(updated);
+                          }}
+                          placeholder="1800 123 4567"
+                          style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

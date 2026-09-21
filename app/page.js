@@ -893,12 +893,14 @@ ${video.previewVideo}
               <div className="contact-info">
                 <h4>Email Us</h4>
                 <p>
-                  {(currentSiteConfig.contact?.emails || siteConfig.contact.emails).map((m, i) => (
-                    <span key={i}>
-                      <a href={`mailto:${m.email}`}>{m.email}</a>
-                      <br />
-                    </span>
-                  ))}
+                  {(currentSiteConfig.contact?.emails || siteConfig.contact.emails)
+                    .filter(m => m && m.email && m.email.trim())
+                    .map((m, i) => (
+                      <span key={i}>
+                        <a href={`mailto:${m.email}`}>{m.email}</a>
+                        <br />
+                      </span>
+                    ))}
                 </p>
               </div>
             </div>
@@ -910,9 +912,23 @@ ${video.previewVideo}
               <div className="contact-info">
                 <h4>Call Us</h4>
                 <p>
-                  Newsroom: <strong>{(currentSiteConfig.contact?.phones?.[0]?.number) || "+91 20 6789 0000"}</strong><br />
-                  WhatsApp Tips: <strong>{(currentSiteConfig.contact?.phones?.[1]?.number) || "+91 98765 43210"}</strong><br />
-                  Toll Free: <strong>{(currentSiteConfig.contact?.phones?.[2]?.number) || "1800 123 4567"}</strong>
+                  {((currentSiteConfig.contact?.phones?.[0]?.number) || siteConfig.contact.phones[0].number) && (
+                    <>
+                      Newsroom: <strong>{(currentSiteConfig.contact?.phones?.[0]?.number) || siteConfig.contact.phones[0].number}</strong>
+                      <br />
+                    </>
+                  )}
+                  {((currentSiteConfig.contact?.phones?.[1]?.number) || siteConfig.contact.phones[1]?.number) && (
+                    <>
+                      WhatsApp Tips: <strong>{(currentSiteConfig.contact?.phones?.[1]?.number) || siteConfig.contact.phones[1]?.number}</strong>
+                      <br />
+                    </>
+                  )}
+                  {((currentSiteConfig.contact?.phones?.[2]?.number) || siteConfig.contact.phones[2]?.number) && (
+                    <>
+                      Toll Free: <strong>{(currentSiteConfig.contact?.phones?.[2]?.number) || siteConfig.contact.phones[2]?.number}</strong>
+                    </>
+                  )}
                 </p>
               </div>
             </div>
