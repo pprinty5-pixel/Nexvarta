@@ -474,16 +474,38 @@ ${video.previewVideo}
         <div className="container hero-spotlight-grid">
           {/* Left Column: Big Featured Hero Card (Dynamic from CMS) */}
           <Link href={`/news/${heroArticle.id}`} className="hero-featured-card">
+            {heroArticle.image ? (
+              <div className="hero-featured-image-wrapper">
+                <img 
+                  src={heroArticle.image} 
+                  alt={heroArticle.title} 
+                  className="hero-featured-image"
+                />
+                <div className="hero-featured-image-overlay"></div>
+              </div>
+            ) : (
+              <div className="hero-featured-center">
+                <div className="hero-center-circle">
+                  <span className="hero-center-circle-text">
+                    {heroArticle.badge || 'नेक्सवार्ता विशेष'}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="hero-trending-badge">
               {t.trending}
             </div>
-            <div className="hero-featured-center">
-              <div className="hero-center-circle">
-                <span className="hero-center-circle-text">
-                  {heroArticle.badge || 'नेक्सवार्ता विशेष'}
-                </span>
+
+            {heroArticle.image && (
+              <div 
+                className="hero-category-pill" 
+                style={{ background: heroArticle.badgeColor || '#ea580c' }}
+              >
+                {heroArticle.badge || 'नेक्सवार्ता विशेष'}
               </div>
-            </div>
+            )}
+
             <div className="hero-featured-overlay">
               <h2 className="hero-featured-title">
                 {language === 'en' && heroArticle.titleEn ? heroArticle.titleEn : heroArticle.title}
@@ -514,7 +536,9 @@ ${video.previewVideo}
                   <div 
                     className="top-story-banner" 
                     style={{ 
-                      background: story.badgeColor || (index === 0 ? '#ea580c' : index === 1 ? '#0284c7' : '#10b981') 
+                      background: story.image 
+                        ? `linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.65)), url(${story.image}) center/cover no-repeat`
+                        : (story.badgeColor || (index === 0 ? '#ea580c' : index === 1 ? '#0284c7' : '#10b981')) 
                     }}
                   >
                     {story.badge || story.sectionName?.toUpperCase()}
