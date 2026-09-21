@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { siteConfig, nexvartaShorts, newsSections } from '../../../data/newsData';
 import { renderRichContent } from '../../../lib/formatContent';
 import { getLiveDateDisplay } from '../../../lib/i18n';
+import { applyLanguage, getSavedLanguage } from '../../../lib/translator';
 import { 
   Tv, 
   Share2, 
@@ -45,6 +46,27 @@ export default function ArticleDetailClient({
   const [toastMessage, setToastMessage] = useState(null);
   const [copied, setCopied] = useState(false);
   const [liveViews, setLiveViews] = useState(null);
+  const [language, setLanguage] = useState('mr');
+
+  useEffect(() => {
+    try {
+      const savedLang = getSavedLanguage();
+      if (savedLang) setLanguage(savedLang);
+    } catch (e) {}
+
+    const handleLangChange = (e) => {
+      if (e.detail) setLanguage(e.detail);
+    };
+    window.addEventListener('nexvarta-lang-change', handleLangChange);
+    return () => {
+      window.removeEventListener('nexvarta-lang-change', handleLangChange);
+    };
+  }, []);
+
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+    applyLanguage(lang);
+  };
 
   // Fetch Live Data from CMS
   useEffect(() => {
@@ -148,8 +170,29 @@ export default function ArticleDetailClient({
               <Tv size={13} /> E-Paper
             </Link>
             <span className="super-top-divider">|</span>
-            <span className="lang-badge">हिंदी</span>
-            <span className="lang-badge active">मराठी</span>
+            <button 
+              className={`super-top-link ${language === 'mr' ? 'active-lang' : ''}`}
+              style={language === 'mr' ? { fontWeight: 800, background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 4, border: 'none', cursor: 'pointer' } : { border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', padding: '2px 8px' }}
+              onClick={() => changeLanguage('mr')}
+            >
+              मराठी
+            </button>
+            <span className="super-top-divider">|</span>
+            <button 
+              className={`super-top-link ${language === 'en' ? 'active-lang' : ''}`}
+              style={language === 'en' ? { fontWeight: 800, background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 4, border: 'none', cursor: 'pointer' } : { border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', padding: '2px 8px' }}
+              onClick={() => changeLanguage('en')}
+            >
+              English
+            </button>
+            <span className="super-top-divider">|</span>
+            <button 
+              className={`super-top-link ${language === 'hi' ? 'active-lang' : ''}`}
+              style={language === 'hi' ? { fontWeight: 800, background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: 4, border: 'none', cursor: 'pointer' } : { border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', padding: '2px 8px' }}
+              onClick={() => changeLanguage('hi')}
+            >
+              हिंदी
+            </button>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import './globals.css';
+import GoogleTranslator from './components/GoogleTranslator';
 
 export const viewport = {
   width: 'device-width',
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="mr-IN">
       <body>
+        <GoogleTranslator />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -80,3 +82,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

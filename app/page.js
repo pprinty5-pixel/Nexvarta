@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { openEPaperPrintWindow, downloadEPaperPDF } from '../lib/epaperDownloader';
 import { translations, getLiveDateDisplay } from '../lib/i18n';
+import { applyLanguage, getSavedLanguage } from '../lib/translator';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('all');
@@ -132,18 +133,26 @@ export default function HomePage() {
     }
 
     try {
-      const savedLang = localStorage.getItem('nexvarta_lang');
-      if (savedLang && (savedLang === 'mr' || savedLang === 'en' || savedLang === 'hi')) {
+      const savedLang = getSavedLanguage();
+      if (savedLang) {
         setLanguage(savedLang);
       }
     } catch (e) {}
+
+    const handleLangChange = (e) => {
+      if (e.detail) {
+        setLanguage(e.detail);
+      }
+    };
+    window.addEventListener('nexvarta-lang-change', handleLangChange);
+    return () => {
+      window.removeEventListener('nexvarta-lang-change', handleLangChange);
+    };
   }, []);
 
   const changeLanguage = (lang) => {
     setLanguage(lang);
-    try {
-      localStorage.setItem('nexvarta_lang', lang);
-    } catch (e) {}
+    applyLanguage(lang);
     showToast(lang === 'mr' ? 'भाषा: मराठी निवडली' : lang === 'hi' ? 'भाषा: हिंदी चुनी गई' : 'Language: English selected');
   };
 
