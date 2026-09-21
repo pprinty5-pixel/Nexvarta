@@ -28,7 +28,7 @@ import {
   Printer
 } from 'lucide-react';
 import { openEPaperPrintWindow, downloadEPaperPDF } from '../lib/epaperDownloader';
-import { translations } from '../lib/i18n';
+import { translations, getLiveDateDisplay } from '../lib/i18n';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('all');
@@ -93,8 +93,12 @@ export default function HomePage() {
   const [isLiveTvModalOpen, setIsLiveTvModalOpen] = useState(false);
   const [isEPaperModalOpen, setIsEPaperModalOpen] = useState(false);
   const [epaperEdition, setEpaperEdition] = useState('pune');
-  const [epaperDate, setEpaperDate] = useState('१३ सप्टेंबर २०२६');
-  const [epaperDateSlug, setEpaperDateSlug] = useState('13-Sep-2026');
+  const [epaperDate, setEpaperDate] = useState(() => getLiveDateDisplay('mr'));
+  const [epaperDateSlug, setEpaperDateSlug] = useState(() => {
+    const now = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${now.getDate()}-${months[now.getMonth()]}-${now.getFullYear()}`;
+  });
   const [activeEPaperPage, setActiveEPaperPage] = useState(1);
 
   // Form State for Admin
@@ -295,7 +299,7 @@ ${video.previewVideo}
       <div className="super-top-bar">
         <div className="container super-top-inner">
           <div className="super-top-left">
-            <span>{t.dateDisplay}</span>
+            <span suppressHydrationWarning>{t.dateDisplay}</span>
             <span className="super-top-divider">|</span>
             <span>{t.puneWeather}</span>
             <span className="super-top-divider">|</span>
@@ -1361,8 +1365,8 @@ ${video.previewVideo}
                 <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#475569' }}>📅 तारीख निवडा (Date):</span>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {[
-                    { date: '१३ सप्टेंबर २०२६', slug: '13-Sep-2026', label: 'आजची आवृत्ती (१३ सप्टें)' },
-                    { date: '१२ सप्टेंबर २०२६', slug: '12-Sep-2026', label: 'कालची आवृत्ती (१२ सप्टें)' },
+                    { date: epaperDate, slug: epaperDateSlug, label: `आजची आवृत्ती (${epaperDate})` },
+                    { date: '१२ सप्टेंबर २०२६', slug: '12-Sep-2026', label: 'मागील आवृत्ती (१२ सप्टें)' },
                     { date: '११ सप्टेंबर २०२६', slug: '11-Sep-2026', label: '११ सप्टेंबर २०२६' },
                     { date: '१० सप्टेंबर २०२६', slug: '10-Sep-2026', label: '१० सप्टेंबर २०२६' },
                   ].map(d => (

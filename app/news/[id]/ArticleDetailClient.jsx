@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { siteConfig, nexvartaShorts, newsSections } from '../../../data/newsData';
 import { renderRichContent } from '../../../lib/formatContent';
+import { getLiveDateDisplay } from '../../../lib/i18n';
 import { 
   Tv, 
   Share2, 
@@ -128,7 +129,7 @@ export default function ArticleDetailClient({
       <div className="super-top-bar">
         <div className="container super-top-inner">
           <div className="super-top-left">
-            <span>September 13, 2026</span>
+            <span suppressHydrationWarning>{getLiveDateDisplay('mr')}</span>
             <span className="super-top-divider">|</span>
             <span>Pune: 28°C</span>
             <span className="super-top-divider">|</span>

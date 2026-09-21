@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { translations, getLiveDateDisplay } from '../lib/i18n';
 import { 
   Check, 
   ShieldCheck, 
@@ -84,8 +85,12 @@ export default function SubscriberDashboardPage() {
 
   // EPaper Download States
   const [epaperEdition, setEpaperEdition] = useState('pune');
-  const [epaperDate, setEpaperDate] = useState('१३ सप्टेंबर २०२६');
-  const [epaperDateSlug, setEpaperDateSlug] = useState('13-Sep-2026');
+  const [epaperDate, setEpaperDate] = useState(() => getLiveDateDisplay('mr'));
+  const [epaperDateSlug, setEpaperDateSlug] = useState(() => {
+    const now = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${now.getDate()}-${months[now.getMonth()]}-${now.getFullYear()}`;
+  });
 
   // Team Invite State
   const [teamMembers, setTeamMembers] = useState([
@@ -1022,7 +1027,7 @@ export default function SubscriberDashboardPage() {
                   </label>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {[
-                      { date: '१३ सप्टेंबर २०२६', slug: '13-Sep-2026', label: 'आज (१३ सप्टें)' },
+                      { date: epaperDate, slug: epaperDateSlug, label: `आज (${epaperDate})` },
                       { date: '१२ सप्टेंबर २०२६', slug: '12-Sep-2026', label: 'काल (१२ सप्टें)' },
                       { date: '११ सप्टेंबर २०२६', slug: '11-Sep-2026', label: '११ सप्टें' },
                       { date: '१० सप्टेंबर २०२६', slug: '10-Sep-2026', label: '१० सप्टें' },
@@ -1247,7 +1252,7 @@ export default function SubscriberDashboardPage() {
                   </div>
                   <div style={{ textAlign: 'right', fontSize: '0.8rem', color: '#475569' }}>
                     <div>पावती क्र.: <strong>{subscriber.invoiceNumber}</strong></div>
-                    <div>तारीख: <strong>१३ सप्टेंबर २०२६</strong></div>
+                    <div>तारीख: <strong>{epaperDate}</strong></div>
                     <div>पेमेंट पद्धत: <strong>UPI / Online Verified</strong></div>
                   </div>
                 </div>
