@@ -44,6 +44,7 @@ export default function ArticleDetailClient({
   const [currentTrendingArticleId, setCurrentTrendingArticleId] = useState(initialCmsData?.trendingArticleId || null);
   const [toastMessage, setToastMessage] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [liveViews, setLiveViews] = useState(null);
 
   // Fetch Live Data from CMS
   useEffect(() => {
@@ -62,14 +63,21 @@ export default function ArticleDetailClient({
       .catch(err => console.log('Using local fallback for fast SSR'));
   }, []);
 
-  // Track view analytics on mount
+  // Track view analytics on mount and increment live
   useEffect(() => {
     if (articleId) {
       fetch('/api/admin/analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'view', articleId })
-      }).catch(() => {});
+      })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.views !== undefined) {
+            setLiveViews(data.views);
+          }
+        })
+        .catch(() => {});
     }
   }, [articleId]);
 
@@ -319,11 +327,13 @@ export default function ArticleDetailClient({
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                         <Clock size={13} /> {foundArticle.readTime || '3 min read'}
                       </span>
-                      {foundArticle.views && (
+                      {(liveViews !== null ? liveViews : foundArticle.views) && (
                         <>
                           <span>•</span>
                           <span style={{ color: '#ea580c', fontWeight: 700 }}>
-                            👁️ {foundArticle.views} वाचक
+                            👁️ {typeof (liveViews !== null ? liveViews : foundArticle.views) === 'number' 
+                              ? (liveViews !== null ? liveViews : foundArticle.views).toLocaleString('en-IN') 
+                              : (liveViews !== null ? liveViews : foundArticle.views)} वाचक
                           </span>
                         </>
                       )}

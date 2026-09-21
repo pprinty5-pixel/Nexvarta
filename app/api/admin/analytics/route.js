@@ -103,15 +103,30 @@ export async function POST(request) {
     const data = JSON.parse(fileContent);
 
     let found = false;
+    let newViews = null;
+    let newShares = null;
+
+    const parseNum = (val, defaultVal = 0) => {
+      if (typeof val === 'number') return val;
+      if (!val) return defaultVal;
+      const s = String(val)
+        .replace(/,/g, '')
+        .replace(/[\u0966-\u096F]/g, d => d.charCodeAt(0) - 2406);
+      const n = parseInt(s, 10);
+      return isNaN(n) ? defaultVal : n;
+    };
+
     for (const section of (data.newsSections || [])) {
       for (const art of (section.articles || [])) {
-        if (art.id === articleId) {
+        if (art.id === articleId || art.id?.toLowerCase() === articleId?.toLowerCase()) {
           if (action === 'share') {
-            art.shares = (typeof art.shares === 'number' ? art.shares : 100) + 1;
+            art.shares = parseNum(art.shares, 100) + 1;
+            newShares = art.shares;
           } else if (action === 'download') {
-            art.downloads = (typeof art.downloads === 'number' ? art.downloads : 50) + 1;
+            art.downloads = parseNum(art.downloads, 50) + 1;
           } else {
-            art.views = (typeof art.views === 'number' ? art.views : 1000) + 1;
+            art.views = parseNum(art.views, 1200) + 1;
+            newViews = art.views;
           }
           found = true;
           break;
@@ -124,7 +139,12 @@ export async function POST(request) {
       fs.writeFileSync(storePath, JSON.stringify(data, null, 2), 'utf8');
     }
 
-    return NextResponse.json({ success: true, message: `${action} recorded` });
+    return NextResponse.json({ 
+      success: true, 
+      message: `${action} recorded`,
+      views: newViews,
+      shares: newShares
+    });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

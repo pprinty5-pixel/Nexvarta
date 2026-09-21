@@ -627,12 +627,22 @@ export default function AdminDashboardPage() {
     const secIndex = updated.newsSections.findIndex(s => s.id === articleCategoryTarget);
     
     if (secIndex !== -1) {
+      const rawViews = editingArticle.views;
+      const parsedViews = typeof rawViews === 'number' 
+        ? rawViews 
+        : (parseInt(String(rawViews || '').replace(/,/g, '').replace(/[\u0966-\u096F]/g, d => d.charCodeAt(0) - 2406), 10) || 0);
+
+      const rawShares = editingArticle.shares;
+      const parsedShares = typeof rawShares === 'number' 
+        ? rawShares 
+        : (parseInt(String(rawShares || '').replace(/,/g, '').replace(/[\u0966-\u096F]/g, d => d.charCodeAt(0) - 2406), 10) || 0);
+
       const artToSave = {
         ...editingArticle,
         status: editingArticle.status || 'published',
         scheduledAt: editingArticle.status === 'scheduled' ? editingArticle.scheduledAt : null,
-        views: typeof editingArticle.views === 'number' ? editingArticle.views : (editingArticle.views || 16400),
-        shares: typeof editingArticle.shares === 'number' ? editingArticle.shares : (editingArticle.shares || 520),
+        views: parsedViews,
+        shares: parsedShares,
         downloads: typeof editingArticle.downloads === 'number' ? editingArticle.downloads : (editingArticle.downloads || 115),
         image: editingArticle.image || '',
         reelScript: editingArticle.reelScript || '',
@@ -1537,8 +1547,10 @@ export default function AdminDashboardPage() {
                             summary: '',
                             fullContent: '',
                             author: 'Nexvarta Bureau',
-                            date: 'Sep 13, 2026',
-                            readTime: '3 min read'
+                            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                            readTime: '3 min read',
+                            views: 5000,
+                            shares: 420
                           });
                         }}
                         style={{ fontSize: '0.825rem', background: '#003884', color: '#fff', padding: '6px 12px', borderRadius: 6, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}
@@ -1691,7 +1703,17 @@ export default function AdminDashboardPage() {
                           <button 
                             onClick={() => {
                               setArticleCategoryTarget(section.id);
-                              setEditingArticle({ ...article });
+                              let artViews = article.views;
+                              if (typeof artViews === 'string') {
+                                const n = parseInt(artViews.replace(/,/g, '').replace(/[\u0966-\u096F]/g, d => d.charCodeAt(0) - 2406), 10);
+                                if (!isNaN(n)) artViews = n;
+                              }
+                              let artShares = article.shares;
+                              if (typeof artShares === 'string') {
+                                const s = parseInt(artShares.replace(/,/g, '').replace(/[\u0966-\u096F]/g, d => d.charCodeAt(0) - 2406), 10);
+                                if (!isNaN(s)) artShares = s;
+                              }
+                              setEditingArticle({ ...article, views: artViews, shares: artShares });
                             }}
                             style={{ background: '#fff', border: '1px solid #cbd5e1', color: '#003884', padding: '8px 12px', borderRadius: 6, fontSize: '0.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}
                           >
@@ -3801,6 +3823,42 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setEditingArticle({ ...editingArticle, date: e.target.value })}
                     style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
                   />
+                </div>
+
+                {/* 8. Custom Initial Views & Shares Studio */}
+                <div style={{ gridColumn: 'span 2', background: '#f8fafc', padding: '14px 16px', borderRadius: 10, border: '1.5px solid #e2e8f0', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 14, alignItems: 'center' }}>
+                  <div>
+                    <label style={{ fontSize: '0.825rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      👁️ सुरुवातीचे व्ह्यूज (Custom Views / वाचक संख्या)
+                    </label>
+                    <input 
+                      type="number" 
+                      min="0"
+                      value={editingArticle.views !== undefined ? editingArticle.views : 5000}
+                      onChange={(e) => setEditingArticle({ ...editingArticle, views: parseInt(e.target.value, 10) || 0 })}
+                      placeholder="उदा. 5000 किंवा 12500"
+                      style={{ width: '100%', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4, fontWeight: 700, fontSize: '0.95rem', color: '#0f172a', background: '#fff' }}
+                    />
+                    <span style={{ fontSize: '0.725rem', color: '#64748b', marginTop: 4, display: 'block' }}>
+                      💡 येथे इच्छित सुरुवातीचे व्ह्यूज टाका. त्यानंतर वाचक जसजसे बातमी वाचतील, तसे यात व्ह्यूज आपोआप पुढे वाढत जातील (+१).
+                    </span>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.825rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      🔗 शेअर्स संख्या (Shares Count)
+                    </label>
+                    <input 
+                      type="number" 
+                      min="0"
+                      value={editingArticle.shares !== undefined ? editingArticle.shares : 420}
+                      onChange={(e) => setEditingArticle({ ...editingArticle, shares: parseInt(e.target.value, 10) || 0 })}
+                      placeholder="उदा. 420"
+                      style={{ width: '100%', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4, fontWeight: 700, fontSize: '0.95rem', color: '#0f172a', background: '#fff' }}
+                    />
+                    <span style={{ fontSize: '0.725rem', color: '#64748b', marginTop: 4, display: 'block' }}>
+                      कार्डवर दिसणारी शेअर्स संख्या (पर्यायी).
+                    </span>
+                  </div>
                 </div>
               </div>
 

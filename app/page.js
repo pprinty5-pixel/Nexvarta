@@ -643,7 +643,7 @@ ${video.previewVideo}
                       <span className="news-date">{article.date}</span>
                       {article.views && (
                         <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
-                          👁️ {article.views}
+                          👁️ {typeof article.views === 'number' ? article.views.toLocaleString('en-IN') : article.views}
                         </span>
                       )}
                     </div>
