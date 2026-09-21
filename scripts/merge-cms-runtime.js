@@ -48,40 +48,30 @@ try {
     merged.trendingArticleId = runtimeData.trendingArticleId;
   }
 
-  // 3. Preserve breakingTickers if runtime has custom tickers
-  if (Array.isArray(runtimeData.breakingTickers) && runtimeData.breakingTickers.length > 0) {
-    const set = new Set(repoData.breakingTickers || []);
-    runtimeData.breakingTickers.forEach(t => set.add(t));
-    merged.breakingTickers = Array.from(set);
+  // 3. Preserve breakingTickers from runtime (honoring deletions)
+  if (Array.isArray(runtimeData.breakingTickers)) {
+    merged.breakingTickers = runtimeData.breakingTickers;
   }
 
-  // 4. Merge articles in each section
-  if (Array.isArray(runtimeData.newsSections)) {
-    merged.newsSections = (merged.newsSections || []).map(repoSec => {
-      const runSec = runtimeData.newsSections.find(s => s.id === repoSec.id || s.slug === repoSec.slug);
-      if (!runSec || !Array.isArray(runSec.articles)) return repoSec;
-
-      const existingIds = new Set(repoSec.articles.map(a => a.id));
-      const userArticles = runSec.articles.filter(a => !existingIds.has(a.id) || a.id.startsWith('art-'));
-      
-      return {
-        ...repoSec,
-        articles: [...userArticles, ...repoSec.articles.filter(a => !userArticles.some(u => u.id === a.id))]
-      };
-    });
-
-    runtimeData.newsSections.forEach(runSec => {
-      if (!merged.newsSections.some(s => s.id === runSec.id)) {
-        merged.newsSections.push(runSec);
-      }
-    });
+  // 4. Preserve newsSections and articles from runtime (honoring deletions, edits, and additions)
+  if (Array.isArray(runtimeData.newsSections) && runtimeData.newsSections.length > 0) {
+    merged.newsSections = runtimeData.newsSections;
   }
 
-  // 5. Merge creatorVideos if any added
+  // 5. Preserve creatorVideos from runtime (honoring deletions)
   if (Array.isArray(runtimeData.creatorVideos)) {
-    const existingVidIds = new Set((merged.creatorVideos || []).map(v => v.id));
-    const newVids = runtimeData.creatorVideos.filter(v => !existingVidIds.has(v.id));
-    merged.creatorVideos = [...newVids, ...(merged.creatorVideos || [])];
+    merged.creatorVideos = runtimeData.creatorVideos;
+  }
+
+  // 6. Preserve subscriptionPlan, liveTv, nexvartaShorts from runtime if present
+  if (runtimeData.subscriptionPlan) {
+    merged.subscriptionPlan = runtimeData.subscriptionPlan;
+  }
+  if (runtimeData.liveTv) {
+    merged.liveTv = runtimeData.liveTv;
+  }
+  if (Array.isArray(runtimeData.nexvartaShorts)) {
+    merged.nexvartaShorts = runtimeData.nexvartaShorts;
   }
 
   // Write back to data/cmsStore.json
