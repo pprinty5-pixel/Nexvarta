@@ -50,6 +50,26 @@ export default function RootLayout({ children }) {
   return (
     <html lang="mr-IN">
       <body>
+        <div id="google_translate_element" style={{ position: 'absolute', top: -9999, left: -9999, opacity: 0, pointerEvents: 'none' }} aria-hidden="true"></div>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              function googleTranslateElementInit() {
+                if (window.google && window.google.translate) {
+                  new window.google.translate.TranslateElement({
+                    pageLanguage: 'mr',
+                    includedLanguages: 'mr,en,hi',
+                    autoDisplay: false
+                  }, 'google_translate_element');
+                }
+              }
+            `
+          }}
+        />
+        <script
+          type="text/javascript"
+          src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+        />
         <GoogleTranslator />
         <script
           type="application/ld+json"

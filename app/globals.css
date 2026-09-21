@@ -2158,10 +2158,7 @@ button {
 .goog-te-banner-frame,
 iframe.goog-te-banner-frame,
 #goog-gt-tt,
-.goog-te-balloon-frame,
-.VIpgJd-ZVi9od-ORHb-OEVmcd,
-.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
-.VIpgJd-ZVi9od-xl07Ob-OEVmcd {
+.goog-te-balloon-frame {
   display: none !important;
   visibility: hidden !important;
 }
@@ -2177,13 +2174,26 @@ body {
 }
 
 #google_translate_element {
-  display: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-xl07Ob-OEVmcd,
 .skiptranslate > iframe {
-  display: none !important;
-  height: 0 !important;
-  border-width: 0 !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
+
 
 
