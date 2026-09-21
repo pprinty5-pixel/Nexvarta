@@ -16,6 +16,13 @@ export const siteConfig = {
       { label: "टोल फ्री", number: "1800 123 4567" },
     ],
   },
+  socialLinks: {
+    facebook: "https://facebook.com/nexvarta",
+    twitter: "https://x.com/nexvarta",
+    instagram: "https://instagram.com/nexvarta",
+    youtube: "https://youtube.com/@nexvarta",
+    whatsapp: "https://whatsapp.com/channel/nexvarta"
+  },
   stats: [
     { value: "५० लाख+", label: "मासिक वाचक" },
     { value: "२४x७", label: "थेट कव्हरेज" },

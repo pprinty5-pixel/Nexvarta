@@ -42,6 +42,13 @@
         }
       ]
     },
+    "socialLinks": {
+      "facebook": "https://facebook.com/nexvarta",
+      "twitter": "https://x.com/nexvarta",
+      "instagram": "https://instagram.com/nexvarta",
+      "youtube": "https://youtube.com/@nexvarta",
+      "whatsapp": "https://whatsapp.com/channel/nexvarta"
+    },
     "stats": [
       {
         "value": "5M+",

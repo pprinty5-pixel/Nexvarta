@@ -975,9 +975,28 @@ ${video.previewVideo}
             <div className="footer-col">
               <h4>Follow Us</h4>
               <div className="social-links-row">
-                <a className="social-icon-btn" href="#">f</a>
-                <a className="social-icon-btn" href="#">𝕏</a>
-                <a className="social-icon-btn" href="#">📷</a>
+                {currentSiteConfig.socialLinks?.facebook && (
+                  <a className="social-icon-btn" href={currentSiteConfig.socialLinks.facebook} target="_blank" rel="noopener noreferrer" title="Facebook">f</a>
+                )}
+                {currentSiteConfig.socialLinks?.twitter && (
+                  <a className="social-icon-btn" href={currentSiteConfig.socialLinks.twitter} target="_blank" rel="noopener noreferrer" title="X (Twitter)">𝕏</a>
+                )}
+                {currentSiteConfig.socialLinks?.instagram && (
+                  <a className="social-icon-btn" href={currentSiteConfig.socialLinks.instagram} target="_blank" rel="noopener noreferrer" title="Instagram">📷</a>
+                )}
+                {currentSiteConfig.socialLinks?.youtube && (
+                  <a className="social-icon-btn" href={currentSiteConfig.socialLinks.youtube} target="_blank" rel="noopener noreferrer" title="YouTube">▶</a>
+                )}
+                {currentSiteConfig.socialLinks?.whatsapp && (
+                  <a className="social-icon-btn" href={currentSiteConfig.socialLinks.whatsapp} target="_blank" rel="noopener noreferrer" title="WhatsApp Channel">💬</a>
+                )}
+                {!currentSiteConfig.socialLinks?.facebook && !currentSiteConfig.socialLinks?.twitter && !currentSiteConfig.socialLinks?.instagram && !currentSiteConfig.socialLinks?.youtube && !currentSiteConfig.socialLinks?.whatsapp && (
+                  <>
+                    <a className="social-icon-btn" href="#" title="Facebook">f</a>
+                    <a className="social-icon-btn" href="#" title="X">𝕏</a>
+                    <a className="social-icon-btn" href="#" title="Instagram">📷</a>
+                  </>
+                )}
               </div>
               <div className="download-app-box">
                 <p>Download our app:</p>

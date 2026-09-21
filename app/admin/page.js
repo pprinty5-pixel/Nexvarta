@@ -2807,6 +2807,122 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Social Media Links Settings (Follow Us) */}
+                <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, gridColumn: 'span 2' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
+                        🌐 सोशल मीडिया हँडल्स (Follow Us - Social Media Links)
+                      </h3>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: '#64748b' }}>
+                        होमपेजच्या फूटरमधील 'Follow Us' विभागातील सोशल मीडिया लिंक्स येथून थेट ॲड/एडिट करा.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 14 }}>
+                    {/* Facebook */}
+                    <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1877f2', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        🔵 Facebook पेज लिंक
+                      </label>
+                      <input 
+                        type="url" 
+                        value={cmsData.siteConfig?.socialLinks?.facebook || ''} 
+                        onChange={(e) => {
+                          const updated = { ...cmsData };
+                          if (!updated.siteConfig) updated.siteConfig = {};
+                          if (!updated.siteConfig.socialLinks) updated.siteConfig.socialLinks = {};
+                          updated.siteConfig.socialLinks.facebook = e.target.value;
+                          setCmsData(updated);
+                        }}
+                        placeholder="https://facebook.com/nexvarta"
+                        style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    {/* X / Twitter */}
+                    <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        𝕏 X (Twitter) प्रोफाइल लिंक
+                      </label>
+                      <input 
+                        type="url" 
+                        value={cmsData.siteConfig?.socialLinks?.twitter || ''} 
+                        onChange={(e) => {
+                          const updated = { ...cmsData };
+                          if (!updated.siteConfig) updated.siteConfig = {};
+                          if (!updated.siteConfig.socialLinks) updated.siteConfig.socialLinks = {};
+                          updated.siteConfig.socialLinks.twitter = e.target.value;
+                          setCmsData(updated);
+                        }}
+                        placeholder="https://x.com/nexvarta"
+                        style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    {/* Instagram */}
+                    <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#e1306c', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        📷 Instagram प्रोफाइल लिंक
+                      </label>
+                      <input 
+                        type="url" 
+                        value={cmsData.siteConfig?.socialLinks?.instagram || ''} 
+                        onChange={(e) => {
+                          const updated = { ...cmsData };
+                          if (!updated.siteConfig) updated.siteConfig = {};
+                          if (!updated.siteConfig.socialLinks) updated.siteConfig.socialLinks = {};
+                          updated.siteConfig.socialLinks.instagram = e.target.value;
+                          setCmsData(updated);
+                        }}
+                        placeholder="https://instagram.com/nexvarta"
+                        style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    {/* YouTube */}
+                    <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#dc2626', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        ▶️ YouTube चॅनेल लिंक
+                      </label>
+                      <input 
+                        type="url" 
+                        value={cmsData.siteConfig?.socialLinks?.youtube || ''} 
+                        onChange={(e) => {
+                          const updated = { ...cmsData };
+                          if (!updated.siteConfig) updated.siteConfig = {};
+                          if (!updated.siteConfig.socialLinks) updated.siteConfig.socialLinks = {};
+                          updated.siteConfig.socialLinks.youtube = e.target.value;
+                          setCmsData(updated);
+                        }}
+                        placeholder="https://youtube.com/@nexvarta"
+                        style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    {/* WhatsApp Channel */}
+                    <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        💬 WhatsApp चॅनेल / कम्युनिटी लिंक
+                      </label>
+                      <input 
+                        type="url" 
+                        value={cmsData.siteConfig?.socialLinks?.whatsapp || ''} 
+                        onChange={(e) => {
+                          const updated = { ...cmsData };
+                          if (!updated.siteConfig) updated.siteConfig = {};
+                          if (!updated.siteConfig.socialLinks) updated.siteConfig.socialLinks = {};
+                          updated.siteConfig.socialLinks.whatsapp = e.target.value;
+                          setCmsData(updated);
+                        }}
+                        placeholder="https://whatsapp.com/channel/..."
+                        style={{ width: '100%', padding: '8px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
