@@ -71,30 +71,30 @@ export async function POST(request) {
     let processedBuffer = buffer;
     let finalExt = ext.toLowerCase();
 
-    // Process with sharp: auto-orient, convert CMYK to sRGB, optimize for web
-    try {
-      const sharpModule = (await import('sharp')).default;
-      const image = sharpModule(buffer);
-      const metadata = await image.metadata();
-
-      // If CMYK (common in print/vinyl files) or JPG, convert to sRGB PNG for 100% browser rendering & transparency
-      if (metadata.space === 'cmyk' || metadata.channels === 4 || finalExt === '.jpg' || finalExt === '.jpeg') {
-        processedBuffer = await image
-          .rotate()
-          .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
-          .toColorspace('srgb')
-          .png({ quality: 90, compressionLevel: 8 })
-          .toBuffer();
-        finalExt = '.png';
-      } else if (finalExt === '.png' || finalExt === '.webp') {
-        processedBuffer = await image
-          .rotate()
-          .toColorspace('srgb')
-          .toBuffer();
+    // SVG stays vector; raster photos become compact, auto-oriented sRGB WebP.
+    if (finalExt !== '.svg') {
+      try {
+        const sharp = (await import('sharp')).default;
+        for (const quality of [80, 70, 60]) {
+          processedBuffer = await sharp(buffer, { animated: true })
+            .rotate()
+            .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
+            .toColorspace('srgb')
+            .webp({ quality, effort: 5 })
+            .toBuffer();
+          if (processedBuffer.length <= 200 * 1024) break;
+        }
+        finalExt = '.webp';
+        // Avoid making already optimized WebP files larger.
+        if (file.type === 'image/webp' && buffer.length < processedBuffer.length) {
+          const metadata = await sharp(buffer).metadata();
+          if (metadata.width <= 1200 && metadata.height <= 1200 && !metadata.exif && !metadata.icc && !metadata.xmp && !metadata.iptc) {
+            processedBuffer = buffer;
+          }
+        }
+      } catch (error) {
+        return NextResponse.json({ error: 'फोटो प्रक्रिया अयशस्वी. दुसरा फोटो निवडा.' }, { status: 400 });
       }
-    } catch (sharpError) {
-      console.warn('Sharp image conversion error, saving original buffer:', sharpError.message);
-      processedBuffer = buffer;
     }
 
     const fileName = `${baseName}_${Date.now()}${finalExt}`;

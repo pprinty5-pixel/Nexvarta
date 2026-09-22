@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { compressImage } from '../../lib/compressImage';
 import { renderRichContent } from '../../lib/formatContent';
 import { 
   Tv, 
@@ -232,7 +233,7 @@ export default function AdminDashboardPage() {
     try {
       setIsLogoUploading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', await compressImage(file));
 
       const res = await fetch('/api/admin/upload-image', {
         method: 'POST',
@@ -396,7 +397,7 @@ export default function AdminDashboardPage() {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', await compressImage(file));
 
     try {
       setIsInlineImgUploading(true);
@@ -547,7 +548,8 @@ export default function AdminDashboardPage() {
         const fetchRes = await fetch(watermarkedDataUrl);
         const blob = await fetchRes.blob();
         const uploadForm = new FormData();
-        uploadForm.append('file', blob, `article_img_${Date.now()}.png`);
+        const compressed = await compressImage(new File([blob], `article_img_${Date.now()}.png`, { type: blob.type }));
+        uploadForm.append('file', compressed);
         const uploadRes = await fetch('/api/admin/upload-image', {
           method: 'POST',
           body: uploadForm
