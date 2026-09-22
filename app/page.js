@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import LiveDate from './components/LiveDate';
 import { siteConfig, nexvartaShorts, newsSections } from '../data/newsData';
 import { subscriptionPlan, initialCreatorVideos } from '../data/creatorsData';
 import { renderRichContent } from '../lib/formatContent';
@@ -308,7 +309,7 @@ ${video.previewVideo}
       <div className="super-top-bar">
         <div className="container super-top-inner">
           <div className="super-top-left">
-            <span suppressHydrationWarning>{t.dateDisplay}</span>
+            <LiveDate language={language} />
             <span className="super-top-divider">|</span>
             <span>{t.puneWeather}</span>
             <span className="super-top-divider">|</span>
