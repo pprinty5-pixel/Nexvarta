@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AdSlot from '../../components/AdSlot';
 import { useParams } from 'next/navigation';
 import { siteConfig, nexvartaShorts, newsSections } from '../../../data/newsData';
 import { renderRichContent } from '../../../lib/formatContent';
@@ -270,6 +271,7 @@ export default function ArticleDetailClient({
           </div>
         </div>
       </header>
+      <div className="container"><AdSlot placement="header" contact /></div>
 
       {/* Breadcrumb & Navigation Bar */}
       <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '12px 0' }} className="article-breadcrumb-bar">
@@ -499,10 +501,12 @@ export default function ArticleDetailClient({
                   </button>
                 </div>
               </div>
+              <AdSlot placement="feed" />
             </article>
 
             {/* Right Column: Sidebar */}
             <aside className="article-sidebar">
+              <AdSlot placement="sidebar" />
               {/* More from this category */}
               {relatedArticles.length > 0 && (
                 <div style={{ background: '#ffffff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AdSlot from './components/AdSlot';
 import LiveDate from './components/LiveDate';
 import { siteConfig, nexvartaShorts, newsSections } from '../data/newsData';
 import { subscriptionPlan, initialCreatorVideos } from '../data/creatorsData';
@@ -479,6 +480,8 @@ ${video.previewVideo}
         </div>
       </div>
 
+      <div className="container"><AdSlot placement="header" contact /></div>
+
       {/* Hero Spotlight & Top Stories Section (Dynamic from Admin CMS) */}
       <section className="hero-spotlight-section">
         <div className="container hero-spotlight-grid">
@@ -567,6 +570,7 @@ ${video.previewVideo}
                 </Link>
               ))}
             </div>
+            <AdSlot placement="sidebar" />
           </div>
         </div>
       </section>
@@ -597,9 +601,11 @@ ${video.previewVideo}
         </div>
       </section>
 
+      {displayedSections.length < 2 && <div className="container"><AdSlot placement="feed" /></div>}
       {/* Categorized News Feeds */}
-      {displayedSections.map(section => (
+      {displayedSections.map((section, sectionIndex) => (
         <section key={section.id} className="news-category-section" id={section.slug}>
+          {sectionIndex === 1 && <div className="container"><AdSlot placement="feed" /></div>}
           <div className="container">
             <div className="section-title-wrap">
               <h2 className="section-title">

@@ -2197,3 +2197,60 @@ body {
 
 
 
+
+/* Direct advertisements: fixed ratios, uncropped artwork, no overlays. */
+.nv-ad { margin: 18px auto; width: 100%; min-width: 0; }
+.nv-ad-header { max-width: 970px; }
+.nv-ad-feed { max-width: 728px; }
+.nv-ad-sidebar { max-width: 300px; }
+.nv-ad-label { color: #64748b; font-size: 11px; text-align: center; margin-bottom: 5px; letter-spacing: .06em; }
+.nv-ad-frame { display: block; width: 100%; overflow: hidden; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; }
+.nv-ad-header .nv-ad-frame { aspect-ratio: 970 / 90; }
+.nv-ad-feed .nv-ad-frame { aspect-ratio: 728 / 90; }
+.nv-ad-sidebar .nv-ad-frame { aspect-ratio: 300 / 250; }
+.nv-ad-frame picture { display: block; width: 100%; height: 100%; }
+.nv-ad-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.nv-ad-contact { display: block; text-align: right; margin-top: 6px; font-size: 12px; color: #075985; text-decoration: underline; }
+.ads-manager { max-width: 1120px; margin: auto; min-width: 0; color: #0f172a; }
+.ads-manager h1 { font-size: 26px; font-weight: 800; }
+.ads-manager h2 { font-size: 21px; font-weight: 750; margin-bottom: 18px; }
+.ads-manager h3 { font-weight: 750; }
+.ads-manager p { margin: 8px 0; }
+.ads-panel { background: #fff; padding: 22px; border: 1px solid #dbe3ed; border-radius: 12px; margin: 18px 0; min-width: 0; }
+.ads-sizes { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin: 20px 0; }
+.ads-sizes > div { display: grid; gap: 5px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px; font-size: 13px; }
+.ads-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.ads-manager label { display: grid; gap: 7px; font-size: 14px; font-weight: 650; min-width: 0; }
+.ads-manager input:not([type=checkbox]), .ads-manager select { width: 100%; min-width: 0; border: 1px solid #cbd5e1; border-radius: 7px; padding: 10px; background: #fff; color: #0f172a; }
+.ads-manager button { background: #003884; color: white; border-radius: 7px; padding: 10px 15px; cursor: pointer; font-size: 13px; }
+.ads-manager button:disabled { opacity: .5; cursor: wait; }
+.ads-manager button:focus-visible, .nv-ad a:focus-visible { outline: 3px solid #f97316; outline-offset: 3px; }
+.ads-toolbar { display: flex; flex-wrap: wrap; gap: 9px; margin: 16px 0; }
+.ads-manager .ads-toggle { display: flex; align-items: center; margin: 18px 0; }
+.ads-contact-form { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.ads-contact-form label { flex: 1; min-width: 180px; }
+.ads-notice { padding: 12px; background: #fff7ed; border-radius: 8px; }
+.ads-help, .ads-manager small { font-size: 12px; color: #64748b; }
+.ads-preview { width: 100%; margin: 20px auto; }
+.ads-preview.nv-ad-header { max-width: 970px; }
+.ads-preview.nv-ad-feed { max-width: 728px; }
+.ads-preview.nv-ad-sidebar { max-width: 300px; }
+.ads-preview.mobile.nv-ad-header { max-width: 320px; }
+.ads-preview.mobile.nv-ad-header .nv-ad-frame { aspect-ratio: 320 / 100; }
+.ads-preview.mobile.nv-ad-feed { max-width: 300px; }
+.ads-preview.mobile.nv-ad-feed .nv-ad-frame { aspect-ratio: 300 / 250; }
+.ads-card { display: grid; grid-template-columns: 170px minmax(0,1fr); gap: 20px; }
+.ads-card > img { width: 100%; height: 140px; object-fit: contain; background: #f8fafc; border-radius: 8px; }
+@media (max-width: 767px) {
+  .nv-ad { margin: 16px auto; }
+  .nv-ad-header { max-width: 320px; }
+  .nv-ad-header .nv-ad-frame { aspect-ratio: 320 / 100; }
+  .nv-ad-feed { max-width: 300px; }
+  .nv-ad-feed .nv-ad-frame { aspect-ratio: 300 / 250; }
+  .ads-preview.desktop.nv-ad-header .nv-ad-frame { aspect-ratio: 970 / 90; }
+  .ads-preview.desktop.nv-ad-feed .nv-ad-frame { aspect-ratio: 728 / 90; }
+  .ads-fields, .ads-sizes, .ads-card { grid-template-columns: minmax(0,1fr); }
+  .ads-panel { padding: 15px; }
+  .ads-manager h1 { font-size: 22px; }
+  .ads-card > img { max-height: 120px; }
+}

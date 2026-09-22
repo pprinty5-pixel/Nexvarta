@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AdsManager from '../components/AdsManager';
 import { compressImage } from '../../lib/compressImage';
 import { renderRichContent } from '../../lib/formatContent';
 import { 
@@ -135,7 +136,7 @@ export default function AdminDashboardPage() {
     fetchCmsData();
   }, []);
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
 
@@ -151,6 +152,10 @@ export default function AdminDashboardPage() {
     const validPasswords = ['Nexvarta@2026', 'admin123'];
 
     if (validUsers.includes(u.toLowerCase()) && validPasswords.includes(p)) {
+      try {
+        await fetch('/api/admin/ads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login', username: u, password: p }) });
+      } catch (err) { /* Ads manager offers sign-in if the session was unavailable. */ }
+
       try {
         localStorage.setItem('nexvarta_admin_auth', 'true');
         localStorage.setItem('nexvarta_admin_user', u);
@@ -169,6 +174,7 @@ export default function AdminDashboardPage() {
         localStorage.removeItem('nexvarta_admin_auth');
         localStorage.removeItem('nexvarta_admin_user');
       } catch (err) {}
+      fetch('/api/admin/ads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) }).catch(() => {});
       setIsAuthenticated(false);
       setUsernameInput('');
       setPasswordInput('');
@@ -1283,6 +1289,7 @@ export default function AdminDashboardPage() {
             <ExternalLink size={14} style={{ marginLeft: 'auto' }} />
           </Link>
 
+          <button onClick={() => setActiveTab('ads')} style={{ padding: '12px 16px', borderRadius: 8, textAlign: 'left', fontWeight: 700, color: activeTab === 'ads' ? '#fff' : '#003884', background: activeTab === 'ads' ? '#003884' : '#eff6ff' }}>जाहिराती व्यवस्थापन</button>
           {/* Quick Metrics Bar at bottom */}
           <div style={{ marginTop: 'auto', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 14 }}>
             <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>सक्रिय पास किंमत:</div>
@@ -1300,6 +1307,7 @@ export default function AdminDashboardPage() {
           {/* =========================================================================
               TAB 1: ARTICLES & NEWS MANAGER
               ========================================================================= */}
+          {activeTab === 'ads' && <AdsManager />}
           {activeTab === 'articles' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 14 }}>
