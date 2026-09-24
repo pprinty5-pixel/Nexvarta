@@ -101,6 +101,8 @@ export default function AdminDashboardPage() {
   const [watermarkPosition, setWatermarkPosition] = useState('bottom-banner');
   const [watermarkTag, setWatermarkTag] = useState('🌟 अधिकृत लोगो');
   const [showWatermarkLogo, setShowWatermarkLogo] = useState(true);
+  const [customWatermarkTag, setCustomWatermarkTag] = useState('');
+  const [isCustomTagActive, setIsCustomTagActive] = useState(false);
   const [isWatermarking, setIsWatermarking] = useState(false);
   const [rawOriginalImage, setRawOriginalImage] = useState(null);
   const [watermarkLocation, setWatermarkLocation] = useState('PUNE • MAHARASHTRA');
@@ -673,7 +675,7 @@ export default function AdminDashboardPage() {
       setWatermarkLocation(defaultLoc);
     }
 
-    const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null);
+    const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null) || editingArticle?.image;
     if (sourceImage) {
       await processAndApplyWatermark(sourceImage, tag, newPos, { locationText: defaultLoc });
     }
@@ -3904,23 +3906,161 @@ export default function AdminDashboardPage() {
                       <button
                         key={tag}
                         type="button"
-                        onClick={() => handleWatermarkTagSelect(tag)}
+                        onClick={() => {
+                          setIsCustomTagActive(false);
+                          handleWatermarkTagSelect(tag);
+                        }}
                         style={{
                           padding: '4px 10px',
                           borderRadius: 6,
                           fontSize: '0.75rem',
                           fontWeight: 700,
                           border: '1px solid',
-                          borderColor: watermarkTag === tag ? '#003884' : '#cbd5e1',
-                          background: watermarkTag === tag ? '#003884' : '#fff',
-                          color: watermarkTag === tag ? '#fff' : '#334155',
+                          borderColor: (!isCustomTagActive && watermarkTag === tag) ? '#003884' : '#cbd5e1',
+                          background: (!isCustomTagActive && watermarkTag === tag) ? '#003884' : '#fff',
+                          color: (!isCustomTagActive && watermarkTag === tag) ? '#fff' : '#334155',
                           cursor: 'pointer'
                         }}
                       >
                         {tag}
                       </button>
                     ))}
+
+                    {/* Custom Tag Toggle Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextState = !isCustomTagActive;
+                        setIsCustomTagActive(nextState);
+                        if (nextState) {
+                          const tagToUse = customWatermarkTag.trim() || '🔴 BREAKING NEWS';
+                          if (!customWatermarkTag.trim()) setCustomWatermarkTag('🔴 BREAKING NEWS');
+                          handleWatermarkTagSelect(tagToUse);
+                        } else {
+                          handleWatermarkTagSelect('🌟 अधिकृत लोगो');
+                        }
+                      }}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: 6,
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        border: '1.5px solid',
+                        borderColor: isCustomTagActive ? '#003884' : '#0284c7',
+                        background: isCustomTagActive ? '#003884' : '#f0f9ff',
+                        color: isCustomTagActive ? '#fff' : '#0284c7',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4
+                      }}
+                    >
+                      ✏️ कस्टम टॅग (स्वतःचा टॅग)
+                    </button>
                   </div>
+
+                  {/* Custom Tag Input Bar with Quick Suggestion Chips */}
+                  {isCustomTagActive && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      marginBottom: 12,
+                      background: '#eff6ff',
+                      padding: '10px 14px',
+                      borderRadius: 8,
+                      border: '1.5px solid #93c5fd',
+                      flexWrap: 'wrap'
+                    }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1e40af', whiteSpace: 'nowrap' }}>
+                        ✏️ कस्टम टॅग टाईप करा:
+                      </span>
+                      <input
+                        type="text"
+                        value={customWatermarkTag}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setCustomWatermarkTag(val);
+                          setWatermarkTag(val);
+                        }}
+                        onBlur={() => {
+                          if (customWatermarkTag.trim()) {
+                            handleWatermarkTagSelect(customWatermarkTag.trim());
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (customWatermarkTag.trim()) {
+                              handleWatermarkTagSelect(customWatermarkTag.trim());
+                            }
+                          }
+                        }}
+                        placeholder="उदा. 🔴 BREAKING NEWS, 🔥 ग्राउंड रिपोर्ट, 🚨 अलर्ट किंवा कोणताही टॅग..."
+                        style={{
+                          flex: '1 1 240px',
+                          padding: '6px 10px',
+                          borderRadius: 6,
+                          border: '1px solid #60a5fa',
+                          fontSize: '0.825rem',
+                          fontWeight: 700,
+                          color: '#0f172a',
+                          background: '#fff'
+                        }}
+                      />
+
+                      {/* Quick Chips */}
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>किंवा निवडा:</span>
+                        {['🔴 BREAKING NEWS', '🔥 ग्राउंड रिपोर्ट', '🚨 अलर्ट', '📊 निवडणूक विशेष', '🚩 उत्सव विशेष', '⚡ लाईव्ह अपडेट'].map(chip => (
+                          <button
+                            key={chip}
+                            type="button"
+                            onClick={() => {
+                              setCustomWatermarkTag(chip);
+                              handleWatermarkTagSelect(chip);
+                            }}
+                            style={{
+                              padding: '3px 8px',
+                              borderRadius: 4,
+                              fontSize: '0.7rem',
+                              fontWeight: 700,
+                              background: customWatermarkTag === chip ? '#1d4ed8' : '#dbeafe',
+                              color: customWatermarkTag === chip ? '#fff' : '#1e40af',
+                              border: 'none',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {chip}
+                          </button>
+                        ))}
+                      </div>
+
+                      {(rawOriginalImage || editingArticle?.image) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (customWatermarkTag.trim()) {
+                              handleWatermarkTagSelect(customWatermarkTag.trim());
+                            }
+                          }}
+                          style={{
+                            padding: '5px 12px',
+                            borderRadius: 6,
+                            background: '#0284c7',
+                            color: '#fff',
+                            border: 'none',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          🔄 टॅग लावा
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   {/* Watermark Customization: Location Checkbox & Input + Domain Branding */}
                   {watermarkTag !== '❌ विना वॉटरमार्क' && (
