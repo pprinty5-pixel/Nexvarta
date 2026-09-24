@@ -468,21 +468,36 @@ export default function AdminDashboardPage() {
   };
 
   const handleInsertWebLink = () => {
-    const url = prompt('वेबसाईट किंवा बातमीची लिंक (URL) टाका:\nउदा. https://nvnews.in', 'https://');
-    if (!url || !url.trim() || url.trim() === 'https://' || url.trim() === 'http://') return;
-    const cleanUrl = url.trim().startsWith('http://') || url.trim().startsWith('https://') 
-      ? url.trim() 
-      : `https://${url.trim()}`;
-    const text = prompt('लिंकचे नाव (Link Text) टाका (उदा. नेक्सवार्ता मुख्य पान):', '');
-    const markdownLink = text && text.trim() ? `[${text.trim()}](${cleanUrl})` : `${cleanUrl}`;
-
     const textarea = document.getElementById('fullStoryTextarea');
+    let selectedText = '';
+    let start = 0;
+    let end = 0;
     if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
+      start = textarea.selectionStart;
+      end = textarea.selectionEnd;
       const currentVal = editingArticle.fullContent || '';
-      const selected = currentVal.substring(start, end);
-      const insertText = selected ? `[${selected}](${cleanUrl})` : markdownLink;
+      selectedText = currentVal.substring(start, end);
+    }
+
+    const url = prompt('वेबसाईट किंवा बातमीची लिंक (URL) टाका:\nउदा. https://nvnews.in किंवा nvnews.in', 'https://');
+    if (!url || !url.trim() || url.trim() === 'https://' || url.trim() === 'http://') return;
+    
+    let cleanUrl = url.trim();
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://') && !cleanUrl.startsWith('mailto:') && !cleanUrl.startsWith('tel:')) {
+      cleanUrl = `https://${cleanUrl}`;
+    }
+
+    let linkText = selectedText && selectedText.trim() ? selectedText.trim() : '';
+    if (!linkText) {
+      const defaultDomain = cleanUrl.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/.*$/, '');
+      const userText = prompt('लिंकचे नाव (Link Text) टाका:\nउदा. अधिकृत वेबसाईट / येथे क्लिक करा', defaultDomain || 'येथे क्लिक करा');
+      linkText = userText && userText.trim() ? userText.trim() : (defaultDomain || cleanUrl);
+    }
+
+    const insertText = `[${linkText}](${cleanUrl})`;
+
+    if (textarea) {
+      const currentVal = editingArticle.fullContent || '';
       const newText = currentVal.substring(0, start) + insertText + currentVal.substring(end);
       setEditingArticle({ ...editingArticle, fullContent: newText });
       setTimeout(() => {
@@ -491,9 +506,9 @@ export default function AdminDashboardPage() {
         textarea.setSelectionRange(nextPos, nextPos);
       }, 40);
     } else {
-      setEditingArticle({ ...editingArticle, fullContent: (editingArticle.fullContent || '') + ' ' + markdownLink });
+      setEditingArticle({ ...editingArticle, fullContent: (editingArticle.fullContent || '') + ' ' + insertText });
     }
-    showToast('🔗 लिंक यशस्वीरीत्या जोडली!');
+    showToast('🔗 लिंक बातमीमध्ये जोडली!');
   };
 
   // ----------------------------------------------------
@@ -3926,6 +3941,12 @@ export default function AdminDashboardPage() {
                         >
                           रंग लावा
                         </button>
+                      </div>
+
+                      {/* Row 3: Link & Markdown Guide Hint */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: '#eff6ff', borderBottom: '1px solid #dbeafe', fontSize: '0.74rem', color: '#1e40af' }}>
+                        <span>🌐</span>
+                        <span><strong>बातमीत लिंक कशी टाकावी:</strong> वरील <strong>"🌐 लिंक जोडा"</strong> बटण वापरा किंवा मजकुरात थेट <code>https://...</code> अथवा <code>[लिंक नाव](https://...)</code> टाईप करा. ती बातमीत वाचकांसाठी आपोआप निळी आणि क्लिकेबल (Clickable) दिसेल.</span>
                       </div>
 
                       <textarea 

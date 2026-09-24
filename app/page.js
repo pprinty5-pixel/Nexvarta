@@ -986,101 +986,6 @@ ${video.previewVideo}
         </div>
       </section>
 
-      {/* Video Gallery with Format Filters */}
-      <section className="container" style={{ marginBottom: 50 }}>
-        <div className="filter-tabs-row">
-          <div className="filter-pills">
-            <button 
-              className={`pill-btn ${activeFormatFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveFormatFilter('all')}
-            >
-              सर्व व्हिडिओ (All)
-            </button>
-            <button 
-              className={`pill-btn ${activeFormatFilter === '9:16' ? 'active' : ''}`}
-              onClick={() => setActiveFormatFilter('9:16')}
-            >
-              <Smartphone size={14} style={{ display: 'inline', marginRight: 4 }} />
-              9:16 रील्स / शॉर्ट्स
-            </button>
-            <button 
-              className={`pill-btn ${activeFormatFilter === '16:9' ? 'active' : ''}`}
-              onClick={() => setActiveFormatFilter('16:9')}
-            >
-              <Monitor size={14} style={{ display: 'inline', marginRight: 4 }} />
-              16:9 4K ब्रॉडकास्ट (YouTube/TV)
-            </button>
-            <button 
-              className="pill-btn"
-              onClick={() => setIsAdminUploadModalOpen(true)}
-            >
-              <PlusCircle size={14} style={{ display: 'inline', marginRight: 4 }} />
-              ॲडमिन: व्हिडिओ अपलोड करा
-            </button>
-          </div>
-          <span className="stat-label">
-            {filteredVideos.length} पॅकेजेस उपलब्ध
-          </span>
-        </div>
-
-        <div className="video-grid">
-          {filteredVideos.map(vid => (
-            <div key={vid.id} className="video-card">
-              <div 
-                className={`video-thumb-container ${vid.format === '9:16' ? 'portrait' : ''}`}
-                onClick={() => setPreviewVideo(vid)}
-              >
-                <img src={vid.thumbnail} alt={vid.title} className="video-thumb-img" />
-                <span className="format-indicator-tag">
-                  {vid.format === '9:16' ? '📱 9:16 REEL' : '🖥️ 16:9 4K'}
-                </span>
-                <span className="duration-tag">{vid.duration}</span>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
-                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#ea580c', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                    <Play size={20} fill="#fff" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="video-card-body">
-                <div className="bundle-badges-row">
-                  <span className="bundle-chip highlight">{vid.resolution}</span>
-                  <span className="bundle-chip">मराठी/EN Script</span>
-                  <span className="bundle-chip">Audio Byte</span>
-                </div>
-
-                <h4 
-                  style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', fontWeight: 700, lineHeight: 1.35, marginBottom: 10, cursor: 'pointer' }}
-                  onClick={() => setPreviewVideo(vid)}
-                >
-                  {vid.title}
-                </h4>
-
-                <p style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginBottom: 16, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  "{vid.scriptMarathi}"
-                </p>
-
-                <div style={{ display: 'flex', gap: 10, marginTop: 'auto' }}>
-                  <button 
-                    style={{ flex: 1, background: '#f1f5f9', fontWeight: 700, fontSize: '0.85rem', padding: 10, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
-                    onClick={() => setPreviewVideo(vid)}
-                  >
-                    प्रिव्ह्यू
-                  </button>
-                  <button 
-                    style={{ flex: 1.2, background: 'var(--color-primary)', color: '#fff', fontWeight: 700, fontSize: '0.85rem', padding: 10, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
-                    onClick={() => handleDownloadBundle(vid)}
-                  >
-                    <Download size={14} />
-                    डाऊनलोड
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Stats & Trust Banner */}
       <section className="container">
         <div className="stats-banner">
@@ -1281,8 +1186,9 @@ ${video.previewVideo}
               <span>{readerArticle.readTime}</span>
             </div>
             <div 
+              className="article-full-text"
               style={{ fontSize: '1.05rem', lineHeight: 1.8, color: '#334155', marginBottom: 28 }}
-              dangerouslySetInnerHTML={{ __html: renderRichContent(readerArticle.fullContent) }}
+              dangerouslySetInnerHTML={{ __html: renderRichContent(readerArticle.fullContent || readerArticle.summary) }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #e2e8f0', paddingTop: 18 }}>
               <button 

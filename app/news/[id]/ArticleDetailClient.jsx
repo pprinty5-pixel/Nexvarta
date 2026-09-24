@@ -439,9 +439,11 @@ export default function ArticleDetailClient({
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#003884', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }}>
                     ⚡ बातमीचा सारांश (Quick Summary)
                   </div>
-                  <p style={{ fontSize: '1.05rem', color: '#1e293b', fontWeight: 600, lineHeight: 1.65, margin: 0 }}>
-                    {foundArticle.summary}
-                  </p>
+                  <div 
+                    className="article-full-text article-summary-text"
+                    style={{ fontSize: '1.05rem', color: '#1e293b', fontWeight: 600, lineHeight: 1.65, margin: 0 }}
+                    dangerouslySetInnerHTML={{ __html: renderRichContent(foundArticle.summary) }}
+                  />
                 </div>
               )}
 
@@ -477,8 +479,8 @@ export default function ArticleDetailClient({
 
               {/* Full News Content with Marathi Rich Formatting */}
               <div 
-                className="article-full-content-body"
-                dangerouslySetInnerHTML={{ __html: renderRichContent(foundArticle.fullContent) }}
+                className="article-full-text article-full-content-body"
+                dangerouslySetInnerHTML={{ __html: renderRichContent(foundArticle.fullContent || foundArticle.summary) }}
               />
 
               {/* Bottom Engagement Bar */}
