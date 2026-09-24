@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AdSlot from './components/AdSlot';
 import LiveDate from './components/LiveDate';
-import { siteConfig, nexvartaShorts, newsSections } from '../data/newsData';
+import { siteConfig, nexvartaShorts, newsSections, initialYoutubeVideos } from '../data/newsData';
 import { subscriptionPlan, initialCreatorVideos } from '../data/creatorsData';
 import { renderRichContent } from '../lib/formatContent';
 import { 
@@ -65,6 +65,8 @@ export default function HomePage() {
   const [currentTrendingArticleId, setCurrentTrendingArticleId] = useState('india-2');
 
   const [creatorVideos, setCreatorVideos] = useState(initialCreatorVideos);
+  const [youtubeVideos, setYoutubeVideos] = useState(initialYoutubeVideos || []);
+  const [activeYoutubeIndex, setActiveYoutubeIndex] = useState(0);
   const [toastMessage, setToastMessage] = useState(null);
 
   // Fetch Live Data from Admin CMS API
@@ -82,6 +84,7 @@ export default function HomePage() {
           if (data.creatorVideos) setCreatorVideos(data.creatorVideos);
           if (data.liveTv) setCurrentLiveTv(data.liveTv);
           if (data.trendingArticleId) setCurrentTrendingArticleId(data.trendingArticleId);
+          if (data.featuredYoutubeVideos && data.featuredYoutubeVideos.length > 0) setYoutubeVideos(data.featuredYoutubeVideos);
         }
       })
       .catch(err => console.log('Using local fallback for fast SSR'));
@@ -581,56 +584,164 @@ ${video.previewVideo}
       {/* Hero Spotlight & Top Stories Section (Dynamic from Admin CMS) */}
       <section className="hero-spotlight-section">
         <div className="container hero-spotlight-grid">
-          {/* Left Column: Big Featured Hero Card (Dynamic from CMS) */}
-          <Link href={`/news/${heroArticle.id}`} className="hero-featured-card">
-            {heroArticle.image ? (
-              <div className="hero-featured-image-wrapper">
-                <img 
-                  src={heroArticle.image} 
-                  alt={heroArticle.title} 
-                  className="hero-featured-image"
-                />
-                <div className="hero-featured-image-overlay"></div>
+          {/* Left Column: Big Featured Hero Card + YouTube Showcase */}
+          <div className="hero-spotlight-left">
+            <Link href={`/news/${heroArticle.id}`} className="hero-featured-card">
+              {heroArticle.image ? (
+                <div className="hero-featured-image-wrapper">
+                  <img 
+                    src={heroArticle.image} 
+                    alt={heroArticle.title} 
+                    className="hero-featured-image"
+                  />
+                  <div className="hero-featured-image-overlay"></div>
+                </div>
+              ) : (
+                <div className="hero-featured-center">
+                  <div className="hero-center-circle">
+                    <span className="hero-center-circle-text">
+                      {heroArticle.badge || 'नेक्सवार्ता विशेष'}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="hero-trending-badge">
+                {t.trending}
               </div>
-            ) : (
-              <div className="hero-featured-center">
-                <div className="hero-center-circle">
-                  <span className="hero-center-circle-text">
-                    {heroArticle.badge || 'नेक्सवार्ता विशेष'}
-                  </span>
+
+              {heroArticle.image && (
+                <div 
+                  className="hero-category-pill" 
+                  style={{ background: heroArticle.badgeColor || '#ea580c' }}
+                >
+                  {heroArticle.badge || 'नेक्सवार्ता विशेष'}
+                </div>
+              )}
+
+              <div className="hero-featured-overlay">
+                <h2 className="hero-featured-title">
+                  {language === 'en' && heroArticle.titleEn ? heroArticle.titleEn : heroArticle.title}
+                </h2>
+                <p className="hero-featured-desc">
+                  {heroArticle.summary}
+                </p>
+                <div className="hero-featured-meta">
+                  <span>{heroArticle.author || 'वृत्त कक्ष'}</span>
+                  <span>•</span>
+                  <span>{heroArticle.date || t.dateDisplay}</span>
+                  <span>•</span>
+                  <span>👁️ {heroArticle.views || '४८ हजार'} {t.views}</span>
                 </div>
               </div>
-            )}
+            </Link>
 
-            <div className="hero-trending-badge">
-              {t.trending}
-            </div>
+            {/* Nexvarta YouTube Video Hub (Fills blank space under Hero) */}
+            {youtubeVideos && youtubeVideos.length > 0 && (() => {
+              const activeYt = youtubeVideos[activeYoutubeIndex] || youtubeVideos[0];
+              const getEmbed = (url) => {
+                if (!url) return '';
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) 
+                  ? `https://www.youtube-nocookie.com/embed/${match[2]}?autoplay=0&rel=0` 
+                  : url;
+              };
+              const getThumb = (url) => {
+                if (!url) return 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400';
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11)
+                  ? `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`
+                  : 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400';
+              };
 
-            {heroArticle.image && (
-              <div 
-                className="hero-category-pill" 
-                style={{ background: heroArticle.badgeColor || '#ea580c' }}
-              >
-                {heroArticle.badge || 'नेक्सवार्ता विशेष'}
-              </div>
-            )}
+              return (
+                <div className="hero-youtube-showcase">
+                  <div className="youtube-showcase-header">
+                    <div className="youtube-badge-title">
+                      <span className="youtube-live-dot"></span>
+                      <span style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Play size={16} fill="#dc2626" />
+                        नेक्सवार्ता व्हिडिओ कव्हरेज
+                      </span>
+                    </div>
+                    {currentSiteConfig?.socialLinks?.youtube && (
+                      <a 
+                        href={currentSiteConfig.socialLinks.youtube} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="youtube-channel-btn"
+                      >
+                        ▶ YouTube चॅनेल सबस्क्राईब करा
+                      </a>
+                    )}
+                  </div>
 
-            <div className="hero-featured-overlay">
-              <h2 className="hero-featured-title">
-                {language === 'en' && heroArticle.titleEn ? heroArticle.titleEn : heroArticle.title}
-              </h2>
-              <p className="hero-featured-desc">
-                {heroArticle.summary}
-              </p>
-              <div className="hero-featured-meta">
-                <span>{heroArticle.author || 'वृत्त कक्ष'}</span>
-                <span>•</span>
-                <span>{heroArticle.date || t.dateDisplay}</span>
-                <span>•</span>
-                <span>👁️ {heroArticle.views || '४८ हजार'} {t.views}</span>
-              </div>
-            </div>
-          </Link>
+                  <div className="youtube-player-container">
+                    {/* Active Video Player */}
+                    <div className="youtube-main-col">
+                      <div className="youtube-main-player">
+                        <iframe 
+                          src={getEmbed(activeYt.url)} 
+                          title={activeYt.title} 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                          allowFullScreen
+                        />
+                      </div>
+                      <div className="youtube-main-details">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '10px 0 4px' }}>
+                          <span className="news-badge" style={{ background: '#fef2f2', color: '#dc2626', fontSize: '0.72rem', padding: '2px 8px', borderRadius: 4, fontWeight: 800 }}>
+                            {activeYt.tag || 'व्हिडिओ रिपोर्ट'}
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>👁️ {activeYt.views || '२५ हजार+'}</span>
+                        </div>
+                        <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.4, margin: 0 }}>
+                          {activeYt.title}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {/* Playlist of latest channel videos */}
+                    <div className="youtube-playlist">
+                      <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: 4, letterSpacing: 0.5 }}>
+                        ताज्या व्हिडिओ बातम्या ({youtubeVideos.length})
+                      </div>
+                      {youtubeVideos.map((yt, idx) => (
+                        <div 
+                          key={yt.id || idx} 
+                          className={`youtube-playlist-item ${idx === activeYoutubeIndex ? 'active' : ''}`}
+                          onClick={() => setActiveYoutubeIndex(idx)}
+                        >
+                          <div className="youtube-thumb-wrapper">
+                            <img src={getThumb(yt.url)} alt={yt.title} onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400'; }} />
+                            <div className="youtube-thumb-play-icon">
+                              <Play size={12} fill="#fff" />
+                            </div>
+                            {yt.duration && (
+                              <span style={{ position: 'absolute', bottom: 2, right: 3, background: 'rgba(0,0,0,0.8)', color: '#fff', fontSize: '0.62rem', padding: '1px 3px', borderRadius: 2, fontWeight: 700 }}>
+                                {yt.duration}
+                              </span>
+                            )}
+                          </div>
+                          <div className="youtube-playlist-info">
+                            <div className="youtube-playlist-title">
+                              {yt.title}
+                            </div>
+                            <div className="youtube-playlist-meta">
+                              <span style={{ color: '#dc2626', fontWeight: 700 }}>{yt.tag || 'व्हिडिओ'}</span>
+                              <span>•</span>
+                              <span>{yt.views || '१५ हजार+'}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
 
           {/* Right Column: Top Stories (Dynamic from CMS) */}
           <div className="top-stories-column">

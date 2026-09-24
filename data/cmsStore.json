@@ -784,5 +784,31 @@
       "fileSize": "185.0 MB",
       "downloadsCount": 145
     }
+  ],
+  "featuredYoutubeVideos": [
+    {
+      "id": "yt-1",
+      "title": "पुणे मेट्रो लाईन ३: हिंजवडी ते शिवाजीनगर विशेष ऑन-ग्राउंड रिपोर्ट",
+      "url": "https://www.youtube.com/watch?v=0k2ZzkwbFao",
+      "tag": "ऑन-ग्राउंड स्पेशल",
+      "duration": "४:२५",
+      "views": "२८ हजार+"
+    },
+    {
+      "id": "yt-2",
+      "title": "महाराष्ट्र नवीन औद्योगिक धोरण २०२६ - पत्रकार परिषद सविस्तर कव्हरेज",
+      "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+      "tag": "विशेष कव्हरेज",
+      "duration": "५:१२",
+      "views": "३५ हजार+"
+    },
+    {
+      "id": "yt-3",
+      "title": "पिंपरी चिंचवड: वाहतूक व स्मार्ट सिटी कनेक्टिव्हिटी ग्राउंड रिपोर्ट",
+      "url": "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
+      "tag": "ग्राउंड रिपोर्ट",
+      "duration": "३:४०",
+      "views": "१९ हजार+"
+    }
   ]
 }
