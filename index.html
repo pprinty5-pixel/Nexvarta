@@ -3256,6 +3256,11 @@ ${activeVideoModalItem.videoUrl}
       const tech = document.getElementById('techSection');
       const sports = document.getElementById('sportsSection');
 
+      if (category === 'video') {
+        scrollToSection('creatorHub');
+        return;
+      }
+
       if (category === 'all') {
         pune.style.display = 'block';
         maha.style.display = 'block';

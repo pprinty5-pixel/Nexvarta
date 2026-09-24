@@ -147,6 +147,35 @@ export default function HomePage() {
       }
     };
     window.addEventListener('nexvarta-lang-change', handleLangChange);
+
+    // Initial hash auto-scroll (e.g. nvnews.in/#creatorHub or #pune)
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'creatorHub') {
+        setActiveTab('video');
+        setTimeout(() => {
+          const el = document.getElementById('creatorHub');
+          if (el) {
+            const headerOffset = 80;
+            const elementPosition = el.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          }
+        }, 400);
+      } else if (['pune', 'maharashtra', 'india', 'tech', 'startup', 'politics', 'sports'].includes(hash)) {
+        setActiveTab(hash);
+        setTimeout(() => {
+          const el = document.getElementById(hash);
+          if (el) {
+            const headerOffset = 80;
+            const elementPosition = el.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          }
+        }, 400);
+      }
+    }
+
     return () => {
       window.removeEventListener('nexvarta-lang-change', handleLangChange);
     };
@@ -266,13 +295,62 @@ ${video.previewVideo}
     showToast('स्क्रिप्ट क्लिपबोर्डवर कॉपी झाली!');
   };
 
+  const handleCategoryNav = (catKey, targetId) => {
+    setActiveTab(catKey);
+
+    if (catKey === 'all') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (typeof window !== 'undefined' && window.location.hash) {
+        try {
+          history.pushState(null, '', window.location.pathname);
+        } catch (e) {}
+      }
+      return;
+    }
+
+    if (catKey === 'video' || targetId === 'creatorHub') {
+      const el = document.getElementById('creatorHub');
+      if (el) {
+        const headerOffset = 80;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+      if (typeof window !== 'undefined') {
+        try {
+          history.pushState(null, '', '#creatorHub');
+        } catch (e) {}
+      }
+      return;
+    }
+
+    // Scroll smoothly to target category section
+    setTimeout(() => {
+      const targetElement = document.getElementById(targetId || catKey) || document.getElementById('newsFeedBlock');
+      if (targetElement) {
+        const headerOffset = 80;
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 60);
+  };
+
   const filteredVideos = activeFormatFilter === 'all' 
     ? creatorVideos 
     : creatorVideos.filter(v => v.format === activeFormatFilter);
 
-  const displayedSections = activeTab === 'all'
+  const displayedSections = (activeTab === 'all' || activeTab === 'video')
     ? currentSections
-    : currentSections.filter(s => s.slug === activeTab);
+    : (currentSections.filter(s => s.slug === activeTab).length > 0 
+        ? currentSections.filter(s => s.slug === activeTab) 
+        : currentSections);
 
   // Derive all active published articles across all CMS news sections
   const allActiveArticles = currentSections.flatMap(sec => 
@@ -377,61 +455,79 @@ ${video.previewVideo}
           </Link>
 
           {/* Navigation Categories */}
-          <nav className="nav-categories">
+          <nav className="nav-categories" aria-label="News Categories">
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveTab('all')}
+              onClick={() => handleCategoryNav('all')}
+              title={t.home}
             >
               {t.home}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'pune' ? 'active' : ''}`}
-              onClick={() => setActiveTab('pune')}
+              onClick={() => handleCategoryNav('pune', 'pune')}
+              title={t.pune}
             >
               {t.pune}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'maharashtra' ? 'active' : ''}`}
-              onClick={() => setActiveTab('maharashtra')}
+              onClick={() => handleCategoryNav('maharashtra', 'maharashtra')}
+              title={t.maharashtra}
             >
               {t.maharashtra}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'india' ? 'active' : ''}`}
-              onClick={() => setActiveTab('india')}
+              onClick={() => handleCategoryNav('india', 'india')}
+              title={t.india}
             >
               {t.india}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'tech' ? 'active' : ''}`}
-              onClick={() => setActiveTab('tech')}
+              onClick={() => handleCategoryNav('tech', 'tech')}
+              title={t.tech}
             >
               {t.tech}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'startup' ? 'active' : ''}`}
-              onClick={() => setActiveTab('tech')}
+              onClick={() => handleCategoryNav('startup', 'startup')}
+              title={t.startup}
             >
               {t.startup}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'politics' ? 'active' : ''}`}
-              onClick={() => setActiveTab('maharashtra')}
+              onClick={() => handleCategoryNav('politics', 'politics')}
+              title={t.politics}
             >
               {t.politics}
             </button>
             <button 
+              type="button"
               className={`nav-link ${activeTab === 'sports' ? 'active' : ''}`}
-              onClick={() => setActiveTab('sports')}
+              onClick={() => handleCategoryNav('sports', 'sports')}
+              title={t.sports}
             >
               {t.sports}
             </button>
-            <a 
-              href="#creatorHub" 
-              className="nav-link"
+            <button 
+              type="button"
+              className={`nav-link ${activeTab === 'video' ? 'active' : ''}`}
+              onClick={() => handleCategoryNav('video', 'creatorHub')}
+              title={t.video}
             >
               {t.video}
-            </a>
+            </button>
           </nav>
 
           {/* Actions */}
@@ -601,8 +697,28 @@ ${video.previewVideo}
         </div>
       </section>
 
-      {displayedSections.length < 2 && <div className="container"><AdSlot placement="feed" /></div>}
       {/* Categorized News Feeds */}
+      <div id="newsFeedBlock" style={{ scrollMarginTop: 85 }}></div>
+      {activeTab !== 'all' && activeTab !== 'video' && (
+        <div className="container" style={{ margin: '20px auto 10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '12px 18px', borderRadius: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: '1.1rem' }}>📂</span>
+              <span style={{ fontSize: '0.95rem', color: '#1e40af', fontWeight: 700 }}>
+                {t[activeTab] || activeTab} वर्गवारीतील बातम्या दाखवत आहोत
+              </span>
+            </div>
+            <button 
+              type="button"
+              onClick={() => handleCategoryNav('all')} 
+              style={{ fontSize: '0.85rem', color: '#1d4ed8', fontWeight: 700, cursor: 'pointer', background: '#fff', border: '1px solid #93c5fd', padding: '6px 14px', borderRadius: 8, transition: 'all 0.2s ease' }}
+            >
+              सर्व बातम्या पहा (Show All) ✕
+            </button>
+          </div>
+        </div>
+      )}
+      {displayedSections.length < 2 && <div className="container"><AdSlot placement="feed" /></div>}
       {displayedSections.map((section, sectionIndex) => (
         <section key={section.id} className="news-category-section" id={section.slug}>
           {sectionIndex === 1 && <div className="container"><AdSlot placement="feed" /></div>}

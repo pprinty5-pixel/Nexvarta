@@ -309,10 +309,17 @@ button {
   font-size: 0.95rem;
   font-weight: 600;
   color: #334155;
-  padding: 6px 2px;
+  padding: 6px 4px 10px 4px;
   position: relative;
-  transition: color 0.15s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-link:hover {
@@ -321,17 +328,24 @@ button {
 
 .nav-link.active {
   color: #003884;
+  font-weight: 700;
 }
 
 .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: -16px;
-  left: 0;
-  right: 0;
+  bottom: 0;
+  left: 2px;
+  right: 2px;
   height: 3px;
   background-color: #003884;
-  border-radius: 3px 3px 0 0;
+  border-radius: 3px;
+}
+
+.news-category-section,
+.creator-hero,
+#creatorHub {
+  scroll-margin-top: 85px;
 }
 
 /* =========================================
@@ -1584,13 +1598,14 @@ button {
 
   .nav-link {
     font-size: 0.85rem;
-    padding: 4px 2px;
+    padding: 6px 4px 8px 4px;
     flex-shrink: 0 !important;
     white-space: nowrap !important;
+    cursor: pointer;
   }
 
   .nav-link.active::after {
-    bottom: -5px;
+    bottom: 0;
   }
 
   /* Breaking Ticker */
