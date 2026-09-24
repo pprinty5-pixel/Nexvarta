@@ -101,6 +101,7 @@ export default function AdminDashboardPage() {
   const [watermarkPosition, setWatermarkPosition] = useState('bottom-banner');
   const [watermarkTag, setWatermarkTag] = useState('🔴 NEXVARTA EXCLUSIVE');
   const [isWatermarking, setIsWatermarking] = useState(false);
+  const [rawOriginalImage, setRawOriginalImage] = useState(null);
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -582,15 +583,17 @@ export default function AdminDashboardPage() {
     showToast('🚀 AI मसुदा बातमी फॉर्ममध्ये भरला!');
   };
 
-  const handleImageFileSelected = async (file) => {
-    if (!file) return;
+  const processAndApplyWatermark = async (fileOrUrl, tag = watermarkTag, pos = watermarkPosition) => {
+    if (!fileOrUrl) return;
     try {
       setIsWatermarking(true);
-      showToast('🎨 फोटोवर वॉटरमार्क जोडत आहे...');
-      const watermarkedDataUrl = await applyWatermarkToImage(file, {
-        watermarkText: watermarkTag,
-        position: watermarkPosition,
-        locationText: 'PUNE • MAHARASHTRA'
+      const isNone = tag === '❌ विना वॉटरमार्क' || pos === 'none';
+      showToast(isNone ? '🖼️ विना-वॉटरमार्क मूळ फोटो सेट करत आहे...' : `🎨 ${tag} वॉटरमार्क जोडत आहे...`);
+
+      const watermarkedDataUrl = await applyWatermarkToImage(fileOrUrl, {
+        watermarkText: tag,
+        position: isNone ? 'none' : 'bottom-banner',
+        locationText: tag.includes('PUNE') ? 'PUNE • PCMC • MAHARASHTRA' : 'PUNE • MAHARASHTRA'
       });
 
       // Upload to server so it has a permanent real URL for WhatsApp, Facebook and social media thumbnails
@@ -598,7 +601,7 @@ export default function AdminDashboardPage() {
         const fetchRes = await fetch(watermarkedDataUrl);
         const blob = await fetchRes.blob();
         const uploadForm = new FormData();
-        const compressed = await compressImage(new File([blob], `article_img_${Date.now()}.png`, { type: blob.type }));
+        const compressed = await compressImage(new File([blob], `article_img_${Date.now()}.jpg`, { type: 'image/jpeg' }));
         uploadForm.append('file', compressed);
         const uploadRes = await fetch('/api/admin/upload-image', {
           method: 'POST',
@@ -610,26 +613,42 @@ export default function AdminDashboardPage() {
             ...prev,
             image: uploadData.url
           }));
-          showToast('✅ फोटोवर वॉटरमार्क जोडून फोटो यशस्वीरीत्या सेव्ह झाला!');
+          showToast(isNone ? '✅ विना-वॉटरमार्क मूळ फोटो सेव्ह झाला!' : `✅ ${tag} वॉटरमार्क जोडून सेव्ह झाला!`);
           return;
         }
       } catch (uploadErr) {
         console.warn('Fallback to data URL:', uploadErr);
       }
 
-      if (editingArticle) {
-        setEditingArticle({
-          ...editingArticle,
-          image: watermarkedDataUrl
-        });
-      }
-      showToast('✅ फोटोवर NEXVARTA Exclusive वॉटरमार्क यशस्वीरीत्या जोडला!');
+      setEditingArticle(prev => ({
+        ...prev,
+        image: watermarkedDataUrl
+      }));
+      showToast(isNone ? '✅ विना-वॉटरमार्क मूळ फोटो सेट केला!' : `✅ ${tag} वॉटरमार्क सेट केला!`);
     } catch (err) {
       console.error(err);
       showToast('⚠️ फोटो वॉटरमार्क करताना अडचण आली.');
     } finally {
       setIsWatermarking(false);
     }
+  };
+
+  const handleWatermarkTagSelect = async (tag) => {
+    setWatermarkTag(tag);
+    const newPos = tag === '❌ विना वॉटरमार्क' ? 'none' : 'bottom-banner';
+    setWatermarkPosition(newPos);
+
+    // If an image was uploaded or is present in the form, immediately re-render the watermark live!
+    const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null);
+    if (sourceImage) {
+      await processAndApplyWatermark(sourceImage, tag, newPos);
+    }
+  };
+
+  const handleImageFileSelected = async (file) => {
+    if (!file) return;
+    setRawOriginalImage(file);
+    await processAndApplyWatermark(file, watermarkTag, watermarkPosition);
   };
 
   const handleQuickStatusChange = (sectionId, articleId, newStatus) => {
@@ -3850,11 +3869,7 @@ export default function AdminDashboardPage() {
                       <button
                         key={tag}
                         type="button"
-                        onClick={() => {
-                          setWatermarkTag(tag);
-                          if (tag === '❌ विना वॉटरमार्क') setWatermarkPosition('none');
-                          else if (watermarkPosition === 'none') setWatermarkPosition('bottom-banner');
-                        }}
+                        onClick={() => handleWatermarkTagSelect(tag)}
                         style={{
                           padding: '4px 10px',
                           borderRadius: 6,
