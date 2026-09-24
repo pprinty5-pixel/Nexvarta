@@ -753,14 +753,16 @@ button {
 .top-story-banner {
   height: 95px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 10px;
+  padding-left: 14px;
   font-weight: 900;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   letter-spacing: 1.2px;
   color: #ffffff;
   text-transform: uppercase;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .top-story-body {
