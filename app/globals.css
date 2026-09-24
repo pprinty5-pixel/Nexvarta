@@ -2269,3 +2269,22 @@ body {
   .ads-manager h1 { font-size: 22px; }
   .ads-card > img { max-height: 120px; }
 }
+
+/* News Content Hyperlinks */
+.article-full-content-body a,
+.reader-article-content a,
+.news-detail-content a {
+  color: #003884 !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+  word-break: break-all !important;
+  cursor: pointer !important;
+  transition: color 0.15s ease;
+}
+
+.article-full-content-body a:hover,
+.reader-article-content a:hover,
+.news-detail-content a:hover {
+  color: #ea580c !important;
+  text-decoration-thickness: 2px !important;
+}

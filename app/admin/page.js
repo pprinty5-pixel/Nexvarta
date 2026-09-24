@@ -467,6 +467,35 @@ export default function AdminDashboardPage() {
     showToast('✅ फोटो बातमीमध्ये जोडला!');
   };
 
+  const handleInsertWebLink = () => {
+    const url = prompt('वेबसाईट किंवा बातमीची लिंक (URL) टाका:\nउदा. https://nvnews.in', 'https://');
+    if (!url || !url.trim() || url.trim() === 'https://' || url.trim() === 'http://') return;
+    const cleanUrl = url.trim().startsWith('http://') || url.trim().startsWith('https://') 
+      ? url.trim() 
+      : `https://${url.trim()}`;
+    const text = prompt('लिंकचे नाव (Link Text) टाका (उदा. नेक्सवार्ता मुख्य पान):', '');
+    const markdownLink = text && text.trim() ? `[${text.trim()}](${cleanUrl})` : `${cleanUrl}`;
+
+    const textarea = document.getElementById('fullStoryTextarea');
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentVal = editingArticle.fullContent || '';
+      const selected = currentVal.substring(start, end);
+      const insertText = selected ? `[${selected}](${cleanUrl})` : markdownLink;
+      const newText = currentVal.substring(0, start) + insertText + currentVal.substring(end);
+      setEditingArticle({ ...editingArticle, fullContent: newText });
+      setTimeout(() => {
+        textarea.focus();
+        const nextPos = start + insertText.length;
+        textarea.setSelectionRange(nextPos, nextPos);
+      }, 40);
+    } else {
+      setEditingArticle({ ...editingArticle, fullContent: (editingArticle.fullContent || '') + ' ' + markdownLink });
+    }
+    showToast('🔗 लिंक यशस्वीरीत्या जोडली!');
+  };
+
   // ----------------------------------------------------
   // AI MARATHI NEWS ASSISTANT & WATERMARK HELPERS
   // ----------------------------------------------------
@@ -3822,6 +3851,27 @@ export default function AdminDashboardPage() {
                           }}
                         >
                           🔗 फोटो लिंक
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleInsertWebLink}
+                          title="वेबसाईट किंवा बातमीची लिंक जोडा (Insert Web Link)"
+                          style={{
+                            height: 30,
+                            padding: '0 10px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: '#eff6ff',
+                            color: '#1d4ed8',
+                            border: '1px solid #bfdbfe',
+                            borderRadius: 5,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
+                        >
+                          🌐 लिंक जोडा
                         </button>
                         <button
                           type="button"
