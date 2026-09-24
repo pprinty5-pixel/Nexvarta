@@ -102,6 +102,10 @@ export default function AdminDashboardPage() {
   const [watermarkTag, setWatermarkTag] = useState('🔴 NEXVARTA EXCLUSIVE');
   const [isWatermarking, setIsWatermarking] = useState(false);
   const [rawOriginalImage, setRawOriginalImage] = useState(null);
+  const [watermarkLocation, setWatermarkLocation] = useState('PUNE • MAHARASHTRA');
+  const [showWatermarkLocation, setShowWatermarkLocation] = useState(true);
+  const [watermarkDomain, setWatermarkDomain] = useState('NVNEWS.IN');
+  const [showWatermarkDomain, setShowWatermarkDomain] = useState(true);
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -583,17 +587,30 @@ export default function AdminDashboardPage() {
     showToast('🚀 AI मसुदा बातमी फॉर्ममध्ये भरला!');
   };
 
-  const processAndApplyWatermark = async (fileOrUrl, tag = watermarkTag, pos = watermarkPosition) => {
+  const processAndApplyWatermark = async (
+    fileOrUrl, 
+    tag = watermarkTag, 
+    pos = watermarkPosition, 
+    overrides = {}
+  ) => {
     if (!fileOrUrl) return;
     try {
       setIsWatermarking(true);
       const isNone = tag === '❌ विना वॉटरमार्क' || pos === 'none';
       showToast(isNone ? '🖼️ विना-वॉटरमार्क मूळ फोटो सेट करत आहे...' : `🎨 ${tag} वॉटरमार्क जोडत आहे...`);
 
+      const locActive = overrides.showLocation !== undefined ? overrides.showLocation : showWatermarkLocation;
+      const locText = overrides.locationText !== undefined ? overrides.locationText : watermarkLocation;
+      const domActive = overrides.showDomain !== undefined ? overrides.showDomain : showWatermarkDomain;
+      const domText = overrides.domainText !== undefined ? overrides.domainText : watermarkDomain;
+
       const watermarkedDataUrl = await applyWatermarkToImage(fileOrUrl, {
         watermarkText: tag,
         position: isNone ? 'none' : 'bottom-banner',
-        locationText: tag.includes('PUNE') ? 'PUNE • PCMC • MAHARASHTRA' : 'PUNE • MAHARASHTRA'
+        showLocation: locActive,
+        locationText: locText,
+        showDomain: domActive,
+        domainText: domText
       });
 
       // Upload to server so it has a permanent real URL for WhatsApp, Facebook and social media thumbnails
@@ -633,15 +650,27 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const triggerWatermarkRefresh = async (overrides = {}) => {
+    const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null);
+    if (sourceImage) {
+      await processAndApplyWatermark(sourceImage, watermarkTag, watermarkPosition, overrides);
+    }
+  };
+
   const handleWatermarkTagSelect = async (tag) => {
     setWatermarkTag(tag);
     const newPos = tag === '❌ विना वॉटरमार्क' ? 'none' : 'bottom-banner';
     setWatermarkPosition(newPos);
 
-    // If an image was uploaded or is present in the form, immediately re-render the watermark live!
+    let defaultLoc = watermarkLocation;
+    if (tag.includes('PUNE') && (!watermarkLocation || watermarkLocation === 'PUNE • MAHARASHTRA')) {
+      defaultLoc = 'PUNE • PCMC • MAHARASHTRA';
+      setWatermarkLocation(defaultLoc);
+    }
+
     const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null);
     if (sourceImage) {
-      await processAndApplyWatermark(sourceImage, tag, newPos);
+      await processAndApplyWatermark(sourceImage, tag, newPos, { locationText: defaultLoc });
     }
   };
 
@@ -3886,6 +3915,125 @@ export default function AdminDashboardPage() {
                       </button>
                     ))}
                   </div>
+
+                  {/* Watermark Customization: Location Checkbox & Input + Domain Branding */}
+                  {watermarkTag !== '❌ विना वॉटरमार्क' && (
+                    <div style={{
+                      display: 'flex',
+                      gap: 12,
+                      marginBottom: 14,
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      background: '#f1f5f9',
+                      padding: '10px 14px',
+                      borderRadius: 8,
+                      border: '1px solid #e2e8f0'
+                    }}>
+                      {/* Location Checkbox + Editable Input */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 260px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', fontWeight: 700, color: '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          <input
+                            type="checkbox"
+                            checked={showWatermarkLocation}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setShowWatermarkLocation(checked);
+                              triggerWatermarkRefresh({ showLocation: checked });
+                            }}
+                            style={{ width: 16, height: 16, accentColor: '#003884', cursor: 'pointer' }}
+                          />
+                          📍 लोकेशन दाखवा:
+                        </label>
+                        <input
+                          type="text"
+                          disabled={!showWatermarkLocation}
+                          value={watermarkLocation}
+                          onChange={(e) => setWatermarkLocation(e.target.value)}
+                          onBlur={() => triggerWatermarkRefresh({ locationText: watermarkLocation })}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              triggerWatermarkRefresh({ locationText: watermarkLocation });
+                            }
+                          }}
+                          placeholder="उदा. PUNE • MAHARASHTRA किंवा पिंपरी चिंचवड"
+                          style={{
+                            flex: 1,
+                            padding: '6px 10px',
+                            borderRadius: 6,
+                            border: '1px solid #cbd5e1',
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                            background: showWatermarkLocation ? '#fff' : '#f8fafc',
+                            color: showWatermarkLocation ? '#0f172a' : '#94a3b8'
+                          }}
+                        />
+                      </div>
+
+                      {/* Domain Branding Checkbox + Editable Input */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 200px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', fontWeight: 700, color: '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          <input
+                            type="checkbox"
+                            checked={showWatermarkDomain}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setShowWatermarkDomain(checked);
+                              triggerWatermarkRefresh({ showDomain: checked });
+                            }}
+                            style={{ width: 16, height: 16, accentColor: '#003884', cursor: 'pointer' }}
+                          />
+                          🌐 ब्रँड नाव:
+                        </label>
+                        <input
+                          type="text"
+                          disabled={!showWatermarkDomain}
+                          value={watermarkDomain}
+                          onChange={(e) => setWatermarkDomain(e.target.value)}
+                          onBlur={() => triggerWatermarkRefresh({ domainText: watermarkDomain })}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              triggerWatermarkRefresh({ domainText: watermarkDomain });
+                            }
+                          }}
+                          placeholder="NVNEWS.IN"
+                          style={{
+                            flex: 1,
+                            padding: '6px 10px',
+                            borderRadius: 6,
+                            border: '1px solid #cbd5e1',
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                            background: showWatermarkDomain ? '#fff' : '#f8fafc',
+                            color: showWatermarkDomain ? '#003884' : '#94a3b8'
+                          }}
+                        />
+                      </div>
+
+                      {/* Quick Apply Button when an image is loaded */}
+                      {(rawOriginalImage || editingArticle?.image) && (
+                        <button
+                          type="button"
+                          onClick={() => triggerWatermarkRefresh()}
+                          title="बदललेले लोकेशन / नाव तात्काळ फोटोवर वॉटरमार्क करा"
+                          style={{
+                            padding: '5px 12px',
+                            borderRadius: 6,
+                            background: '#0284c7',
+                            color: '#fff',
+                            border: 'none',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          🔄 लागू करा
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   {/* Drag & Drop Upload Box */}
                   <div 
