@@ -99,7 +99,8 @@ export default function AdminDashboardPage() {
 
   // Watermark Studio State
   const [watermarkPosition, setWatermarkPosition] = useState('bottom-banner');
-  const [watermarkTag, setWatermarkTag] = useState('🔴 NEXVARTA EXCLUSIVE');
+  const [watermarkTag, setWatermarkTag] = useState('🌟 अधिकृत लोगो');
+  const [showWatermarkLogo, setShowWatermarkLogo] = useState(true);
   const [isWatermarking, setIsWatermarking] = useState(false);
   const [rawOriginalImage, setRawOriginalImage] = useState(null);
   const [watermarkLocation, setWatermarkLocation] = useState('PUNE • MAHARASHTRA');
@@ -603,6 +604,8 @@ export default function AdminDashboardPage() {
       const locText = overrides.locationText !== undefined ? overrides.locationText : watermarkLocation;
       const domActive = overrides.showDomain !== undefined ? overrides.showDomain : showWatermarkDomain;
       const domText = overrides.domainText !== undefined ? overrides.domainText : watermarkDomain;
+      const logoActive = overrides.showLogo !== undefined ? overrides.showLogo : showWatermarkLogo;
+      const currentLogoUrl = overrides.logoUrl !== undefined ? overrides.logoUrl : (cmsData?.siteConfig?.logoUrl || '/uploads/logos/nexvarta_official_logo.png');
 
       const watermarkedDataUrl = await applyWatermarkToImage(fileOrUrl, {
         watermarkText: tag,
@@ -610,7 +613,9 @@ export default function AdminDashboardPage() {
         showLocation: locActive,
         locationText: locText,
         showDomain: domActive,
-        domainText: domText
+        domainText: domText,
+        showLogo: logoActive,
+        logoUrl: currentLogoUrl
       });
 
       // Upload to server so it has a permanent real URL for WhatsApp, Facebook and social media thumbnails
@@ -651,7 +656,7 @@ export default function AdminDashboardPage() {
   };
 
   const triggerWatermarkRefresh = async (overrides = {}) => {
-    const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null);
+    const sourceImage = rawOriginalImage || (editingArticle?.image && !editingArticle.image.startsWith('data:') ? editingArticle.image : null) || editingArticle?.image;
     if (sourceImage) {
       await processAndApplyWatermark(sourceImage, watermarkTag, watermarkPosition, overrides);
     }
@@ -3890,6 +3895,7 @@ export default function AdminDashboardPage() {
                   <div style={{ display: 'flex', gap: 10, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>वॉटरमार्क टॅग:</span>
                     {[
+                      '🌟 अधिकृत लोगो',
                       '🔴 NEXVARTA EXCLUSIVE',
                       '⚡ NEXVARTA SPECIAL',
                       '📍 NEXVARTA PUNE',
@@ -3929,8 +3935,23 @@ export default function AdminDashboardPage() {
                       borderRadius: 8,
                       border: '1px solid #e2e8f0'
                     }}>
+                      {/* Official Logo Toggle Checkbox */}
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', fontWeight: 700, color: '#003884', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                        <input
+                          type="checkbox"
+                          checked={showWatermarkLogo}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setShowWatermarkLogo(checked);
+                            triggerWatermarkRefresh({ showLogo: checked });
+                          }}
+                          style={{ width: 16, height: 16, accentColor: '#003884', cursor: 'pointer' }}
+                        />
+                        🌟 अधिकृत लोगो
+                      </label>
+
                       {/* Location Checkbox + Editable Input */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 260px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 240px' }}>
                         <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', fontWeight: 700, color: '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                           <input
                             type="checkbox"
@@ -3942,7 +3963,7 @@ export default function AdminDashboardPage() {
                             }}
                             style={{ width: 16, height: 16, accentColor: '#003884', cursor: 'pointer' }}
                           />
-                          📍 लोकेशन दाखवा:
+                          📍 लोकेशन:
                         </label>
                         <input
                           type="text"
@@ -4072,14 +4093,28 @@ export default function AdminDashboardPage() {
                         />
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                          <span style={{ fontSize: '0.725rem', background: '#dcfce7', color: '#15803d', fontWeight: 800, padding: '2px 8px', borderRadius: 4 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '0.725rem', background: '#dcfce7', color: '#15803d', fontWeight: 800, padding: '3px 8px', borderRadius: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <img 
+                              src={cmsData?.siteConfig?.logoUrl || '/uploads/logos/nexvarta_official_logo.png'} 
+                              alt="Logo" 
+                              style={{ height: 14, width: 'auto', borderRadius: 2 }} 
+                              onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                            />
                             ✓ वॉटरमार्क तयार आहे
                           </span>
                           <button
                             type="button"
+                            onClick={() => triggerWatermarkRefresh()}
+                            style={{ fontSize: '0.725rem', color: '#fff', background: '#003884', border: 'none', borderRadius: 4, padding: '3px 8px', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}
+                            title="या फोटोवर अधिकृत लोगो वॉटरमार्क लावा किंवा रिफ्रेश करा"
+                          >
+                            🎨 या फोटोवर वॉटरमार्क लावा
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => setEditingArticle({ ...editingArticle, image: '' })}
-                            style={{ fontSize: '0.725rem', color: '#dc2626', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+                            style={{ fontSize: '0.725rem', color: '#dc2626', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 700, marginLeft: 'auto' }}
                           >
                             फोटो काढून टाका
                           </button>
@@ -4092,6 +4127,23 @@ export default function AdminDashboardPage() {
                           style={{ width: '100%', padding: '6px 10px', fontSize: '0.75rem', border: '1px solid #cbd5e1', borderRadius: 6, color: '#475569' }}
                         />
                       </div>
+                    </div>
+                  )}
+
+                  {/* Fallback button if no photo is currently set */}
+                  {!editingArticle.image && (
+                    <div style={{ marginTop: 8, display: 'flex', justifyContent: 'flex-end' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const defaultLogo = cmsData?.siteConfig?.logoUrl || '/uploads/logos/nexvarta_official_logo.png';
+                          setEditingArticle(prev => ({ ...prev, image: defaultLogo }));
+                          showToast('✅ डीफॉल्ट लोगो इमेज सेट केली!');
+                        }}
+                        style={{ fontSize: '0.75rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 6, padding: '4px 10px', color: '#003884', fontWeight: 700, cursor: 'pointer' }}
+                      >
+                        🖼️ बातमीसाठी डीफॉल्ट लोगो इमेज वापरा
+                      </button>
                     </div>
                   )}
                 </div>
