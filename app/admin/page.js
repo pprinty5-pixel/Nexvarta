@@ -2328,7 +2328,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={handleSaveAllChanges}
+                  onClick={() => saveCmsData(cmsData)}
                   disabled={isSaving}
                   style={{
                     background: '#ea580c',
