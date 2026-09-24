@@ -1298,7 +1298,7 @@ export default function AdminDashboardPage() {
             style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '12px 16px', borderRadius: 8, fontWeight: 700, fontSize: '0.9rem', color: activeTab === 'livetv' ? '#fff' : '#475569', background: activeTab === 'livetv' ? '#003884' : 'transparent' }}
           >
             <Tv size={18} />
-            <span>Live TV कंट्रोल</span>
+            <span>Live TV व YouTube व्हिडिओ</span>
           </button>
 
           <button 
@@ -2317,55 +2317,290 @@ export default function AdminDashboardPage() {
           )}
 
           {/* =========================================================================
-              TAB 5: LIVE TV CONTROL
+              TAB 5: LIVE TV & YOUTUBE VIDEOS CONTROL
               ========================================================================= */}
           {activeTab === 'livetv' && (
             <div>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Live TV कंट्रोलर</h2>
-              <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: 24 }}>२४x७ लाइव्ह ब्रॉडकास्टची व्हिडिओ लिंक व माहिती व्यवस्थापित करा.</p>
-
-              <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, maxWidth: 680 }}>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>लाइव्ह स्ट्रीम शीर्षक (Stream Title)</label>
-                  <input 
-                    type="text" 
-                    value={cmsData.liveTv.title} 
-                    onChange={(e) => {
-                      const updated = { ...cmsData };
-                      updated.liveTv.title = e.target.value;
-                      setCmsData(updated);
-                    }}
-                    style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
-                  />
-                </div>
-
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>व्हिडिओ MP4 / HLS / YouTube URL</label>
-                  <input 
-                    type="url" 
-                    value={cmsData.liveTv.videoUrl} 
-                    onChange={(e) => {
-                      const updated = { ...cmsData };
-                      updated.liveTv.videoUrl = e.target.value;
-                      setCmsData(updated);
-                    }}
-                    style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
-                  />
-                </div>
-
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>दर्शकांची संख्या (Live Viewers Text)</label>
-                  <input 
-                    type="text" 
-                    value={cmsData.liveTv.viewers} 
-                    onChange={(e) => {
-                      const updated = { ...cmsData };
-                      updated.liveTv.viewers = e.target.value;
-                      setCmsData(updated);
-                    }}
-                    style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
-                  />
+                  <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Live TV व YouTube व्हिडिओ व्यवस्थापन</h2>
+                  <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>२४x७ लाइव्ह ब्रॉडकास्ट आणि मुख्य पानावरील YouTube व्हिडिओ कव्हरेज व्यवस्थापित करा.</p>
                 </div>
+                <button
+                  type="button"
+                  onClick={handleSaveAllChanges}
+                  disabled={isSaving}
+                  style={{
+                    background: '#ea580c',
+                    color: '#fff',
+                    fontWeight: 800,
+                    padding: '10px 22px',
+                    borderRadius: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    cursor: isSaving ? 'not-allowed' : 'pointer',
+                    boxShadow: '0 2px 6px rgba(234, 88, 12, 0.25)'
+                  }}
+                >
+                  <Save size={16} /> {isSaving ? 'सेव्ह होत आहे...' : 'सर्व बदल सेव्ह करा'}
+                </button>
+              </div>
+
+              {/* 1. Live TV Stream Box */}
+              <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, marginBottom: 28 }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Tv size={20} color="#dc2626" /> २४x७ Live TV कंट्रोलर (Live Stream)
+                </h3>
+                <p style={{ fontSize: '0.825rem', color: '#64748b', marginBottom: 18 }}>
+                  हेडरमधील "Live TV" बटणावर क्लिक केल्यावर सुरू होणारा थेट प्रवाह (YouTube Live, HLS किंवा MP4 लिंक).
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+                  <div>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>लाइव्ह स्ट्रीम शीर्षक (Stream Title)</label>
+                    <input 
+                      type="text" 
+                      value={cmsData.liveTv?.title || ''} 
+                      onChange={(e) => {
+                        const updated = { ...cmsData };
+                        if (!updated.liveTv) updated.liveTv = {};
+                        updated.liveTv.title = e.target.value;
+                        setCmsData(updated);
+                      }}
+                      style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>व्हिडिओ MP4 / HLS / YouTube URL</label>
+                    <input 
+                      type="url" 
+                      value={cmsData.liveTv?.videoUrl || ''} 
+                      placeholder="उदा. https://www.youtube.com/watch?v=..."
+                      onChange={(e) => {
+                        const updated = { ...cmsData };
+                        if (!updated.liveTv) updated.liveTv = {};
+                        updated.liveTv.videoUrl = e.target.value;
+                        setCmsData(updated);
+                      }}
+                      style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>दर्शकांची संख्या (Live Viewers Text)</label>
+                    <input 
+                      type="text" 
+                      value={cmsData.liveTv?.viewers || ''} 
+                      onChange={(e) => {
+                        const updated = { ...cmsData };
+                        if (!updated.liveTv) updated.liveTv = {};
+                        updated.liveTv.viewers = e.target.value;
+                        setCmsData(updated);
+                      }}
+                      style={{ width: '100%', padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, marginTop: 4 }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Homepage Featured YouTube Videos Showcase */}
+              <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, marginBottom: 28 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Play size={20} color="#ea580c" /> होमपेज "नेक्सवार्ता व्हिडिओ कव्हरेज" (YouTube Playlist)
+                    </h3>
+                    <p style={{ fontSize: '0.825rem', color: '#64748b', marginTop: 4, marginBottom: 0 }}>
+                      होमपेजवर ट्रेंडिंग बातमीच्या खाली दिसणारे YouTube व्हिडिओ येथे जोडा, संपादित करा किंवा बदला.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = { ...cmsData };
+                      if (!updated.featuredYoutubeVideos) updated.featuredYoutubeVideos = [];
+                      updated.featuredYoutubeVideos.push({
+                        id: `yt-${Date.now()}`,
+                        title: 'नवीन विशेष व्हिडिओ बातमी',
+                        url: 'https://www.youtube.com/watch?v=0k2ZzkwbFao',
+                        tag: 'ताज्या घडामोडी',
+                        duration: '३:३०',
+                        views: '१० हजार+'
+                      });
+                      setCmsData(updated);
+                      showToast('✅ नवीन व्हिडिओ जोडला! माहिती भरून सेव्ह करा.');
+                    }}
+                    style={{
+                      background: '#003884',
+                      color: '#fff',
+                      fontWeight: 700,
+                      padding: '8px 16px',
+                      borderRadius: 8,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      fontSize: '0.85rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Plus size={16} /> नवीन YouTube व्हिडिओ जोडा
+                  </button>
+                </div>
+
+                {/* Video List */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {(cmsData.featuredYoutubeVideos || []).map((video, idx) => {
+                    const ytMatch = video.url ? video.url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]*).*/) : null;
+                    const videoId = (ytMatch && ytMatch[2].length === 11) ? ytMatch[2] : null;
+                    const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400';
+
+                    return (
+                      <div 
+                        key={video.id || idx}
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '140px 1fr auto',
+                          gap: 16,
+                          alignItems: 'center',
+                          padding: 16,
+                          background: '#f8fafc',
+                          borderRadius: 10,
+                          border: '1px solid #e2e8f0'
+                        }}
+                      >
+                        {/* Video Thumbnail */}
+                        <div style={{ position: 'relative', width: 140, height: 80, borderRadius: 8, overflow: 'hidden', background: '#000' }}>
+                          <img src={thumbUrl} alt="Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)' }}>
+                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                              <Play size={12} fill="#fff" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Video Form Fields */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 10 }}>
+                          <div style={{ gridColumn: 'span 2' }}>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569' }}>व्हिडिओ शीर्षक (Title) *</label>
+                            <input 
+                              type="text" 
+                              value={video.title || ''}
+                              onChange={(e) => {
+                                const updated = { ...cmsData };
+                                updated.featuredYoutubeVideos[idx].title = e.target.value;
+                                setCmsData(updated);
+                              }}
+                              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }}
+                            />
+                          </div>
+
+                          <div style={{ gridColumn: 'span 2' }}>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569' }}>YouTube URL (उदा. https://www.youtube.com/watch?v=...) *</label>
+                            <input 
+                              type="url" 
+                              value={video.url || ''}
+                              onChange={(e) => {
+                                const updated = { ...cmsData };
+                                updated.featuredYoutubeVideos[idx].url = e.target.value;
+                                setCmsData(updated);
+                              }}
+                              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }}
+                            />
+                          </div>
+
+                          <div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569' }}>टॅग (Tag / Category)</label>
+                            <input 
+                              type="text" 
+                              value={video.tag || ''}
+                              placeholder="उदा. ऑन-ग्राउंड स्पेशल"
+                              onChange={(e) => {
+                                const updated = { ...cmsData };
+                                updated.featuredYoutubeVideos[idx].tag = e.target.value;
+                                setCmsData(updated);
+                              }}
+                              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }}
+                            />
+                          </div>
+
+                          <div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569' }}>कालावधी (Duration)</label>
+                            <input 
+                              type="text" 
+                              value={video.duration || ''}
+                              placeholder="उदा. ४:२५"
+                              onChange={(e) => {
+                                const updated = { ...cmsData };
+                                updated.featuredYoutubeVideos[idx].duration = e.target.value;
+                                setCmsData(updated);
+                              }}
+                              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }}
+                            />
+                          </div>
+
+                          <div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569' }}>व्ह्यूज (Views Display)</label>
+                            <input 
+                              type="text" 
+                              value={video.views || ''}
+                              placeholder="उदा. २५ हजार+"
+                              onChange={(e) => {
+                                const updated = { ...cmsData };
+                                updated.featuredYoutubeVideos[idx].views = e.target.value;
+                                setCmsData(updated);
+                              }}
+                              style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Delete Button */}
+                        <div>
+                          <button
+                            type="button"
+                            title="व्हिडिओ काढून टाका"
+                            onClick={() => {
+                              if (confirm('हा YouTube व्हिडिओ काढून टाकायचा आहे का?')) {
+                                const updated = { ...cmsData };
+                                updated.featuredYoutubeVideos = updated.featuredYoutubeVideos.filter((_, i) => i !== idx);
+                                setCmsData(updated);
+                                showToast('🗑️ व्हिडिओ काढून टाकला!');
+                              }
+                            }}
+                            style={{
+                              background: '#fee2e2',
+                              color: '#dc2626',
+                              border: '1px solid #fecaca',
+                              padding: 8,
+                              borderRadius: 8,
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {(!cmsData.featuredYoutubeVideos || cmsData.featuredYoutubeVideos.length === 0) && (
+                    <div style={{ textAlign: 'center', padding: '30px', color: '#64748b', background: '#f8fafc', borderRadius: 8, border: '1px dashed #cbd5e1' }}>
+                      कोणताही YouTube व्हिडिओ उपलब्ध नाही. वरील <strong>"नवीन YouTube व्हिडिओ जोडा"</strong> बटण दाबून व्हिडिओ जोडा.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 3. Helpful Info Card: How to embed YouTube videos in news stories */}
+              <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, padding: 18 }}>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#166534', margin: '0 0 6px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  💡 बातमीच्या मजकुरात (News Article) YouTube व्हिडिओ कसा दाखवावा?
+                </h4>
+                <p style={{ fontSize: '0.85rem', color: '#14532d', lineHeight: 1.6, margin: 0 }}>
+                  कोणत्याही बातमीत YouTube व्हिडिओ दाखवण्यासाठी, <strong>"बातम्या व्यवस्थापन"</strong> मध्ये जाऊन बातमीच्या सविस्तर मजकुरात नवीन ओळीवर फक्त YouTube व्हिडिओची लिंक (उदा. <code>https://www.youtube.com/watch?v=aqz-KE-bpKQ</code> किंवा <code>https://youtu.be/...</code>) पेस्ट करा. ती बातमी वाचणाऱ्यांसाठी आपोआप थेट प्ले होणारा YouTube प्लेयर बनेल!
+                </p>
               </div>
             </div>
           )}
