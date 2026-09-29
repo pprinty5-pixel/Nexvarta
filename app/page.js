@@ -154,8 +154,10 @@ export default function HomePage() {
     };
     window.addEventListener('nexvarta-lang-change', handleLangChange);
 
-    // Initial hash auto-scroll (e.g. nvnews.in/#creatorHub or #pune)
-    if (typeof window !== 'undefined' && window.location.hash) {
+    // Scroll to a hash only on a fresh navigation. On browser refresh, always keep the page at the top.
+    const navigationEntry = typeof performance !== 'undefined' ? performance.getEntriesByType('navigation')[0] : null;
+    const isPageRefresh = navigationEntry?.type === 'reload';
+    if (typeof window !== 'undefined' && window.location.hash && !isPageRefresh) {
       const hash = window.location.hash.replace('#', '');
       if (hash === 'creatorHub') {
         setActiveTab('video');
@@ -180,6 +182,9 @@ export default function HomePage() {
           }
         }, 400);
       }
+    } else if (typeof window !== 'undefined' && isPageRefresh && window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.scrollTo(0, 0);
     }
 
     return () => {
