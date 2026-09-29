@@ -1,5 +1,18 @@
 import './globals.css';
 import GoogleTranslator from './components/GoogleTranslator';
+import fs from 'fs';
+import path from 'path';
+
+export const dynamic = 'force-dynamic';
+
+function getSiteFavicon() {
+  try {
+    const store = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data', 'cmsStore.json'), 'utf8'));
+    return store?.siteConfig?.faviconUrl || '/favicon.ico';
+  } catch {
+    return '/favicon.ico';
+  }
+}
 
 export const viewport = {
   width: 'device-width',
@@ -7,7 +20,8 @@ export const viewport = {
   maximumScale: 5,
 };
 
-export const metadata = {
+export async function generateMetadata() {
+  return {
   title: 'NEXVARTA | The Next Voice of News | Pune & Maharashtra Live News & Creator Video Hub',
   description: 'Delivering credible, fast, and hyperlocal journalism from Pune to the world. Features 24x7 Live News, Pune Metro, Maharashtra Policy, and B2B Creator Video Syndication with readymade 9:16 Reels and 16:9 4K packages.',
   keywords: ['Nexvarta', 'Pune News', 'Maharashtra News', 'Pune Metro', 'Hinjewadi IT Park', 'Creator Video Syndication', 'News Reels', '9:16 News'],
@@ -15,9 +29,7 @@ export const metadata = {
   creator: 'Nexvarta Media Pvt. Ltd.',
   publisher: 'Nexvarta Media Pvt. Ltd.',
   metadataBase: new URL('https://nvnews.in'),
-  icons: {
-    icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>',
-  },
+    icons: { icon: getSiteFavicon() },
   alternates: {
     canonical: '/',
   },
@@ -44,7 +56,8 @@ export const metadata = {
     images: ['https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=630&fit=crop'],
     creator: '@NexvartaNews',
   },
-};
+  };
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -102,4 +115,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-

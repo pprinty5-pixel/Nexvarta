@@ -641,7 +641,10 @@ ${video.previewVideo}
 
             {/* Nexvarta YouTube Video Hub (Fills blank space under Hero) */}
             {youtubeVideos && youtubeVideos.length > 0 && (() => {
-              const activeYt = youtubeVideos[activeYoutubeIndex] || youtubeVideos[0];
+              const visibleVideos = [...youtubeVideos]
+                .sort((a, b) => Number(Boolean(b.isMain)) - Number(Boolean(a.isMain)) || (Number(b.priority) || 0) - (Number(a.priority) || 0))
+                .slice(0, 4);
+              const activeYt = visibleVideos[activeYoutubeIndex] || visibleVideos[0];
               const getEmbed = (url) => {
                 if (!url) return '';
                 const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -708,9 +711,9 @@ ${video.previewVideo}
                     {/* Playlist of latest channel videos */}
                     <div className="youtube-playlist">
                       <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: 4, letterSpacing: 0.5 }}>
-                        ताज्या व्हिडिओ बातम्या ({youtubeVideos.length})
+                        ताज्या व्हिडिओ बातम्या ({visibleVideos.length})
                       </div>
-                      {youtubeVideos.map((yt, idx) => (
+                      {visibleVideos.map((yt, idx) => (
                         <div 
                           key={yt.id || idx} 
                           className={`youtube-playlist-item ${idx === activeYoutubeIndex ? 'active' : ''}`}

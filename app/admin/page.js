@@ -120,6 +120,7 @@ export default function AdminDashboardPage() {
 
   // Logo Upload State
   const [isLogoUploading, setIsLogoUploading] = useState(false);
+  const [isFaviconUploading, setIsFaviconUploading] = useState(false);
   const [isInlineImgUploading, setIsInlineImgUploading] = useState(false);
   const [logoPreviewBg, setLogoPreviewBg] = useState('light'); // 'light' | 'dark'
   const [logoLoadError, setLogoLoadError] = useState(false);
@@ -270,6 +271,31 @@ export default function AdminDashboardPage() {
       showToast('⚠️ नेटवर्क एरर आला.');
     } finally {
       setIsLogoUploading(false);
+    }
+  };
+
+  const handleFaviconUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('⚠️ Favicon फाईल 2MB पेक्षा लहान असावी.');
+      return;
+    }
+    try {
+      setIsFaviconUploading(true);
+      const formData = new FormData();
+      formData.append('file', await compressImage(file));
+      const res = await fetch('/api/admin/upload-image', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');
+      const updated = { ...cmsData, siteConfig: { ...(cmsData.siteConfig || {}), faviconUrl: data.url } };
+      setCmsData(updated);
+      await saveCmsData(updated);
+      showToast('✅ Favicon अपलोड आणि सेव्ह झाले! साइट refresh केल्यावर दिसेल.');
+    } catch (err) {
+      showToast('⚠️ Favicon अपलोड करताना त्रुटी आली.');
+    } finally {
+      setIsFaviconUploading(false);
     }
   };
 
@@ -2482,7 +2508,9 @@ export default function AdminDashboardPage() {
                         url: 'https://www.youtube.com/watch?v=0k2ZzkwbFao',
                         tag: 'ताज्या घडामोडी',
                         duration: '३:३०',
-                        views: '१० हजार+'
+                        views: '१० हजार+',
+                        priority: 0,
+                        isMain: false
                       });
                       setCmsData(updated);
                       showToast('✅ नवीन व्हिडिओ जोडला! माहिती भरून सेव्ह करा.');
@@ -2609,6 +2637,16 @@ export default function AdminDashboardPage() {
                               style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }}
                             />
                           </div>
+
+                          <div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569' }}>Priority (0–100)</label>
+                            <input type="number" min="0" max="100" value={video.priority ?? 0} onChange={(e) => { const updated = { ...cmsData }; updated.featuredYoutubeVideos[idx].priority = Math.max(0, Math.min(100, Number(e.target.value) || 0)); setCmsData(updated); }} style={{ width: '100%', padding: '7px 10px', fontSize: '0.85rem', border: '1px solid #cbd5e1', borderRadius: 6, marginTop: 2 }} />
+                          </div>
+
+                          <label style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: '0.78rem', fontWeight: 800, color: '#334155', cursor: 'pointer', marginTop: 18 }}>
+                            <input type="checkbox" checked={Boolean(video.isMain)} onChange={(e) => { const updated = { ...cmsData }; updated.featuredYoutubeVideos = updated.featuredYoutubeVideos.map((item, i) => ({ ...item, isMain: i === idx ? e.target.checked : false })); setCmsData(updated); }} />
+                            मुख्य Main Video
+                          </label>
                         </div>
 
                         {/* Delete Button */}
@@ -2878,6 +2916,23 @@ export default function AdminDashboardPage() {
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/* Favicon Settings */}
+              <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, marginBottom: 20 }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  🌐 Browser Favicon सेटिंग्स
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 16px' }}>ब्राउझर tab मध्ये दिसणारे छोटे icon upload करा किंवा image URL द्या.</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
+                  <input type="file" id="faviconFileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml,.ico" style={{ display: 'none' }} onClick={(e) => { e.target.value = null; }} onChange={handleFaviconUpload} disabled={isFaviconUploading} />
+                  <label htmlFor="faviconFileInput" style={{ cursor: 'pointer', background: '#003884', color: '#fff', padding: '10px 16px', borderRadius: 8, fontWeight: 800, fontSize: '0.85rem' }}>
+                    <UploadCloud size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} />{isFaviconUploading ? 'अपलोड होत आहे...' : 'Favicon Upload करा'}
+                  </label>
+                  <input type="text" placeholder="https://.../favicon.png किंवा /uploads/logos/..." value={cmsData.siteConfig?.faviconUrl || ''} onChange={(e) => setCmsData({ ...cmsData, siteConfig: { ...(cmsData.siteConfig || {}), faviconUrl: e.target.value } })} style={{ flex: 1, minWidth: 260, padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: 8 }} />
+                  {cmsData.siteConfig?.faviconUrl && <img src={cmsData.siteConfig.faviconUrl} alt="Favicon preview" style={{ width: 32, height: 32, objectFit: 'contain', border: '1px solid #cbd5e1', borderRadius: 6 }} />}
+                </div>
+                <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '10px 0 0' }}>URL बदलल्यानंतर खालील “सर्व बदल सेव्ह करा” बटण दाबा. PNG/SVG, square 32×32 किंवा 64×64 उत्तम.</p>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
