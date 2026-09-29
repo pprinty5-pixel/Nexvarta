@@ -315,7 +315,7 @@ ${video.previewVideo}
     }
 
     if (catKey === 'video' || targetId === 'creatorHub') {
-      const el = document.getElementById('creatorHub');
+      const el = document.getElementById('youtubeVideos') || document.getElementById('creatorHub');
       if (el) {
         const headerOffset = 80;
         const elementPosition = el.getBoundingClientRect().top;
@@ -327,7 +327,7 @@ ${video.previewVideo}
       }
       if (typeof window !== 'undefined') {
         try {
-          history.pushState(null, '', '#creatorHub');
+          history.pushState(null, '', '#youtubeVideos');
         } catch (e) {}
       }
       return;
@@ -665,7 +665,7 @@ ${video.previewVideo}
               };
 
               return (
-                <div className="hero-youtube-showcase">
+                <div className="hero-youtube-showcase" id="youtubeVideos" style={{ scrollMarginTop: 90 }}>
                   <div className="youtube-showcase-header">
                     <div className="youtube-badge-title">
                       <span className="youtube-live-dot"></span>
