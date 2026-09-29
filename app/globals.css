@@ -258,6 +258,30 @@ button {
   text-decoration: none;
 }
 
+.market-indices {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.market-index-card {
+  min-width: 132px;
+  padding: 6px 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  line-height: 1.15;
+}
+
+.market-index-name { display: flex; align-items: center; gap: 4px; color: #475569; font-size: .66rem; font-weight: 800; }
+.market-live-dot { width: 5px; height: 5px; border-radius: 50%; background: #16a34a; display: inline-block; }
+.market-index-card strong { display: block; color: #0f172a; font-size: .92rem; margin: 3px 0; }
+.market-change { font-size: .64rem; font-weight: 700; }
+.market-change.up { color: #15803d; }
+.market-change.down { color: #dc2626; }
+.market-loading { color: #64748b; font-size: .72rem; padding: 12px 8px; }
+
 .brand-logo-icon {
   width: 44px;
   height: 44px;
@@ -1716,6 +1740,9 @@ button {
     flex: 1;
     min-width: 0;
   }
+
+  .market-indices { order: 2; width: 100%; overflow-x: auto; }
+  .market-index-card { flex: 1; min-width: 128px; }
 
   .brand-logo-icon {
     width: 36px;

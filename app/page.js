@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AdSlot from './components/AdSlot';
 import LiveDate from './components/LiveDate';
+import MarketIndices from './components/MarketIndices';
 import { siteConfig, nexvartaShorts, newsSections, initialYoutubeVideos } from '../data/newsData';
 import { subscriptionPlan, initialCreatorVideos } from '../data/creatorsData';
 import { renderRichContent } from '../lib/formatContent';
@@ -456,6 +457,8 @@ ${video.previewVideo}
               </div>
             )}
           </Link>
+
+          <MarketIndices />
 
           {/* Navigation Categories */}
           <nav className="nav-categories" aria-label="News Categories">
