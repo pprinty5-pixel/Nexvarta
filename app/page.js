@@ -30,7 +30,7 @@ import {
   Monitor,
   Printer
 } from 'lucide-react';
-import { openEPaperPrintWindow, downloadEPaperPDF } from '../lib/epaperDownloader';
+import { openEPaperPrintWindow, downloadEPaperPDF, downloadDailyNewsPDF } from '../lib/epaperDownloader';
 import { translations, getLiveDateDisplay } from '../lib/i18n';
 import { applyLanguage, getSavedLanguage } from '../lib/translator';
 
@@ -404,7 +404,10 @@ ${video.previewVideo}
             <button 
               className="super-top-link"
               style={{ background: 'rgba(255,255,255,0.15)', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}
-              onClick={() => setIsEPaperModalOpen(true)}
+              onClick={() => {
+                downloadDailyNewsPDF({ sections: currentSections, date: getLiveDateDisplay(language) });
+                showToast('📥 आजच्या section-wise बातम्यांची PDF download होत आहे...');
+              }}
             >
               {t.ePaper}
             </button>
