@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import Link from 'next/link';
 import AdSlot from './components/AdSlot';
 import LiveDate from './components/LiveDate';
@@ -838,7 +838,8 @@ ${video.previewVideo}
         </div>
       )}
       {displayedSections.map((section, sectionIndex) => (
-        <section key={section.id} className="news-category-section" id={section.slug}>
+        <Fragment key={section.id}>
+        <section className="news-category-section" id={section.slug}>
           <div className="container">
             <div className="section-title-wrap">
               <h2 className="section-title">
@@ -933,6 +934,7 @@ ${video.previewVideo}
         <div key={`${section.id}-ad`} className="container">
           <AdSlot placement="feed" />
         </div>
+        </Fragment>
       ))}
 
       {/* B2B Creator & Media Video Syndication Hub */}
