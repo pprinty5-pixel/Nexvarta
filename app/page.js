@@ -837,10 +837,8 @@ ${video.previewVideo}
           </div>
         </div>
       )}
-      {displayedSections.length < 2 && <div className="container"><AdSlot placement="feed" /></div>}
       {displayedSections.map((section, sectionIndex) => (
         <section key={section.id} className="news-category-section" id={section.slug}>
-          {sectionIndex === 1 && <div className="container"><AdSlot placement="feed" /></div>}
           <div className="container">
             <div className="section-title-wrap">
               <h2 className="section-title">
@@ -932,6 +930,9 @@ ${video.previewVideo}
             )}
           </div>
         </section>
+        <div key={`${section.id}-ad`} className="container">
+          <AdSlot placement="feed" />
+        </div>
       ))}
 
       {/* B2B Creator & Media Video Syndication Hub */}
