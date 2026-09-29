@@ -2421,12 +2421,12 @@ body {
 /* Direct advertisements: fixed ratios, uncropped artwork, no overlays. */
 .nv-ad { margin: 18px auto; width: 100%; min-width: 0; }
 .nv-ad-header { max-width: 970px; }
-.nv-ad-feed { max-width: 728px; }
+.nv-ad-feed { max-width: 900px; }
 .nv-ad-sidebar { max-width: 300px; }
 .nv-ad-label { color: #64748b; font-size: 11px; text-align: center; margin-bottom: 5px; letter-spacing: .06em; }
 .nv-ad-frame { display: block; width: 100%; overflow: hidden; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; }
 .nv-ad-header .nv-ad-frame { aspect-ratio: 970 / 90; }
-.nv-ad-feed .nv-ad-frame { aspect-ratio: 728 / 90; }
+.nv-ad-feed .nv-ad-frame { aspect-ratio: 970 / 90; }
 .nv-ad-sidebar .nv-ad-frame { aspect-ratio: 300 / 250; }
 .nv-ad-frame picture { display: block; width: 100%; height: 100%; }
 .nv-ad-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -2453,7 +2453,7 @@ body {
 .ads-help, .ads-manager small { font-size: 12px; color: #64748b; }
 .ads-preview { width: 100%; margin: 20px auto; }
 .ads-preview.nv-ad-header { max-width: 970px; }
-.ads-preview.nv-ad-feed { max-width: 728px; }
+.ads-preview.nv-ad-feed { max-width: 900px; }
 .ads-preview.nv-ad-sidebar { max-width: 300px; }
 .ads-preview.mobile.nv-ad-header { max-width: 320px; }
 .ads-preview.mobile.nv-ad-header .nv-ad-frame { aspect-ratio: 320 / 100; }
@@ -2468,7 +2468,7 @@ body {
   .nv-ad-feed { max-width: 300px; }
   .nv-ad-feed .nv-ad-frame { aspect-ratio: 300 / 250; }
   .ads-preview.desktop.nv-ad-header .nv-ad-frame { aspect-ratio: 970 / 90; }
-  .ads-preview.desktop.nv-ad-feed .nv-ad-frame { aspect-ratio: 728 / 90; }
+.ads-preview.desktop.nv-ad-feed .nv-ad-frame { aspect-ratio: 970 / 90; }
   .ads-fields, .ads-sizes, .ads-card { grid-template-columns: minmax(0,1fr); }
   .ads-panel { padding: 15px; }
   .ads-manager h1 { font-size: 22px; }
