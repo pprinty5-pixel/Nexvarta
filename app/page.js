@@ -64,6 +64,7 @@ export default function HomePage() {
     viewers: "१४,२५०+ लाइव्ह"
   });
   const [currentTrendingArticleId, setCurrentTrendingArticleId] = useState('india-2');
+  const [showAllPuneArticles, setShowAllPuneArticles] = useState(false);
 
   const [creatorVideos, setCreatorVideos] = useState(initialCreatorVideos);
   const [youtubeVideos, setYoutubeVideos] = useState(initialYoutubeVideos || []);
@@ -858,6 +859,7 @@ ${video.previewVideo}
                   }
                   return false;
                 })
+                .filter((article, articleIndex) => section.slug !== 'pune' || showAllPuneArticles || articleIndex < 9)
                 .map(article => (
                 <article key={article.id} className="news-card">
                   {article.image && (
@@ -906,6 +908,20 @@ ${video.previewVideo}
                 </article>
               ))}
             </div>
+            {section.slug === 'pune' && section.articles.filter(article => {
+              if (!article.status || article.status === 'published') return true;
+              return article.status === 'scheduled' && article.scheduledFor && new Date(article.scheduledFor) <= new Date();
+            }).length > 9 && (
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAllPuneArticles((current) => !current)}
+                  style={{ background: '#003884', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 24px', fontSize: '0.9rem', fontWeight: 800, cursor: 'pointer', boxShadow: '0 3px 10px rgba(0,56,132,0.2)' }}
+                >
+                  {showAllPuneArticles ? 'कमी बातम्या दाखवा' : 'बाकी पुणे वार्ता पहा (View All)'}
+                </button>
+              </div>
+            )}
           </div>
         </section>
       ))}
