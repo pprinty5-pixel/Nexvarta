@@ -1152,7 +1152,7 @@ ${video.previewVideo}
             <div className="footer-col">
               <h4>Company & Access</h4>
               <ul>
-                <li><a href="#">About Us</a></li>
+                <li><Link href="/about">About Us</Link></li>
                 <li><Link href="/subscribe">{t.subscribe || 'सबस्क्रिप्शन'}</Link></li>
                 <li><Link href="/dashboard">{t.dashboard || 'माझा डॅशबोर्ड'}</Link></li>
                 <li><Link href="/admin">{t.admin || 'ॲडमिन'}</Link></li>
