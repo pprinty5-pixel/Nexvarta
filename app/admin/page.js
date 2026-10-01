@@ -50,7 +50,9 @@ import {
   Lock,
   User,
   EyeOff,
-  LogOut
+  LogOut,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { applyWatermarkToImage } from '../../lib/watermarkUtil';
 
@@ -87,6 +89,9 @@ export default function AdminDashboardPage() {
 
   // Article Filtering & Workflow State
   const [articleStatusFilter, setArticleStatusFilter] = useState('all');
+
+  // Collapsible Category Sections State
+  const [collapsedSections, setCollapsedSections] = useState({});
 
   // AI Assistant Modal & State
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
@@ -1585,10 +1590,27 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Sections & Articles Loop */}
-              {cmsData.newsSections.map((section, secIdx) => (
+              {cmsData.newsSections.map((section, secIdx) => {
+                const isSectionCollapsed = collapsedSections[section.id] || false;
+                const toggleSection = () => setCollapsedSections(prev => ({ ...prev, [section.id]: !prev[section.id] }));
+                return (
                 <div key={section.id} style={{ background: '#fff', borderRadius: 14, border: '1px solid #e2e8f0', padding: 24, marginBottom: 28, boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, borderBottom: '2px solid #f1f5f9', paddingBottom: 14, flexWrap: 'wrap', gap: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isSectionCollapsed ? 0 : 16, borderBottom: isSectionCollapsed ? 'none' : '2px solid #f1f5f9', paddingBottom: isSectionCollapsed ? 0 : 14, flexWrap: 'wrap', gap: 12, transition: 'all 0.2s ease' }}>
+                    <div 
+                      onClick={toggleSection}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', cursor: 'pointer', userSelect: 'none' }}
+                      title={isSectionCollapsed ? 'बातम्या दाखवा (Expand)' : 'बातम्या लपवा (Collapse)'}
+                    >
+                      <span style={{ 
+                        width: 28, height: 28, borderRadius: 6, 
+                        background: isSectionCollapsed ? '#f1f5f9' : '#e0f2fe', 
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        transition: 'all 0.2s ease',
+                        color: '#0369a1',
+                        flexShrink: 0
+                      }}>
+                        {isSectionCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+                      </span>
                       <span style={{ width: 14, height: 14, borderRadius: '50%', background: section.color }}></span>
                       <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a' }}>{section.name}</h3>
                       <span style={{ fontSize: '0.75rem', background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: 99, fontWeight: 700 }}>
@@ -1695,8 +1717,8 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  {/* Articles List with Workflow & Metrics */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {/* Articles List with Workflow & Metrics - Collapsible */}
+                  <div style={{ display: isSectionCollapsed ? 'none' : 'flex', flexDirection: 'column', gap: 14 }}>
                     {section.articles
                       .filter(article => {
                         if (articleStatusFilter === 'all') return true;
@@ -1874,7 +1896,8 @@ export default function AdminDashboardPage() {
                     )}
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           )}
 
