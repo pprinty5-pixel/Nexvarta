@@ -170,7 +170,7 @@ export default function HomePage() {
             window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
           }
         }, 400);
-      } else if (['pune', 'maharashtra', 'india', 'tech', 'startup', 'politics', 'sports'].includes(hash)) {
+      } else if (['pune', 'maharashtra', 'crime', 'india', 'tech', 'startup', 'politics', 'sports'].includes(hash)) {
         setActiveTab(hash);
         setTimeout(() => {
           const el = document.getElementById(hash);
@@ -495,6 +495,15 @@ ${video.previewVideo}
               title={t.maharashtra}
             >
               {t.maharashtra}
+            </button>
+
+            <button 
+              type="button"
+              className={`nav-link ${activeTab === 'crime' ? 'active' : ''}`}
+              onClick={() => handleCategoryNav('crime', 'crime')}
+              title={t.crime || 'क्राइम'}
+            >
+              {t.crime || 'क्राइम'}
             </button>
             <button 
               type="button"
