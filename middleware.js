@@ -15,8 +15,18 @@ const CRAWLER_USER_AGENTS = [
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
+  const proto = request.headers.get('x-forwarded-proto');
+  const host = request.headers.get('host') || '';
 
-  // Intercept requests to /news/:id
+  // Auto-redirect HTTP to HTTPS in production
+  if (proto === 'http' && !host.includes('localhost') && !host.includes('127.0.0.1')) {
+    const httpsUrl = new URL(request.url);
+    httpsUrl.protocol = 'https:';
+    httpsUrl.host = host;
+    return NextResponse.redirect(httpsUrl.toString(), 301);
+  }
+
+  // Intercept requests to /news/:id for crawlers
   const match = pathname.match(/^\/news\/([^/]+)$/);
   if (match) {
     const userAgent = request.headers.get('user-agent') || '';
@@ -43,5 +53,14 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/news/:id*'],
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - uploads (static user uploads)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|uploads/).*)',
+  ],
 };
