@@ -403,6 +403,21 @@ export default function AdminDashboardPage() {
     showToast(`🔄 कॅटेगरी प्राधान्य (Priority) अपडेट केले!`);
   };
 
+  const handleDirectPriorityChange = (currentIndex, newPriority) => {
+    const targetIndex = newPriority - 1; // Convert 1-based priority to 0-based index
+    if (targetIndex < 0 || targetIndex >= cmsData.newsSections.length || targetIndex === currentIndex) return;
+    
+    const updated = { ...cmsData };
+    const sections = [...updated.newsSections];
+    const [movedSection] = sections.splice(currentIndex, 1);
+    sections.splice(targetIndex, 0, movedSection);
+    updated.newsSections = sections;
+    
+    setCmsData(updated);
+    saveCmsData(updated);
+    showToast(`🔄 कॅटेगरी प्राधान्य #${newPriority} वर सेट केले!`);
+  };
+
   const handleDeleteCategory = (sectionId, sectionName) => {
     if (!confirm(`"${sectionName}" ही संपूर्ण कॅटेगरी आणि त्यामधील सर्व बातम्या डिलीट करायच्या आहेत का?`)) return;
     const updated = { ...cmsData };
@@ -1625,47 +1640,47 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      {/* Priority Controls */}
-                      <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 6, padding: '2px 4px' }}>
-                        <button
-                          onClick={() => handleMoveCategory(secIdx, 'up')}
-                          disabled={secIdx === 0}
-                          title="प्राधान्य वर करा (Move Up)"
-                          style={{
-                            background: 'transparent',
-                            border: 'none',
-                            padding: '4px 6px',
-                            cursor: secIdx === 0 ? 'not-allowed' : 'pointer',
-                            opacity: secIdx === 0 ? 0.35 : 1,
-                            color: '#0f172a',
-                            display: 'flex',
-                            alignItems: 'center',
-                            borderRadius: 4
+                      {/* Priority Controls - Direct Number Input */}
+                      <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 6, padding: '4px 8px', gap: 4 }}>
+                        <ArrowUp size={14} style={{ color: '#94a3b8', flexShrink: 0 }} />
+                        <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8' }}>#</span>
+                        <input
+                          type="number"
+                          min={1}
+                          max={cmsData.newsSections.length}
+                          defaultValue={secIdx + 1}
+                          key={`priority-${section.id}-${secIdx}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.target.blur();
+                            }
                           }}
-                        >
-                          <ArrowUp size={16} />
-                        </button>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', padding: '0 4px' }}>
-                          #{secIdx + 1}
-                        </span>
-                        <button
-                          onClick={() => handleMoveCategory(secIdx, 'down')}
-                          disabled={secIdx === cmsData.newsSections.length - 1}
-                          title="प्राधान्य खाली करा (Move Down)"
-                          style={{
-                            background: 'transparent',
-                            border: 'none',
-                            padding: '4px 6px',
-                            cursor: secIdx === cmsData.newsSections.length - 1 ? 'not-allowed' : 'pointer',
-                            opacity: secIdx === cmsData.newsSections.length - 1 ? 0.35 : 1,
-                            color: '#0f172a',
-                            display: 'flex',
-                            alignItems: 'center',
-                            borderRadius: 4
+                          onBlur={(e) => {
+                            const val = parseInt(e.target.value, 10);
+                            if (!isNaN(val) && val >= 1 && val <= cmsData.newsSections.length) {
+                              handleDirectPriorityChange(secIdx, val);
+                            } else {
+                              e.target.value = secIdx + 1;
+                            }
                           }}
-                        >
-                          <ArrowDown size={16} />
-                        </button>
+                          onClick={(e) => e.stopPropagation()}
+                          title="Priority नंबर टाका आणि Enter दाबा"
+                          style={{
+                            width: 36,
+                            padding: '3px 2px',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: 4,
+                            fontSize: '0.8rem',
+                            fontWeight: 800,
+                            color: '#0f172a',
+                            textAlign: 'center',
+                            background: '#fff',
+                            outline: 'none',
+                            MozAppearance: 'textfield',
+                            appearance: 'textfield'
+                          }}
+                        />
+                        <ArrowDown size={14} style={{ color: '#94a3b8', flexShrink: 0 }} />
                       </div>
 
                       {/* Edit Category */}
